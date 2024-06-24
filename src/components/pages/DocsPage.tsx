@@ -14,8 +14,10 @@ const DocsPage = () => {
                 </ResizablePanel>
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={75}>
-                    <div className="flex h-full p-6 pb-0 w-full">
-                        <BlockEditor/>
+                    <div className="flex h-full p-6 pb-0 w-full justify-center">
+                        <div className="max-w-3xl flex-1">
+                            <BlockEditor />
+                        </div>
                     </div>
                 </ResizablePanel>
             </ResizablePanelGroup>
