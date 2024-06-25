@@ -9,19 +9,9 @@ const FolderProvider = ({ children }: Props) => {
 
     const [folder, setFolder] = useState<any[] | []>([])
 
-    function generateRandomId(length = 10) {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let result = '';
-        const charactersLength = characters.length;
-        for (let i = 0; i < length; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
-    }
-
     function createPage(name: string) {
         let obj = {
-            id: generateRandomId(),
+            id: crypto.randomUUID(),
             name: name,
             children: []
         }
@@ -31,7 +21,7 @@ const FolderProvider = ({ children }: Props) => {
     function recursive(name: any, id: any, folder: any) {
         return folder.map((node: any) => {
             if (node.id === id) {
-                return { ...node, children: [...node.children, { id: generateRandomId(), name: name, children: [] }] }
+                return { ...node, children: [...node.children, { id: crypto.randomUUID(), name: name, children: [] }] }
             } else if (node.children.length > 0 && node.id !== id) {
                 return { ...node, children: recursive(name, id, node.children)}
             }
