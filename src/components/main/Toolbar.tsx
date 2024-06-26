@@ -5,10 +5,10 @@ import NavigationSideBar from "./NavigationSideBar"
 
 const Toolbar = () => {
     return (
-        <div>
+        <div className="p-1">
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button size={"icon"} variant={"ghost"}><Menu height={18} width={18}></Menu></Button>
+                    <Button size={"icon"} className="p-1" variant={"ghost"}><Menu height={18} width={18}></Menu></Button>
                 </SheetTrigger>
                 <SheetContent className="p-0" side={"left"}>
                     <NavigationSideBar />
