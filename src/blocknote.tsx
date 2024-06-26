@@ -63,7 +63,7 @@ const Blocknote = () => {
     });
 
     // Renders the editor instance using a React component.
-    return <div className="w-full overflow-auto">
+    return <div>
         <BlockNoteView editor={editor} theme={"light"} autoFocus={true} slashMenu={false}>
             <SuggestionMenuController
                 triggerCharacter={"/"}
