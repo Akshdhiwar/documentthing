@@ -1,8 +1,9 @@
 import FolderProvider from "@/provider/FolderProvider"
 import NavigationSideBar from "../main/NavigationSideBar"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../ui/resizable"
-import BlockEditor from "../main/BlockEditor"
 import Toolbar from "../main/Toolbar"
+import Editor from "../main/Editor"
+import EditorProvider from "@/provider/EditorProvider"
 
 const DocsPage = () => {
     return (
@@ -13,18 +14,20 @@ const DocsPage = () => {
                 <ResizablePanel maxSize={25} defaultSize={15} minSize={15} className="hidden md:flex">
                     <NavigationSideBar />
                 </ResizablePanel>
-                <ResizableHandle withHandle />
+                <ResizableHandle withHandle className="hidden md:flex" />
                 <ResizablePanel defaultSize={75}>
-                    <div className="flex flex-col h-full">
-                        <div className="flex md:hidden">
-                            <Toolbar></Toolbar>
-                        </div>
-                        <div className="flex justify-center mt-6 flex-1 overflow-auto">
-                            <div className="w-full max-w-3xl ">
-                                <BlockEditor />
+                    <EditorProvider>
+                        <div className="flex flex-col h-full">
+                            <div>
+                                <Toolbar></Toolbar>
+                            </div>
+                            <div className="flex justify-center mt-6 flex-1 overflow-auto">
+                                <div className="w-full max-w-3xl ">
+                                    <Editor />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </EditorProvider>
                 </ResizablePanel>
             </ResizablePanelGroup>
         </FolderProvider>

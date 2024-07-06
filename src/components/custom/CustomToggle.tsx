@@ -39,7 +39,7 @@ const CustomToggle = ({ child }: Folder) => {
 
     return (
         <div>
-            <div className={`flex w-full group items-center hover:cursor-pointer hover:bg-primary/10 p-1 px-2 rounded gap-2 transition-all text-muted-foreground hover:text-primary `}>
+            <div onClick={()=>folder?.setSelected(child)} className={`flex w-full group items-center hover:cursor-pointer hover:bg-primary/10 p-1 px-2 rounded gap-2 transition-all text-muted-foreground hover:text-primary `}>
                 <div className=' transition-opacity flex'>
                     {
                         child.children.length > 0 && (
