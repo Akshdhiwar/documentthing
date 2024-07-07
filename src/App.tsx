@@ -1,10 +1,10 @@
 import FullScreen from "./components/main/FullScreen"
-import DocsPage from "./components/pages/DocsPage"
+import Dashboard from "./components/pages/Dashboard"
 
 const App = () => {
   return (
     <FullScreen>
-      <DocsPage/>
+      <Dashboard></Dashboard>
     </FullScreen>
   )
 }
