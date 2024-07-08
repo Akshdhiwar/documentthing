@@ -1,10 +1,9 @@
-import DashboardSideNav from "../main/Dashboard/DashboardSideNav"
-
+import ProjectDasboard from "../main/ProjectDasboard"
 
 const Dashboard = () => {
     return (
-        <div className='h-full'>
-            <DashboardSideNav />
+        <div className="h-full">
+            <ProjectDasboard/>
         </div>
     )
 }

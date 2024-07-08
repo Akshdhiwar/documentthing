@@ -1,10 +1,17 @@
+import ProjectList from "./components/main/Dashboard/ProjectList";
 import FullScreen from "./components/main/FullScreen"
-import Dashboard from "./components/pages/Dashboard"
+import ProjectDasboard from "./components/main/ProjectDasboard";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 const App = () => {
   return (
     <FullScreen>
-      <Dashboard></Dashboard>
+      <Routes>
+        <Route path="/" Component={ProjectDasboard}>
+          <Route index element={<Navigate to="dashboard" />}></Route>
+          <Route path="dashboard" element={<ProjectList />}></Route>
+        </Route>
+      </Routes>
     </FullScreen>
   )
 }

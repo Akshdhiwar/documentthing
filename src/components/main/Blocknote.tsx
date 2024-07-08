@@ -3,7 +3,7 @@ import { SuggestionMenuController, getDefaultReactSlashMenuItems, useCreateBlock
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems, insertOrUpdateBlock } from "@blocknote/core";
-import { Alert } from "./components/custom/blocks/Alert/Alert";
+import { Alert } from "../custom/blocks/Alert/Alert";
 import { RiAlertFill } from "react-icons/ri";
 
 // Our schema with block specs, which contain the configs and implementations for blocks

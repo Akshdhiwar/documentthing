@@ -1,4 +1,4 @@
-import Blocknote from "@/blocknote";
+import Blocknote from "@/components/main/Blocknote";
 
 const BlockEditor = () => {
  
