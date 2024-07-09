@@ -5,6 +5,9 @@ import "@blocknote/mantine/style.css";
 import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems, insertOrUpdateBlock } from "@blocknote/core";
 import { Alert } from "../custom/blocks/Alert/Alert";
 import { RiAlertFill } from "react-icons/ri";
+import { useContext, useEffect } from "react";
+import { FolderContext } from "@/context/FolderContext";
+import axios from "axios";
 
 // Our schema with block specs, which contain the configs and implementations for blocks
 // that we want our editor to use.
@@ -40,6 +43,9 @@ const insertAlert = (editor: typeof schema.BlockNoteEditor) => ({
 
 
 const Blocknote = () => {
+
+    const folder = useContext(FolderContext)
+
     // Creates a new editor instance.
     const editor = useCreateBlockNote({
         schema,
@@ -61,6 +67,15 @@ const Blocknote = () => {
             },
         ],
     });
+
+    useEffect(() => {
+        if (folder?.selected?.fileId === undefined) return
+        axios.get(`http://localhost:3000/api/v1/file/${folder.selected?.fileId}`).then(data => {
+            let content = JSON.parse(data.data.content)
+            editor.document.length = 0
+            editor.document.push(...content)
+        })
+    }, [folder?.selected])
 
     // Renders the editor instance using a React component.
     return <div>
