@@ -2,6 +2,7 @@ import ProjectList from "./components/main/Dashboard/ProjectList";
 import FullScreen from "./components/main/FullScreen"
 import ProjectDasboard from "./components/main/ProjectDasboard";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "./components/ui/toaster";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
           <Route path="dashboard" element={<ProjectList />}></Route>
         </Route>
       </Routes>
+      <Toaster></Toaster>
     </FullScreen>
   )
 }
