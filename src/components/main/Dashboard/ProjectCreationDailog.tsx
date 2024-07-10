@@ -28,7 +28,7 @@ const ProjectCreationDailog = ({ close }: Props) => {
             return;
         }
 
-
+        setLoading(true)
 
 
         close(false)
