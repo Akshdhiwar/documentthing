@@ -3,6 +3,7 @@ import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/co
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Label } from '@radix-ui/react-label'
+import axios from 'axios'
 import { Loader } from 'lucide-react'
 import { Dispatch, useRef, useState } from 'react'
 
@@ -30,6 +31,20 @@ const ProjectCreationDailog = ({ close }: Props) => {
 
         setLoading(true)
 
+        const response = await axios.post("http://localhost:3000/api/v1/project/create" , {name : inputValue.current.value})
+        if(response.status !== 201) {
+            toast({
+                title: "Error",
+                description: response.data.message,
+                variant: "destructive"
+            })
+        }else{
+            toast({
+                title: "Success",
+                description: response.data.message,
+                variant: "success"
+            })
+        }
 
         close(false)
     }
