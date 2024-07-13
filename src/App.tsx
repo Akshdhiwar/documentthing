@@ -3,6 +3,7 @@ import FullScreen from "./components/main/FullScreen"
 import ProjectDasboard from "./components/main/ProjectDasboard";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
+import DocsPage from "./components/pages/DocsPage";
 
 const App = () => {
   return (
@@ -11,6 +12,8 @@ const App = () => {
         <Route path="/" Component={ProjectDasboard}>
           <Route index element={<Navigate to="dashboard" />}></Route>
           <Route path="dashboard" element={<ProjectList />}></Route>
+        </Route>
+        <Route path="/project/:folderId" element={<DocsPage></DocsPage>}>
         </Route>
       </Routes>
       <Toaster></Toaster>

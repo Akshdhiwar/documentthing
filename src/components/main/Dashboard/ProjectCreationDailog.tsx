@@ -9,9 +9,10 @@ import { Dispatch, useRef, useState } from 'react'
 
 type Props = {
     close: Dispatch<any>
+    refresh: Dispatch<any>
 }
 
-const ProjectCreationDailog = ({ close }: Props) => {
+const ProjectCreationDailog = ({ close , refresh }: Props) => {
 
     const inputValue = useRef<HTMLInputElement>(null)
     const [loading, setLoading] = useState(false)
@@ -46,6 +47,7 @@ const ProjectCreationDailog = ({ close }: Props) => {
             })
         }
 
+        refresh((prev : boolean) => !prev)
         close(false)
     }
 

@@ -6,12 +6,22 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { FolderContext } from "@/context/FolderContext"
+import axios from "axios"
+import { useParams } from "react-router-dom"
 
 const NavigationSideBar = () => {
 
     const folder = useContext(FolderContext)
     const [newFolder, setNewFolder] = useState(false)
     let InputRef = useRef<HTMLInputElement>(null)
+    let {folderId} = useParams()
+
+    useEffect(()=>{
+        axios.get(`http://localhost:3000/api/v1/folder/${folderId}`).then(data=> {
+            const res  = JSON.parse(data.data.folderStructure)
+            folder?.setFolder(res)
+        })
+    },[])
 
     function createFolder() {
         setNewFolder(true)

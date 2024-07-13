@@ -6,6 +6,7 @@ interface foldercontextProps {
     addPage : (name : string , id : string) => void
     selected : any
     setSelected : Dispatch<any>
+    setFolder : Dispatch<any>
 }
 
 

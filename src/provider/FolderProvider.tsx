@@ -1,28 +1,25 @@
 import { FolderContext } from '@/context/FolderContext'
-import  { ReactNode, useEffect, useState } from 'react'
+import  { ReactNode, useState } from 'react'
 import axios from "axios"
-import { INIT } from '@/constant/Editor'
+import { WITH_BASIC_INIT_VALUE } from '@/constant/Editor'
+import { useParams } from 'react-router-dom'
+import axiosInstance from '@/axios intercepter/axioshandler'
 
 type Props = {
     children: ReactNode
 }
 
  async function createFile(){
-    const response = await axios.post("http://localhost:3000/api/v1/file/create" , {file : JSON.stringify(INIT)})
+    const response = await axios.post("http://localhost:3000/api/v1/file/create" , {file : JSON.stringify(WITH_BASIC_INIT_VALUE)})
     return response.data.id
  }
 
 const FolderProvider = ({ children }: Props) => {
 
+    const {folderId} = useParams()
+
     const [folder, setFolder] = useState<any[] | []>([])
     const [selected , setSelected] = useState<FileObject>()
-
-    useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/folder/6689053c244c40e5323ac1dc").then(data=> {
-            const res  = JSON.parse(data.data.folderStructure)
-            setFolder(res)
-        })
-    },[])
 
     async function createPage(name: string) {
         let id = await createFile()
@@ -32,6 +29,8 @@ const FolderProvider = ({ children }: Props) => {
             fileId : id,
             children: []
         }
+        let data = await saveFolderStructure([...folder, obj])
+        console.log(data)
         setFolder(prev => [...prev, obj])
     }
 
@@ -55,18 +54,18 @@ const FolderProvider = ({ children }: Props) => {
             children: []
         }
         const updatedFolder = recursive(name, id, folder , obj);
+        let data = await saveFolderStructure(updatedFolder)
+        console.log(data)
         setFolder(updatedFolder)
     }
 
-    useEffect(() => {
-        axios.post("http://localhost:3000/api/v1/folder/6689053c244c40e5323ac1dc" , {folderStructure : JSON.stringify(folder)}).then(
-            data => console.log(data.data)
-        )
-        console.log(folder)
-    }, [folder])
+    async function saveFolderStructure(folderStructure : any[]){
+        const response = await axiosInstance.post(`/folder/${folderId}` , {folderStructure : JSON.stringify(folderStructure)})
+        return response.status
+    }
 
     return (
-        <FolderContext.Provider value={{ folder, createPage, addPage , selected , setSelected }}>{children}</FolderContext.Provider>
+        <FolderContext.Provider value={{ folder, createPage, addPage , selected , setSelected , setFolder }}>{children}</FolderContext.Provider>
     )
 }
 

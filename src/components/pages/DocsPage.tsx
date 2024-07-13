@@ -3,7 +3,7 @@ import NavigationSideBar from "../main/NavigationSideBar"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../ui/resizable"
 import Toolbar from "../main/Toolbar"
 import EditorProvider from "@/provider/EditorProvider"
-import BlockEditor from "../main/BlockEditor"
+import Editor from "../main/Editor"
 
 const DocsPage = () => {
     return (
@@ -23,8 +23,8 @@ const DocsPage = () => {
                             </div>
                             <div className="flex justify-center mt-6 flex-1 overflow-auto">
                                 <div className="w-full max-w-3xl ">
-                                    {/* <Editor /> */}
-                                    <BlockEditor/>
+                                    <Editor />
+                                    {/* <BlockEditor/> */}
                                 </div>
                             </div>
                         </div>
