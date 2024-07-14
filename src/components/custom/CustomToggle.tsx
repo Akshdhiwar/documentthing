@@ -1,9 +1,11 @@
-import { Check, ChevronRight, Ellipsis, File, FileText, Plus, X } from "lucide-react";
+import { Check, ChevronRight, Ellipsis, File, FileText, Plus, SquarePen, Trash, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FolderContext } from "@/context/FolderContext";
 import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import Item from "./Item";
 
 interface Folder {
     child: any
@@ -39,7 +41,7 @@ const CustomToggle = ({ child }: Folder) => {
 
     return (
         <div>
-            <div onClick={()=>folder?.setSelected(child)} className={`flex w-full group items-center hover:cursor-pointer hover:bg-primary/10 p-1 px-2 rounded gap-2 transition-all text-muted-foreground hover:text-primary `}>
+            <div onClick={() => folder?.setSelected(child)} className={`flex w-full group items-center hover:cursor-pointer hover:bg-primary/10 p-1 px-2 rounded gap-2 transition-all text-muted-foreground hover:text-primary `}>
                 <div className=' transition-opacity flex'>
                     {
                         child.children.length > 0 && (
@@ -62,10 +64,18 @@ const CustomToggle = ({ child }: Folder) => {
                 <div className='group-hover:flex items-center justify-center shrink-0 grow-0 h-100'>
                     <div className='opacity-0 transition-opacity group-hover:opacity-100'>
                         <div className='block absolute overflow-hidden whitespace-nowrap h-[0px] w-[0px] group-hover:flex group-hover:static group-hover:overflow-auto group-hover:whitespace-normal group-hover:h-full group-hover:w-full'>
-                            <div className='flex items-center justify-center h-full'>
+                            <div className='flex items-center justify-center h-full z-10'>
                                 <TooltipProvider delayDuration={200}>
                                     <Tooltip>
-                                        <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
+                                        <Popover>
+                                            <PopoverTrigger>
+                                                <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="flex flex-col w-48 p-1 gap-1">
+                                                <Item label="Rename" onClick={()=>{}} icon={SquarePen} className={"text-sm"}></Item>
+                                                <Item label="Delete" onClick={()=>{}} icon={Trash} className={"text-sm text-red-500"}></Item>
+                                            </PopoverContent>
+                                        </Popover>
                                         <TooltipContent side='bottom'>
                                             <p>more</p>
                                         </TooltipContent>
