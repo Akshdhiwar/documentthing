@@ -19,7 +19,7 @@ const ProjectList = () => {
   function getProjectList() {
     setLoading(true)
     axiosInstance.get("/project").then(result => {
-      setProjects(result.data)
+      setProjects(result.data === null ? [] : result.data)
       setLoading(false)
     }).catch(err => {
       console.error(err)

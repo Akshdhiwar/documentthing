@@ -6,6 +6,8 @@ import { FolderContext } from "@/context/FolderContext";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Item from "./Item";
+import axiosInstance from "@/axios intercepter/axioshandler";
+import { useParams } from "react-router-dom";
 
 interface Folder {
     child: any
@@ -16,6 +18,7 @@ const CustomToggle = ({ child }: Folder) => {
     const inputValue = useRef<HTMLInputElement>(null)
     const [newFolder, setNewFolder] = useState(false)
     const [open, setOpen] = useState(false)
+    let {folderId} = useParams()
 
     function addFileFolder(id: string) {
         folder?.addPage(inputValue?.current!.value, id)
@@ -37,6 +40,14 @@ const CustomToggle = ({ child }: Folder) => {
             inputValue.current.focus();
         }
     }, [newFolder]);
+
+    async function deleteFolderFile(id: string) {
+        await axiosInstance.delete(`/folder/${folderId}`, { data: { folderId: id } })
+        axiosInstance.get(`/folder/${folderId}`).then((data: any) => {
+            const res = JSON.parse(data.data.folderStructure)
+            folder?.setFolder(res)
+        })
+    }
 
 
     return (
@@ -72,8 +83,8 @@ const CustomToggle = ({ child }: Folder) => {
                                                 <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
                                             </PopoverTrigger>
                                             <PopoverContent className="flex flex-col w-48 p-1 gap-1">
-                                                <Item label="Rename" onClick={()=>{}} icon={SquarePen} className={"text-sm"}></Item>
-                                                <Item label="Delete" onClick={()=>{}} icon={Trash} className={"text-sm text-red-500"}></Item>
+                                                <Item label="Rename" onClick={() => { }} icon={SquarePen} className={"text-sm"}></Item>
+                                                <Item label="Delete" onClick={() => { deleteFolderFile(child.fileId) }} icon={Trash} className={"text-sm text-red-500"}></Item>
                                             </PopoverContent>
                                         </Popover>
                                         <TooltipContent side='bottom'>
