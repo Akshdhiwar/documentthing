@@ -1,4 +1,4 @@
-import YooptaEditor, { createYooptaEditor, YooptaMark } from '@yoopta/editor';
+import YooptaEditor, { createYooptaEditor, YooptaMark, generateId, YooptaContentValue } from '@yoopta/editor';
 import Paragraph from '@yoopta/paragraph';
 import Blockquote from '@yoopta/blockquote';
 import Embed from '@yoopta/embed';
@@ -12,7 +12,7 @@ import Code from '@yoopta/code';
 import ActionMenuList, { DefaultActionMenuRender } from '@yoopta/action-menu-list';
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
-import { useContext, useEffect, useMemo, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { FolderContext } from '@/context/FolderContext';
 import axios from 'axios';
 import { EditorContext } from '@/context/EditorContext';
@@ -54,6 +54,8 @@ const Editor = () => {
   const selectionRef = useRef(null);
   const folder = useContext(FolderContext)
   const editorContext = useContext(EditorContext)
+  const [editorID, setEditorID] = useState(generateId())
+  const [pageContent, setPageContent] = useState<YooptaContentValue | undefined>(undefined);
 
   useEffect(() => {
     function handleChange(value: any) {
@@ -70,9 +72,13 @@ const Editor = () => {
     if (folder?.selected?.fileId === undefined) return
     axios.get(`http://localhost:3000/api/v1/file/${folder.selected?.fileId}`).then(data => {
       let content = JSON.parse(data.data.content)
-      editor.setEditorValue(content)
+      setPageContent(content)
     })
   }, [folder?.selected])
+
+  useEffect(()=>{
+    setEditorID(generateId)
+  },[pageContent])
 
   return (
     <div
@@ -80,13 +86,14 @@ const Editor = () => {
       ref={selectionRef}
     >
       <YooptaEditor
+        key={editorID}
         editor={editor}
         plugins={plugins}
         tools={TOOLS}
         marks={MARKS}
         selectionBoxRoot={selectionRef}
         width={100}
-        // value={WITH_BASIC_INIT_VALUE}
+        value={pageContent}
         autoFocus
         className="yoopta-editor"
       />

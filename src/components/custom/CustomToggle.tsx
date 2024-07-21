@@ -16,9 +16,11 @@ interface Folder {
 const CustomToggle = ({ child }: Folder) => {
     const folder = useContext(FolderContext);
     const inputValue = useRef<HTMLInputElement>(null)
+    const renameInputValue = useRef<HTMLInputElement>(null)
     const [newFolder, setNewFolder] = useState(false)
     const [open, setOpen] = useState(false)
-    let {folderId} = useParams()
+    const [renameOpen, setRenameOpen] = useState(false)
+    let { folderId } = useParams()
 
     function addFileFolder(id: string) {
         folder?.addPage(inputValue?.current!.value, id)
@@ -49,6 +51,12 @@ const CustomToggle = ({ child }: Folder) => {
         })
     }
 
+    function renameFolder(child: any) {
+        setRenameOpen(true)
+        if (renameInputValue?.current) {
+            renameInputValue.current!.focus()
+        }
+    }
 
     return (
         <div>
@@ -68,9 +76,14 @@ const CustomToggle = ({ child }: Folder) => {
                     }</div>
                 </div>
                 <div className='flex-auto truncate flex items-center text-sm font-medium h-full'>
-                    <div className='truncate'>
-                        {child.name}
-                    </div>
+                    {
+                        renameOpen ? <div className="flex items-center">
+                            <Input className="flex-1 h-8" ref={renameInputValue} value={child.name}></Input>
+                            <Button className="p-1 h-8 w-8" onClick={() => { setRenameOpen(false) }}><X className="h-[16px]"></X></Button>
+                        </div> : <div className='truncate'>
+                            {child.name}
+                        </div>
+                    }
                 </div>
                 <div className='group-hover:flex items-center justify-center shrink-0 grow-0 h-100'>
                     <div className='opacity-0 transition-opacity group-hover:opacity-100'>
@@ -83,7 +96,7 @@ const CustomToggle = ({ child }: Folder) => {
                                                 <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
                                             </PopoverTrigger>
                                             <PopoverContent className="flex flex-col w-48 p-1 gap-1">
-                                                <Item label="Rename" onClick={() => { }} icon={SquarePen} className={"text-sm"}></Item>
+                                                <Item label="Rename" onClick={() => { renameFolder(child) }} icon={SquarePen} className={"text-sm"}></Item>
                                                 <Item label="Delete" onClick={() => { deleteFolderFile(child.fileId) }} icon={Trash} className={"text-sm text-red-500"}></Item>
                                             </PopoverContent>
                                         </Popover>
