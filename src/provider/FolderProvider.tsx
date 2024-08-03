@@ -1,6 +1,5 @@
 import { FolderContext } from '@/context/FolderContext'
 import  { ReactNode, useState } from 'react'
-import axios from "axios"
 import { WITH_BASIC_INIT_VALUE } from '@/constant/Editor'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '@/axios intercepter/axioshandler'
@@ -10,7 +9,7 @@ type Props = {
 }
 
  async function createFile(){
-    const response = await axios.post("http://localhost:3000/api/v1/file/create" , {file : JSON.stringify(WITH_BASIC_INIT_VALUE)})
+    const response = await axiosInstance.post("/file/create" , {file : JSON.stringify(WITH_BASIC_INIT_VALUE)})
     return response.data.id
  }
 

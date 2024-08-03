@@ -14,8 +14,8 @@ import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { FolderContext } from '@/context/FolderContext';
-import axios from 'axios';
 import { EditorContext } from '@/context/EditorContext';
+import axiosInstance from '@/axios intercepter/axioshandler';
 
 const plugins: any = [
   Paragraph,
@@ -57,6 +57,8 @@ const Editor = () => {
   const [editorID, setEditorID] = useState(generateId())
   const [pageContent, setPageContent] = useState<YooptaContentValue | undefined>(undefined);
 
+  
+
   useEffect(() => {
     function handleChange(value: any) {
       console.log('value', value);
@@ -70,7 +72,7 @@ const Editor = () => {
 
   useEffect(() => {
     if (folder?.selected?.fileId === undefined) return
-    axios.get(`http://localhost:3000/api/v1/file/${folder.selected?.fileId}`).then(data => {
+    axiosInstance.get(`/file/${folder.selected?.fileId}`).then(data => {
       let content = JSON.parse(data.data.content)
       setPageContent(content)
     })

@@ -6,6 +6,7 @@ import { FolderContext } from "@/context/FolderContext"
 import { useContext } from "react"
 import { EditorContext } from "@/context/EditorContext"
 import axios from "axios"
+import {plainText , markdown , html} from "@yoopta/exports"
 
 const Toolbar = () => {
 
@@ -23,6 +24,12 @@ const Toolbar = () => {
         await fetchToServer(JSON.stringify(editorContent))
     }
 
+    const serializeText = () => {
+        const data = editor?.editor.getEditorValue();
+        const textString = html.serialize(editor?.editor, data);
+        console.log('plain text string', textString);
+      };
+
     return (
         <div className="flex items-center justify-between md:justify-end p-1">
             <div className="md:hidden">
@@ -35,7 +42,7 @@ const Toolbar = () => {
                     </SheetContent>
                 </Sheet>
             </div>
-            <Button size={"sm"} disabled={!folder?.selected} onClick={onSaveToServer}>Save </Button>
+            <Button size={"sm"} disabled={!folder?.selected} onClick={serializeText}>Save </Button>
         </div>
     )
 }

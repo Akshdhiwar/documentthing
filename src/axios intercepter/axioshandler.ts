@@ -6,11 +6,23 @@ const axiosInstance = axios.create({
   timeout: 10000, // Set a timeout (in milliseconds)
 });
 
+const url = import.meta.env.VITE_ENVIRONMENT === "Local" ? "vagzberhxlqxksqegdcn" : "jztymizzcfssbjauqsrq"
+
+function getAccessToken() {
+    const data = localStorage.getItem(`sb-${url}-auth-token`)
+    if (data === null) return null
+    return JSON.parse(data)
+}
+
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
+
+    const accessToken: any = getAccessToken()
     // Add authentication token
-    config.headers['Authorization'] = `Bearer YOUR_ACCESS_TOKEN`;
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken.access_token}`
+  }
 
     // Add custom Origin header
     config.headers['Origin'] = 'http://localhost:5173'; // Replace with your origin

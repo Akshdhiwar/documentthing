@@ -1,9 +1,9 @@
+import axiosInstance from '@/axios intercepter/axioshandler'
 import { Button } from '@/components/ui/button'
 import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Label } from '@radix-ui/react-label'
-import axios from 'axios'
 import { Loader } from 'lucide-react'
 import { Dispatch, useRef, useState } from 'react'
 
@@ -32,7 +32,7 @@ const ProjectCreationDailog = ({ close , refresh }: Props) => {
 
         setLoading(true)
 
-        const response = await axios.post("http://localhost:3000/api/v1/project/create" , {name : inputValue.current.value})
+        const response = await axiosInstance.post("/project/create" , {name : inputValue.current.value})
         if(response.status !== 201) {
             toast({
                 title: "Error",

@@ -6,8 +6,8 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { FolderContext } from "@/context/FolderContext"
-import axios from "axios"
 import { useParams } from "react-router-dom"
+import axiosInstance from "@/axios intercepter/axioshandler"
 
 const NavigationSideBar = () => {
 
@@ -17,7 +17,7 @@ const NavigationSideBar = () => {
     let {folderId} = useParams()
 
     useEffect(()=>{
-        axios.get(`http://localhost:3000/api/v1/folder/${folderId}`).then(data=> {
+        axiosInstance.get(`/folder/${folderId}`).then(data=> {
             const res  = JSON.parse(data.data.folderStructure)
             folder?.setFolder(res)
         })
@@ -41,8 +41,8 @@ const NavigationSideBar = () => {
     }, [newFolder]);
 
     return (
-        <div className="p-2 h-full flex flex-col w-full">
-            <div className="mb-2">
+        <div className="h-full flex flex-col w-full">
+            <div className="m-2">
                 <Item label="Search" onClick={() => { alert("hello") }} icon={Search}></Item>
                 <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
             </div>
@@ -56,11 +56,11 @@ const NavigationSideBar = () => {
                     </form>
                 )
             }
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto m-2">
                 <FolderStructure folder={folder?.folder} />
             </div>
             <Separator />
-            <div className="pt-2 flex flex-col gap-1">
+            <div className="m-2 flex flex-col gap-1">
                 <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item>
                 <Item label="Setting" onClick={() => { alert("hello") }} icon={Settings}></Item>
             </div>
