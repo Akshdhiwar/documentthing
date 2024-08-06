@@ -1,18 +1,18 @@
-import axiosInstance from '@/axios intercepter/axioshandler'
+import axiosInstance from '@/shared/axios intercepter/axioshandler'
 import { Button } from '@/components/ui/button'
 import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Label } from '@radix-ui/react-label'
 import { Loader } from 'lucide-react'
-import { Dispatch, useRef, useState } from 'react'
+import { Dispatch,  useRef, useState } from 'react'
 
 type Props = {
     close: Dispatch<any>
     refresh: Dispatch<any>
 }
 
-const ProjectCreationDailog = ({ close , refresh }: Props) => {
+const ProjectCreationDailog = ({ close, refresh }: Props) => {
 
     const inputValue = useRef<HTMLInputElement>(null)
     const [loading, setLoading] = useState(false)
@@ -32,14 +32,15 @@ const ProjectCreationDailog = ({ close , refresh }: Props) => {
 
         setLoading(true)
 
-        const response = await axiosInstance.post("/project/create" , {name : inputValue.current.value})
-        if(response.status !== 201) {
+        // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
+        const response = await axiosInstance.post("/project/createRepo", { name: inputValue.current.value })
+        if (response.status !== 201) {
             toast({
                 title: "Error",
                 description: response.data.message,
                 variant: "destructive"
             })
-        }else{
+        } else {
             toast({
                 title: "Success",
                 description: response.data.message,
@@ -47,11 +48,12 @@ const ProjectCreationDailog = ({ close , refresh }: Props) => {
             })
         }
 
-        refresh((prev : boolean) => !prev)
+        refresh((prev: boolean) => !prev)
         close(false)
     }
 
     return (
+
         <div>
             <DialogHeader>
                 <DialogTitle>Create new project</DialogTitle>
@@ -59,6 +61,7 @@ const ProjectCreationDailog = ({ close , refresh }: Props) => {
                     Enter the name for your new project.
                 </DialogDescription>
             </DialogHeader>
+            
             <form onSubmit={createNewProject}>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">

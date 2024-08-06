@@ -5,9 +5,9 @@ import FolderStructure from "./FolderStructure"
 import { useContext, useEffect, useRef, useState } from "react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { FolderContext } from "@/context/FolderContext"
+import { FolderContext } from "@/Context&Providers/context/FolderContext"
 import { useParams } from "react-router-dom"
-import axiosInstance from "@/axios intercepter/axioshandler"
+import axiosInstance from "@/shared/axios intercepter/axioshandler"
 
 const NavigationSideBar = () => {
 

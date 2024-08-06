@@ -1,8 +1,8 @@
-import { FolderContext } from '@/context/FolderContext'
+import { FolderContext } from '@/Context&Providers/context/FolderContext'
 import  { ReactNode, useState } from 'react'
-import { WITH_BASIC_INIT_VALUE } from '@/constant/Editor'
+import { WITH_BASIC_INIT_VALUE } from '@/shared/constant/Editor'
 import { useParams } from 'react-router-dom'
-import axiosInstance from '@/axios intercepter/axioshandler'
+import axiosInstance from '@/shared/axios intercepter/axioshandler'
 
 type Props = {
     children: ReactNode

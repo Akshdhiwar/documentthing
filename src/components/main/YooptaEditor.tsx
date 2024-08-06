@@ -13,9 +13,9 @@ import ActionMenuList, { DefaultActionMenuRender } from '@yoopta/action-menu-lis
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { FolderContext } from '@/context/FolderContext';
-import { EditorContext } from '@/context/EditorContext';
-import axiosInstance from '@/axios intercepter/axioshandler';
+import { FolderContext } from '@/Context&Providers/context/FolderContext';
+import { EditorContext } from '@/Context&Providers/context/EditorContext';
+import axiosInstance from '@/shared/axios intercepter/axioshandler';
 
 const plugins: any = [
   Paragraph,

@@ -1,9 +1,9 @@
-import FolderProvider from "@/provider/FolderProvider"
-import NavigationSideBar from "../main/NavigationSideBar"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../ui/resizable"
-import Toolbar from "../main/Toolbar"
-import EditorProvider from "@/provider/EditorProvider"
-import Editor from "../main/Editor"
+import FolderProvider from "@/Context&Providers/provider/FolderProvider"
+import NavigationSideBar from "../components/main/NavigationSideBar"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable"
+import Toolbar from "../components/main/Toolbar"
+import EditorProvider from "@/Context&Providers/provider/EditorProvider"
+import Editor from "../components/main/YooptaEditor"
 
 const DocsPage = () => {
     return (

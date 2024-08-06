@@ -4,12 +4,11 @@ import { Input } from "@/components/ui/input"
 import { ChevronRight, Loader, Plus, Search } from "lucide-react"
 import ProjectCreationDailog from "./ProjectCreationDailog"
 import { useEffect, useState } from "react"
-import axiosInstance from "@/axios intercepter/axioshandler"
+import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import { useNavigate } from "react-router-dom"
 
 
 const ProjectList = () => {
-
   const [openDialog, setOpenDialog] = useState(false)
   const [refresh, setRefresh] = useState(false)
   const [loading, setLoading] = useState(true)

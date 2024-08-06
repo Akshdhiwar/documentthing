@@ -11,7 +11,7 @@ const ProjectDasboard = () => {
             <div className='hidden md:flex'>
                 <DashboardSideNav />
             </div>
-            <main className="flex-1">
+            <main className="flex-1 flex flex-col">
                 <div className="flex h-12 max-h-12 items-center justify-between py-2 px-5 border-b border-default">
                     <div className='md:hidden'>
                         <Sheet>
@@ -25,7 +25,9 @@ const ProjectDasboard = () => {
                     </div>
                     <p className="text-gray-1100 block px-2 py-1 text-xs leading-5 focus:bg-gray-100 focus:text-gray-900 focus:outline-none ">Projects</p>
                 </div>
-                <Outlet></Outlet>
+                <div className='flex-1 basis-0 overflow-auto'>
+                    <Outlet></Outlet>
+                </div>
             </main>
         </div>
     )

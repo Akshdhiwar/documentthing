@@ -1,5 +1,5 @@
 
-import { useSessionStorage } from "@/custom hooks/useSessionStorage";
+import { useSessionStorage } from "@/shared/custom hooks/useSessionStorage";
 import React, { useState } from "react";
 
 interface ProtectedRouteProps {

@@ -1,5 +1,6 @@
-import { UserContext } from '@/context/UserContext'
+
 import React, { useState } from 'react'
+import { UserContext } from '../context/UserContext'
 
 interface UserProviderInterface {
     children: React.ReactNode

@@ -2,18 +2,18 @@ import { Check, ChevronRight, Ellipsis, File, FileText, Plus, SquarePen, Trash, 
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { useContext, useEffect, useRef, useState } from "react";
-import { FolderContext } from "@/context/FolderContext";
+import { FolderContext } from "@/Context&Providers/context/FolderContext";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Item from "./Item";
-import axiosInstance from "@/axios intercepter/axioshandler";
+import axiosInstance from "@/shared/axios intercepter/axioshandler";
 import { useParams } from "react-router-dom";
 
 interface Folder {
     child: any
 }
 
-const CustomToggle = ({ child }: Folder) => {
+const CustomAccordian = ({ child }: Folder) => {
     const folder = useContext(FolderContext);
     const inputValue = useRef<HTMLInputElement>(null)
     const renameInputValue = useRef<HTMLInputElement>(null)
@@ -51,7 +51,7 @@ const CustomToggle = ({ child }: Folder) => {
         })
     }
 
-    function renameFolder(child: any) {
+    function renameFolder() {
         setRenameOpen(true)
         if (renameInputValue?.current) {
             renameInputValue.current!.focus()
@@ -96,7 +96,7 @@ const CustomToggle = ({ child }: Folder) => {
                                                 <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
                                             </PopoverTrigger>
                                             <PopoverContent className="flex flex-col w-48 p-1 gap-1">
-                                                <Item label="Rename" onClick={() => { renameFolder(child) }} icon={SquarePen} className={"text-sm"}></Item>
+                                                <Item label="Rename" onClick={() => { renameFolder() }} icon={SquarePen} className={"text-sm"}></Item>
                                                 <Item label="Delete" onClick={() => { deleteFolderFile(child.fileId) }} icon={Trash} className={"text-sm text-red-500"}></Item>
                                             </PopoverContent>
                                         </Popover>
@@ -129,7 +129,7 @@ const CustomToggle = ({ child }: Folder) => {
                 open && (
                     <div className='pl-2'>
                         {child.children.map((child: any, index: any) => (
-                            <CustomToggle key={index} child={child} />
+                            <CustomAccordian key={index} child={child} />
                         ))}
                     </div>
                 )
@@ -138,4 +138,4 @@ const CustomToggle = ({ child }: Folder) => {
     );
 };
 
-export default CustomToggle;
+export default CustomAccordian;

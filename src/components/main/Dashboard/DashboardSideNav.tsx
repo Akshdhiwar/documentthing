@@ -1,4 +1,4 @@
-import { supabase } from "@/constant/supabase";
+import { supabase } from "@/shared/constant/supabase";
 import { ArrowUpRight, LogOut } from "lucide-react"
 
 const DashboardSideNav = () => {

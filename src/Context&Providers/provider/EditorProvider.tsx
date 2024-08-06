@@ -1,4 +1,4 @@
-import { EditorContext } from '@/context/EditorContext'
+import { EditorContext } from '@/Context&Providers/context/EditorContext'
 import { ReactNode, useState } from 'react'
 
 type Props = {

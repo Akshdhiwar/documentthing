@@ -2,11 +2,11 @@ import { Menu } from "lucide-react"
 import { Button } from "../ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet"
 import NavigationSideBar from "./NavigationSideBar"
-import { FolderContext } from "@/context/FolderContext"
+import { FolderContext } from "@/Context&Providers/context/FolderContext"
 import { useContext } from "react"
-import { EditorContext } from "@/context/EditorContext"
+import { EditorContext } from "@/Context&Providers/context/EditorContext"
 import axios from "axios"
-import {plainText , markdown , html} from "@yoopta/exports"
+// import {plainText , markdown , html} from "@yoopta/exports"
 
 const Toolbar = () => {
 
@@ -24,11 +24,11 @@ const Toolbar = () => {
         await fetchToServer(JSON.stringify(editorContent))
     }
 
-    const serializeText = () => {
-        const data = editor?.editor.getEditorValue();
-        const textString = html.serialize(editor?.editor, data);
-        console.log('plain text string', textString);
-      };
+    // const serializeText = () => {
+    //     const data = editor?.editor.getEditorValue();
+    //     const textString = html.serialize(editor?.editor, data);
+    //     console.log('plain text string', textString);
+    //   };
 
     return (
         <div className="flex items-center justify-between md:justify-end p-1">
@@ -42,7 +42,7 @@ const Toolbar = () => {
                     </SheetContent>
                 </Sheet>
             </div>
-            <Button size={"sm"} disabled={!folder?.selected} onClick={serializeText}>Save </Button>
+            <Button size={"sm"} disabled={!folder?.selected} onClick={onSaveToServer}>Save </Button>
         </div>
     )
 }
