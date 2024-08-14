@@ -1,6 +1,5 @@
 
 interface Project {
-    _id : string
-    folderID : string
-    name : string
+    Id : string
+    Name : string
 }

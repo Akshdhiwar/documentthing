@@ -18,8 +18,9 @@ const NavigationSideBar = () => {
 
     useEffect(()=>{
         axiosInstance.get(`/folder/${folderId}`).then(data=> {
-            const res  = JSON.parse(data.data.folderStructure)
-            folder?.setFolder(res)
+            const res  = data.data
+            const json = JSON.parse(atob(res))
+            folder?.setFolder(json)
         })
     },[])
 
