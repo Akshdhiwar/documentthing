@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 interface User {
-    user : any;
+    user : UserInterface;
     setUserData : (data: any)=> void;
 }
 

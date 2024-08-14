@@ -33,7 +33,7 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
         setLoading(true)
 
         // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
-        const response = await axiosInstance.post("/project/createRepo", { name: inputValue.current.value })
+        const response = await axiosInstance.post("/project/create-project", { name: inputValue.current.value , id : "1cdfeb8d-f468-4828-8d38-8e5c2e092d08"})
         if (response.status !== 201) {
             toast({
                 title: "Error",

@@ -3,9 +3,10 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { ChevronRight, Loader, Plus, Search } from "lucide-react"
 import ProjectCreationDailog from "./ProjectCreationDailog"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import { useNavigate } from "react-router-dom"
+import { UserContext } from "@/Context&Providers/context/UserContext"
 
 
 const ProjectList = () => {
@@ -14,10 +15,16 @@ const ProjectList = () => {
   const [loading, setLoading] = useState(true)
   const [projects, setProjects] = useState<Project[]>([])
   const navigate = useNavigate()
+  const user = useContext(UserContext);
 
   function getProjectList() {
     setLoading(true)
-    axiosInstance.get("/project").then(result => {
+    axiosInstance.get("/project/get-project", {
+      params: {
+        name: user?.user.GithubName,
+        id: user?.user.ID
+      }
+    }).then(result => {
       setProjects(result.data === null ? [] : result.data)
       setLoading(false)
     }).catch(err => {

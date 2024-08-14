@@ -1,5 +1,5 @@
 import { supabase } from '@/shared/constant/supabase';
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
@@ -7,37 +7,41 @@ import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage';
 import { Button } from '../components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import axiosInstance from '@/shared/axios intercepter/axioshandler';
+import { UserContext } from '@/Context&Providers/context/UserContext';
 
 const Login = () => {
     let navigate = useNavigate();
     const [session, setSession] = useState<unknown>(null);
     const { setItem } = useSessionStorage("user")
+    const userContext = useContext(UserContext)
 
     function loginWithGithub() {
         const clientID = "Ov23li8wPmHr2aUiox1X"
-        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID + "&scope=repo,user" )
+        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID + "&scope=repo,user")
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         githubLogin()
-    } , [])
+    }, [])
 
     async function githubLogin() {
         const queryString = window.location.search;
         const urlParam = new URLSearchParams(queryString);
         const code = urlParam.get("code");
-        if(code){
-            const token = await axiosInstance.post("/getAccessToken" , {code : code}).then(res => {
+        if (code) {
+            const token = await axiosInstance.post("/account/get-access-token", { code: code }).then(res => {
                 return res.data.access_token;
             })
-            localStorage.setItem("gth-access-token" , token)
+            localStorage.setItem("gth-access-token", token)
         }
-        const userDetials = await axiosInstance.get("/getUserDetails").then(res => {
-            console.log(JSON.parse(res.data))
-            return JSON.parse(res.data);
-        })
-        setItem(userDetials)
-        navigate("/dashboard");
+        if (code || localStorage.getItem("gth-access-token")) {
+            const userDetials = await axiosInstance.get("/account/user-details").then(res => {
+                return res.data.userDetails;
+            })
+            setItem(userDetials)
+            userContext?.setUserData(userDetials)
+            navigate("/dashboard");
+        }
     }
 
     useEffect(() => {
