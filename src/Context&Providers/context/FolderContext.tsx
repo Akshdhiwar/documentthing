@@ -2,6 +2,7 @@ import { createContext, Dispatch } from "react";
 
 interface foldercontextProps {
     folder : any
+    sha : string
     createPage : (name : string) => void
     addPage : (name : string , id : string) => void
     selected : any

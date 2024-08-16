@@ -1,34 +1,29 @@
 import { FolderContext } from '@/Context&Providers/context/FolderContext'
-import  { ReactNode, useState } from 'react'
-import { WITH_BASIC_INIT_VALUE } from '@/shared/constant/Editor'
+import  { ReactNode, useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axiosInstance from '@/shared/axios intercepter/axioshandler'
+import { UserContext } from '../context/UserContext'
 
 type Props = {
     children: ReactNode
 }
 
- async function createFile(){
-    const response = await axiosInstance.post("/file/create" , {file : JSON.stringify(WITH_BASIC_INIT_VALUE)})
-    return response.data.id
- }
-
 const FolderProvider = ({ children }: Props) => {
 
     const {folderId} = useParams()
-
+    const user = useContext(UserContext)
     const [folder, setFolder] = useState<any[] | []>([])
     const [selected , setSelected] = useState<FileObject>()
+    let sha = ""
 
     async function createPage(name: string) {
-        let id = await createFile()
         let obj : FileObject = {
             id: crypto.randomUUID(),
             name: name,
-            fileId : id,
+            fileId : crypto.randomUUID(),
             children: []
         }
-        let data = await saveFolderStructure([...folder, obj])
+        let data = await saveFolderStructure([...folder, obj] , obj.fileId)
         console.log(data)
         setFolder(prev => [...prev, obj])
     }
@@ -45,26 +40,30 @@ const FolderProvider = ({ children }: Props) => {
     }
 
     async function addPage(name: any, id: any) {
-        let fid = await createFile()
         let obj : FileObject = {
             id: crypto.randomUUID(),
             name: name,
-            fileId : fid,
+            fileId : crypto.randomUUID(),
             children: []
         }
         const updatedFolder = recursive(name, id, folder , obj);
-        let data = await saveFolderStructure(updatedFolder)
+        let data = await saveFolderStructure(updatedFolder , obj.fileId)
         console.log(data)
         setFolder(updatedFolder)
     }
 
-    async function saveFolderStructure(folderStructure : any[]){
-        const response = await axiosInstance.post(`/folder/${folderId}` , {folderStructure : JSON.stringify(folderStructure)})
+    async function saveFolderStructure(folderStructure : any[] , fileID : string){
+        const response = await axiosInstance.post(`/folder/update` , {
+            folder_object : btoa(JSON.stringify(folderStructure)),
+            id : folderId,
+            file_id : fileID,
+            sha : sha
+        })
         return response.status
     }
 
     return (
-        <FolderContext.Provider value={{ folder, createPage, addPage , selected , setSelected , setFolder }}>{children}</FolderContext.Provider>
+        <FolderContext.Provider value={{ folder, createPage, addPage , selected , setSelected , setFolder , sha }}>{children}</FolderContext.Provider>
     )
 }
 
@@ -76,3 +75,5 @@ interface FileObject {
     fileId: string;
     children: FileObject[];
 }
+
+//   https://stackoverflow.com/questions/34011782/how-to-resolve-conflict-with-merging-with-github-api
