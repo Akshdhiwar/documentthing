@@ -1,11 +1,13 @@
 import ProjectList from "./components/main/Dashboard/ProjectList";
 import FullScreen from "./shared/components/FullScreen"
-import ProjectDasboard from "./components/main/ProjectDasboard";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
-import DocsPage from "./pages/DocsPage";
-import Login from "./pages/Login";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
+import { lazy } from "react";
+
+const Login = lazy(()=>import("./pages/Login"))
+const DocsPage = lazy(()=>import("./pages/DocsPage"))
+const ProjectDasboard = lazy(()=> import('./components/main/ProjectDasboard'))
 
 const App = () => {
   return (
