@@ -2,25 +2,27 @@ import { Check, Moon, PlusCircle, Search, Settings, X } from "lucide-react"
 import Item from "../custom/Item"
 import { Separator } from "../ui/separator"
 import FolderStructure from "./FolderStructure"
-import { useContext, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { FolderContext } from "@/Context&Providers/context/FolderContext"
-import { useParams } from "react-router-dom"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
+import useFolderStore from "@/store/folderStore"
+import useProjectStore from "@/store/projectStore"
 
 const NavigationSideBar = () => {
 
-    const folder = useContext(FolderContext)
     const [newFolder, setNewFolder] = useState(false)
     let InputRef = useRef<HTMLInputElement>(null)
-    let {folderId} = useParams()
+    const createPage = useFolderStore(state => state.createPage)
+    const setFolder = useFolderStore(state => state.setFolder)
+    const folder = useFolderStore(state => state.folder)
+    const projectId = useProjectStore(state => state.project)
 
     useEffect(()=>{
-        axiosInstance.get(`/folder/${folderId}`).then(data=> {
+        axiosInstance.get(`/folder/${projectId?.Id}`).then(data=> {
             const res  = data.data
             const json = JSON.parse(atob(res))
-            folder?.setFolder(json)
+            setFolder(json)
         })
     },[])
 
@@ -30,7 +32,7 @@ const NavigationSideBar = () => {
 
     function addPage(event: React.FormEvent) {
         event.preventDefault()
-        folder?.createPage(InputRef.current!.value)
+        createPage(InputRef.current!.value)
         setNewFolder(false)
     }
 
@@ -58,7 +60,7 @@ const NavigationSideBar = () => {
                 )
             }
             <div className="flex-1 overflow-auto m-2">
-                <FolderStructure folder={folder?.folder} />
+                <FolderStructure folder={folder} />
             </div>
             <Separator />
             <div className="m-2 flex flex-col gap-1">

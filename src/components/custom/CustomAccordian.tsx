@@ -1,29 +1,31 @@
 import { Check, ChevronRight, Ellipsis, File, FileText, Plus, SquarePen, Trash, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import { useContext, useEffect, useRef, useState } from "react";
-import { FolderContext } from "@/Context&Providers/context/FolderContext";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Item from "./Item";
 import axiosInstance from "@/shared/axios intercepter/axioshandler";
-import { useParams } from "react-router-dom";
+import useFolderStore from "@/store/folderStore";
+import useProjectStore from "@/store/projectStore";
 
 interface Folder {
     child: any
 }
 
 const CustomAccordian = ({ child }: Folder) => {
-    const folder = useContext(FolderContext);
     const inputValue = useRef<HTMLInputElement>(null)
     const renameInputValue = useRef<HTMLInputElement>(null)
     const [newFolder, setNewFolder] = useState(false)
     const [open, setOpen] = useState(false)
     const [renameOpen, setRenameOpen] = useState(false)
-    let { folderId } = useParams()
+    const project = useProjectStore(state => state.project)
+    const addPage = useFolderStore(state => state.addPage)
+    const setFolder = useFolderStore(state => state.setFolder)
+    const setSelectedFolder = useFolderStore(state => state.setSelectedFolder)
 
     function addFileFolder(id: string) {
-        folder?.addPage(inputValue?.current!.value, id)
+        addPage(inputValue?.current!.value, id)
         setNewFolder(false)
         setOpen(true)
     }
@@ -44,10 +46,10 @@ const CustomAccordian = ({ child }: Folder) => {
     }, [newFolder]);
 
     async function deleteFolderFile(id: string) {
-        await axiosInstance.delete(`/folder/${folderId}`, { data: { folderId: id } })
-        axiosInstance.get(`/folder/${folderId}`).then((data: any) => {
+        await axiosInstance.delete(`/folder/${project?.Id}`, { data: { folderId: id } })
+        axiosInstance.get(`/folder/${project?.Id}`).then((data: any) => {
             const res = JSON.parse(data.data.folderStructure)
-            folder?.setFolder(res)
+            setFolder(res)
         })
     }
 
@@ -60,7 +62,7 @@ const CustomAccordian = ({ child }: Folder) => {
 
     return (
         <div>
-            <div onClick={() => folder?.setSelected(child)} className={`flex w-full group items-center hover:cursor-pointer hover:bg-primary/10 p-1 px-2 rounded gap-2 transition-all text-muted-foreground hover:text-primary `}>
+            <div onClick={() => setSelectedFolder(child)} className={`flex w-full group items-center hover:cursor-pointer hover:bg-primary/10 p-1 px-2 rounded gap-2 transition-all text-muted-foreground hover:text-primary `}>
                 <div className=' transition-opacity flex'>
                     {
                         child.children.length > 0 && (

@@ -12,10 +12,11 @@ import Code from '@yoopta/code';
 import ActionMenuList, { DefaultActionMenuRender } from '@yoopta/action-menu-list';
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { FolderContext } from '@/Context&Providers/context/FolderContext';
-import { EditorContext } from '@/Context&Providers/context/EditorContext';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import axiosInstance from '@/shared/axios intercepter/axioshandler';
+import useFolderStore from '@/store/folderStore';
+import useEditorStore from '@/store/editorStore';
+import useProjectStore from '@/store/projectStore';
 
 const plugins: any = [
   Paragraph,
@@ -52,18 +53,17 @@ const MARKS: YooptaMark<any>[] = [Bold, Italic, CodeMark, Underline, Strike, Hig
 const Editor = () => {
   const editor = useMemo(() => createYooptaEditor(), []);
   const selectionRef = useRef(null);
-  const folder = useContext(FolderContext)
-  const editorContext = useContext(EditorContext)
   const [editorID, setEditorID] = useState(generateId())
   const [pageContent, setPageContent] = useState<YooptaContentValue | undefined>(undefined);
-
-  
+  const selectedFolder = useFolderStore(state => state.selectedFolder)
+  const setEditor = useEditorStore(state => state.setEditor)
+  const project = useProjectStore(state => state.project)
 
   useEffect(() => {
     function handleChange(value: any) {
       console.log('value', value);
     }
-    editorContext?.setEditor(editor)
+    setEditor(editor)
     editor.on('change', handleChange);
     return () => {
       editor.off('change', handleChange);
@@ -71,16 +71,27 @@ const Editor = () => {
   }, [editor]);
 
   useEffect(() => {
-    if (folder?.selected?.fileId === undefined) return
-    axiosInstance.get(`/file/${folder.selected?.fileId}`).then(data => {
-      let content = JSON.parse(data.data.content)
-      setPageContent(content)
+    if (selectedFolder?.fileId === undefined) return
+    axiosInstance.get(`/file/get` , {
+      params : {
+        proj : project?.Id,
+        file : selectedFolder?.fileId
+      }
+    }).then(data => {
+      let base64 = data.data
+      if(base64 === "") {
+        setPageContent({})
+        return
+      }
+      let content = atob(base64)
+      let obj = JSON.parse(content)
+      setPageContent(JSON.parse(obj))
     })
-  }, [folder?.selected])
+  }, [selectedFolder])
 
-  useEffect(()=>{
+  useEffect(() => {
     setEditorID(generateId)
-  },[pageContent])
+  }, [pageContent])
 
   return (
     <div

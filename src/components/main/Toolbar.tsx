@@ -2,25 +2,30 @@ import { Menu } from "lucide-react"
 import { Button } from "../ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet"
 import NavigationSideBar from "./NavigationSideBar"
-import { FolderContext } from "@/Context&Providers/context/FolderContext"
-import { useContext } from "react"
-import { EditorContext } from "@/Context&Providers/context/EditorContext"
-import axios from "axios"
+import useFolderStore from "@/store/folderStore"
+import useEditorStore from "@/store/editorStore"
+import axiosInstance from "@/shared/axios intercepter/axioshandler"
+import useProjectStore from "@/store/projectStore"
 // import {plainText , markdown , html} from "@yoopta/exports"
 
 const Toolbar = () => {
 
-    const folder = useContext(FolderContext)
-    const editor = useContext(EditorContext)
+    const selectedFolder = useFolderStore(state => state.selectedFolder)
+    const project = useProjectStore(state => state.project)
+    const editor = useEditorStore(state => state.editor)
 
     const fetchToServer = async (data: string) => {
-        axios.post(`http://localhost:3000/api/v1/file/${folder?.selected.fileId}`, { file: data }).then(data => {
+        axiosInstance.put(`/file/update`, { 
+            project_id : project?.Id,
+            file_id : selectedFolder?.fileId,
+            content : btoa(JSON.stringify(data))
+        }).then(data => {
             console.log(data.data)
         })
     }
 
     const onSaveToServer = async () => {
-        const editorContent = editor?.editor.getEditorValue();
+        const editorContent = editor.getEditorValue();
         await fetchToServer(JSON.stringify(editorContent))
     }
 
@@ -42,7 +47,7 @@ const Toolbar = () => {
                     </SheetContent>
                 </Sheet>
             </div>
-            <Button size={"sm"} disabled={!folder?.selected} onClick={onSaveToServer}>Save </Button>
+            <Button size={"sm"} disabled={!selectedFolder} onClick={onSaveToServer}>Save </Button>
         </div>
     )
 }

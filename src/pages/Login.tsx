@@ -1,5 +1,5 @@
 import { supabase } from '@/shared/constant/supabase';
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
@@ -7,13 +7,13 @@ import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage';
 import { Button } from '../components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import axiosInstance from '@/shared/axios intercepter/axioshandler';
-import { UserContext } from '@/Context&Providers/context/UserContext';
+import useUserStore from '@/store/userStore';
 
 const Login = () => {
     let navigate = useNavigate();
     const [session, setSession] = useState<unknown>(null);
     const { setItem } = useSessionStorage("user")
-    const userContext = useContext(UserContext)
+    const setUser = useUserStore(state => state.setUserData)
 
     function loginWithGithub() {
         const clientID = "Ov23li8wPmHr2aUiox1X"
@@ -35,11 +35,11 @@ const Login = () => {
             localStorage.setItem("gth-access-token", token)
         }
         if (code || localStorage.getItem("gth-access-token")) {
-            const userDetials = await axiosInstance.get("/account/user-details").then(res => {
+            const userDetials : UserInterface = await axiosInstance.get("/account/user-details").then(res => {
                 return res.data.userDetails;
             })
             setItem(userDetials)
-            userContext?.setUserData(userDetials)
+            setUser(userDetials)
             navigate("/dashboard");
         }
     }
