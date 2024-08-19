@@ -1,9 +1,15 @@
-import NavigationSideBar from "../components/main/NavigationSideBar"
+
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable"
 import Toolbar from "../components/main/Toolbar"
-import Editor from "../components/main/YooptaEditor"
+// import { lazy } from "react"
+import NavigationSideBar from "@/components/main/NavigationSideBar"
+import Editor from "@/components/main/YooptaEditor"
 
 const DocsPage = () => {
+
+    // const NavigationSideBar = lazy(() => import('../components/main/NavigationSideBar'))
+    // const Editor = lazy(() => import("../components/main/YooptaEditor"))
+
     return (
         <ResizablePanelGroup
             direction="horizontal"

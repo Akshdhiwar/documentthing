@@ -19,8 +19,6 @@ const Toolbar = () => {
             project_id : project?.Id,
             file_id : selectedFolder?.fileId,
             content : btoa(JSON.stringify(data))
-        }).then(data => {
-            console.log(data.data)
         })
     }
 

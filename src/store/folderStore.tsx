@@ -11,7 +11,6 @@ type folderStoreType = {
     setSelectedFolder : (folder : Folder) => void
 }
 
-
 // Define the store
 const useFolderStore = create<folderStoreType>((set, get) => ({
     folder: [],
@@ -29,8 +28,7 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         };
 
         // Simulate saving folder structure (replace with your actual function)
-        const data = await saveFolderStructure([...get().folder, newFolder], newFolder.fileId);
-        console.log(data);
+        await saveFolderStructure([...get().folder, newFolder], newFolder.fileId);
 
         // Update the state with the new folder
         set((state) => ({
@@ -45,8 +43,7 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
             children: []
         }
         const updatedFolder = recursive(name, id, get().folder , obj);
-        let data = await saveFolderStructure(updatedFolder , obj.fileId)
-        console.log(data)
+        await saveFolderStructure(updatedFolder , obj.fileId)
         set(() => ({
             folder : updatedFolder
         }))
@@ -63,7 +60,7 @@ export default useFolderStore;
 
 async function saveFolderStructure(folderStructure: any[], fileID: string) {
 
-    const project = useProjectStore(state => state.project)
+    const project = useProjectStore.getState().project; // Access project dynamically
 
     const response = await axiosInstance.post(`/folder/update`, {
         folder_object: btoa(JSON.stringify(folderStructure)),

@@ -25,9 +25,11 @@ const CustomAccordian = ({ child }: Folder) => {
     const setSelectedFolder = useFolderStore(state => state.setSelectedFolder)
 
     function addFileFolder(id: string) {
-        addPage(inputValue?.current!.value, id)
-        setNewFolder(false)
-        setOpen(true)
+        if (inputValue.current) {
+            addPage(inputValue.current.value, id);
+            setNewFolder(false);
+            setOpen(true);
+        }
     }
 
     function openCloseAccordian() {
@@ -46,11 +48,17 @@ const CustomAccordian = ({ child }: Folder) => {
     }, [newFolder]);
 
     async function deleteFolderFile(id: string) {
-        await axiosInstance.delete(`/folder/${project?.Id}`, { data: { folderId: id } })
-        axiosInstance.get(`/folder/${project?.Id}`).then((data: any) => {
-            const res = JSON.parse(data.data.folderStructure)
-            setFolder(res)
+        axiosInstance.delete(`/file`, {
+            data: {
+                file_id: id,
+                project_id: project?.Id,
+            }
+        }).then(data => {
+            const res = data.data
+            const json = JSON.parse(atob(res))
+            setFolder(json)
         })
+
     }
 
     function renameFolder() {
@@ -120,7 +128,7 @@ const CustomAccordian = ({ child }: Folder) => {
             </div>
             {
                 newFolder && (
-                    <form onSubmit={() => addFileFolder(child.id)} className="flex gap-1 items-center my-2 mx-1">
+                    <form onSubmit={() => addFileFolder(child.id)} className="flex gap-1 items-center m-2 mx-1">
                         <Input className="flex-1 h-8" ref={inputValue}></Input>
                         <Button className="p-1 h-8 w-8" type="submit"><Check className="h-[16px]"></Check></Button>
                         <Button className="p-1 h-8 w-8" onClick={() => { setNewFolder(false) }}><X className="h-[16px]"></X></Button>

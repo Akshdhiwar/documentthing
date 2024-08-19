@@ -52,7 +52,7 @@ const NavigationSideBar = () => {
             <Separator />
             {
                 newFolder && (
-                    <form onSubmit={addPage} className="flex gap-1 items-center my-2">
+                    <form onSubmit={addPage} className="flex gap-1 items-center m-2">
                         <Input className="flex-1 h-8" ref={InputRef}></Input>
                         <Button className="p-1 h-8 w-8" type="submit"><Check className="h-[16px]"></Check></Button>
                         <Button className="p-1 h-8 w-8" onClick={() => { setNewFolder(false) }}><X className="h-[16px]"></X></Button>
