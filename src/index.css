@@ -79,3 +79,28 @@
   border-radius: 10px;
   background: #bfbfbf;
 }
+
+.dark .yoopta-block-actions-plus,
+.dark .yoopta-block-actions-drag {
+  color: grey !important;
+}
+
+.dark .yoopta-action-menu-list-content,
+.dark .yoopta-block-options-menu-content {
+  background-color: #242526 !important;
+}
+
+.dark .yoo-action-menu-flex {
+  background-color: transparent;
+}
+
+.dark .yoopta-button:hover,
+.dark .yoopta-button[aria-selected="true"],
+.dark .yoopta-block-options-button:hover {
+  background-color: #3a3b3c;
+}
+
+.dark .yoopta-accordion-list-item-heading button {
+  color: white !important;
+}
+

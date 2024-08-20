@@ -1,4 +1,4 @@
-import { Check, Moon, PlusCircle, Search, Settings, X } from "lucide-react"
+import { Check, ChevronLeft, PlusCircle, Settings, X } from "lucide-react"
 import Item from "../custom/Item"
 import { Separator } from "../ui/separator"
 import FolderStructure from "./FolderStructure"
@@ -8,9 +8,10 @@ import { Button } from "../ui/button"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
+import { useNavigate } from "react-router-dom"
 
 const NavigationSideBar = () => {
-
+    const navigate = useNavigate()
     const [newFolder, setNewFolder] = useState(false)
     let InputRef = useRef<HTMLInputElement>(null)
     const createPage = useFolderStore(state => state.createPage)
@@ -18,13 +19,13 @@ const NavigationSideBar = () => {
     const folder = useFolderStore(state => state.folder)
     const projectId = useProjectStore(state => state.project)
 
-    useEffect(()=>{
-        axiosInstance.get(`/folder/${projectId?.Id}`).then(data=> {
-            const res  = data.data
+    useEffect(() => {
+        axiosInstance.get(`/folder/${projectId?.Id}`).then(data => {
+            const res = data.data
             const json = JSON.parse(atob(res))
             setFolder(json)
         })
-    },[])
+    }, [])
 
     function createFolder() {
         setNewFolder(true)
@@ -46,7 +47,7 @@ const NavigationSideBar = () => {
     return (
         <div className="h-full flex flex-col w-full">
             <div className="m-2">
-                <Item label="Search" onClick={() => { alert("hello") }} icon={Search}></Item>
+                <Item label="Home" onClick={() => { navigate("/dashboard") }} icon={ChevronLeft}></Item>
                 <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
             </div>
             <Separator />
@@ -64,7 +65,7 @@ const NavigationSideBar = () => {
             </div>
             <Separator />
             <div className="m-2 flex flex-col gap-1">
-                <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item>
+                {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
                 <Item label="Setting" onClick={() => { alert("hello") }} icon={Settings}></Item>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react"
+import { Loader, Menu } from "lucide-react"
 import { Button } from "../ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet"
 import NavigationSideBar from "./NavigationSideBar"
@@ -6,19 +6,27 @@ import useFolderStore from "@/store/folderStore"
 import useEditorStore from "@/store/editorStore"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
+import { useState } from "react"
 // import {plainText , markdown , html} from "@yoopta/exports"
 
 const Toolbar = () => {
 
+    const [isLoading, setLoading] = useState(false)
     const selectedFolder = useFolderStore(state => state.selectedFolder)
     const project = useProjectStore(state => state.project)
     const editor = useEditorStore(state => state.editor)
+    const Url = useFolderStore(state => state.Url)
 
     const fetchToServer = async (data: string) => {
-        axiosInstance.put(`/file/update`, { 
-            project_id : project?.Id,
-            file_id : selectedFolder?.fileId,
-            content : btoa(JSON.stringify(data))
+        setLoading(true)
+        axiosInstance.put(`/file/update`, {
+            project_id: project?.Id,
+            file_id: selectedFolder?.fileId,
+            content: btoa(JSON.stringify(data))
+        }).then(() =>
+            setLoading(false)
+        ).catch(err => {
+            console.error(err)
         })
     }
 
@@ -45,7 +53,12 @@ const Toolbar = () => {
                     </SheetContent>
                 </Sheet>
             </div>
-            <Button size={"sm"} disabled={!selectedFolder} onClick={onSaveToServer}>Save </Button>
+            {
+                Url
+            }
+            <Button size={"sm"} className="w-14" disabled={!selectedFolder || isLoading} onClick={onSaveToServer}>{
+                isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : "Save"
+            }</Button>
         </div>
     )
 }

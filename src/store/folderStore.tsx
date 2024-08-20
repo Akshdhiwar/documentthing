@@ -4,19 +4,20 @@ import useProjectStore from "./projectStore";
 
 type folderStoreType = {
     folder: Folder[]
-    setFolder : (content : Folder[] | []) => void
+    setFolder: (content: Folder[] | []) => void
     createPage: (name: string) => Promise<void>
     addPage: (name: string, id: string) => Promise<void>
-    selectedFolder : Folder | null;
-    setSelectedFolder : (folder : Folder) => void
+    selectedFolder: Folder | null;
+    setSelectedFolder: (folder: Folder) => void,
+    Url: string
 }
 
 // Define the store
 const useFolderStore = create<folderStoreType>((set, get) => ({
     folder: [],
-    setFolder : (content : Folder[] | []) => {
-        set(()=>({
-            folder : content
+    setFolder: (content: Folder[] | []) => {
+        set(() => ({
+            folder: content
         }))
     },
     createPage: async (name: string) => {
@@ -35,29 +36,53 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
             folder: [...state.folder, newFolder],
         }));
     },
-    addPage : async (name : string , id : string) => {
-        let obj : Folder = {
+    addPage: async (name: string, id: string) => {
+        let obj: Folder = {
             id: crypto.randomUUID(),
             name: name,
-            fileId : crypto.randomUUID(),
+            fileId: crypto.randomUUID(),
             children: []
         }
-        const updatedFolder = recursive(name, id, get().folder , obj);
-        await saveFolderStructure(updatedFolder , obj.fileId)
+        const updatedFolder = recursive(name, id, get().folder, obj);
+        await saveFolderStructure(updatedFolder, obj.fileId)
         set(() => ({
-            folder : updatedFolder
+            folder: updatedFolder
         }))
     },
-    selectedFolder : null,
-    setSelectedFolder : (folder: Folder)=>{
-        set(()=>({
-            selectedFolder : folder,
+    selectedFolder: null,
+    setSelectedFolder: (folder: Folder) => {
+        set(() => ({
+            selectedFolder: folder,
+            Url: getUrlFromFolder(folder, useFolderStore.getState().folder)
         }))
-    }
+    },
+    Url: ""
 }));
 
 export default useFolderStore;
 
+function getUrlFromFolder(selectedFolder: Folder, folder: Folder[]): string | undefined {
+
+    for (const file of folder) {
+        let urlName = file.name;
+
+        // Check if the current folder is the selected one
+        if (file.id === selectedFolder.id) {
+            return urlName;
+        }
+
+        // If it has children, recursively look into them
+        if (file.children.length > 0) {
+            const childUrl = getUrlFromFolder(selectedFolder, file.children);
+            if (childUrl) {
+                return urlName + " / " + childUrl;
+            }
+        }
+    }
+
+    // Return undefined if no match found
+    return undefined;
+}
 async function saveFolderStructure(folderStructure: any[], fileID: string) {
 
     const project = useProjectStore.getState().project; // Access project dynamically
@@ -70,12 +95,12 @@ async function saveFolderStructure(folderStructure: any[], fileID: string) {
     return response.status
 }
 
-function recursive(name: any, id: any, folder: any , obj : any) {
+function recursive(name: any, id: any, folder: any, obj: any) {
     return folder.map((node: any) => {
         if (node.id === id) {
             return { ...node, children: [...node.children, obj] }
         } else if (node.children.length > 0 && node.id !== id) {
-            return { ...node, children: recursive(name, id, node.children , obj)}
+            return { ...node, children: recursive(name, id, node.children, obj) }
         }
         return node
     })
