@@ -9,7 +9,9 @@ type folderStoreType = {
     addPage: (name: string, id: string) => Promise<void>
     selectedFolder: Folder | null;
     setSelectedFolder: (folder: Folder) => void,
-    Url: string
+    Url: string,
+    loading : boolean,
+    setLoading : (val : boolean) => void
 }
 
 // Define the store
@@ -21,6 +23,9 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         }))
     },
     createPage: async (name: string) => {
+        set(() => ({
+            loading : true
+        }))
         const newFolder: Folder = {
             id: crypto.randomUUID(),
             name: name,
@@ -34,9 +39,13 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         // Update the state with the new folder
         set((state) => ({
             folder: [...state.folder, newFolder],
+            loading : false
         }));
     },
     addPage: async (name: string, id: string) => {
+        set(() => ({
+            loading : true
+        }))
         let obj: Folder = {
             id: crypto.randomUUID(),
             name: name,
@@ -46,7 +55,8 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         const updatedFolder = recursive(name, id, get().folder, obj);
         await saveFolderStructure(updatedFolder, obj.fileId)
         set(() => ({
-            folder: updatedFolder
+            folder: updatedFolder,
+            loading : false
         }))
     },
     selectedFolder: null,
@@ -56,7 +66,13 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
             Url: getUrlFromFolder(folder, useFolderStore.getState().folder)
         }))
     },
-    Url: ""
+    Url: "",
+    loading : false,
+    setLoading : (value : boolean) => {
+        set({
+            loading : value,
+        })
+    }
 }));
 
 export default useFolderStore;

@@ -1,4 +1,4 @@
-import ProjectDasboard from "../components/main/ProjectDasboard"
+import ProjectDasboard from "../components/main/Dashboard/ProjectDasboard"
 
 const Dashboard = () => {
     return (

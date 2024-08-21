@@ -1,12 +1,13 @@
 import { Loader, Menu } from "lucide-react"
-import { Button } from "../ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet"
+import { Button } from "../../ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet"
 import NavigationSideBar from "./NavigationSideBar"
 import useFolderStore from "@/store/folderStore"
 import useEditorStore from "@/store/editorStore"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
 import { useState } from "react"
+import BreadCrums from "./BreadCrums"
 // import {plainText , markdown , html} from "@yoopta/exports"
 
 const Toolbar = () => {
@@ -42,7 +43,7 @@ const Toolbar = () => {
     //   };
 
     return (
-        <div className="flex items-center justify-between md:justify-end p-1">
+        <div className="flex items-center justify-between p-1 mx-4">
             <div className="md:hidden">
                 <Sheet>
                     <SheetTrigger asChild>
@@ -53,9 +54,7 @@ const Toolbar = () => {
                     </SheetContent>
                 </Sheet>
             </div>
-            {
-                Url
-            }
+            <BreadCrums UrlString={Url}/>
             <Button size={"sm"} className="w-14" disabled={!selectedFolder || isLoading} onClick={onSaveToServer}>{
                 isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : "Save"
             }</Button>

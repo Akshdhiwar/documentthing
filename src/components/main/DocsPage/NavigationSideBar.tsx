@@ -1,14 +1,15 @@
-import { Check, ChevronLeft, PlusCircle, Settings, X } from "lucide-react"
-import Item from "../custom/Item"
-import { Separator } from "../ui/separator"
+import { Check, ChevronLeft, Loader, PlusCircle, Settings, X } from "lucide-react"
+import Item from "../../custom/Item"
+import { Separator } from "../../ui/separator"
 import FolderStructure from "./FolderStructure"
 import { useEffect, useRef, useState } from "react"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
+import { Input } from "../../ui/input"
+import { Button } from "../../ui/button"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
 import { useNavigate } from "react-router-dom"
+import { convertIntoLinkedList, linkedList } from "./Links"
 
 const NavigationSideBar = () => {
     const navigate = useNavigate()
@@ -18,12 +19,21 @@ const NavigationSideBar = () => {
     const setFolder = useFolderStore(state => state.setFolder)
     const folder = useFolderStore(state => state.folder)
     const projectId = useProjectStore(state => state.project)
+    const setSelectedFile = useFolderStore(state => state.setSelectedFolder)
+    const isLoading = useFolderStore(state => state.loading)
+    const setLoading = useFolderStore(state => state.setLoading)
 
     useEffect(() => {
+        setLoading(true)
         axiosInstance.get(`/folder/${projectId?.Id}`).then(data => {
             const res = data.data
-            const json = JSON.parse(atob(res))
+            const json: Folder[] = JSON.parse(atob(res))
             setFolder(json)
+            convertIntoLinkedList(json, linkedList)
+            if (json.length > 0) {
+                setSelectedFile(json[0])
+            }
+            setLoading(false)
         })
     }, [])
 
@@ -45,7 +55,7 @@ const NavigationSideBar = () => {
     }, [newFolder]);
 
     return (
-        <div className="h-full flex flex-col w-full">
+        <div className="h-full flex flex-col w-full relative">
             <div className="m-2">
                 <Item label="Home" onClick={() => { navigate("/dashboard") }} icon={ChevronLeft}></Item>
                 <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
@@ -68,6 +78,12 @@ const NavigationSideBar = () => {
                 {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
                 <Item label="Setting" onClick={() => { alert("hello") }} icon={Settings}></Item>
             </div>
+            {
+                isLoading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
+                    <Loader className="animate-spin"></Loader>
+                </div>
+            }
+
         </div>
     )
 }

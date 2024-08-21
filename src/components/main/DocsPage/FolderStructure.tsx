@@ -1,4 +1,4 @@
-import CustomToggle from "../custom/CustomAccordian"
+import CustomToggle from "../../custom/CustomAccordian"
 
 type Props = {
   folder: any[]

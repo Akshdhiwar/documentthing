@@ -4,12 +4,12 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
 import { lazy, Suspense } from "react";
-import Loader from "./components/main/Loader";
+import Loader from "./shared/components/Loader";
 // import DocsPage from "./pages/DocsPage";
 
 const Login = lazy(() => import("./pages/Login"))
 const DocsPage = lazy(() => import("./pages/DocsPage"))
-const ProjectDasboard = lazy(() => import('./components/main/ProjectDasboard'))
+const ProjectDasboard = lazy(() => import('./components/main/Dashboard/ProjectDasboard'))
 
 const App = () => {
   return (

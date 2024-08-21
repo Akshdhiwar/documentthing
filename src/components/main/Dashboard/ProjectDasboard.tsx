@@ -1,8 +1,8 @@
 
 import { Outlet } from 'react-router-dom'
-import DashboardSideNav from './Dashboard/DashboardSideNav'
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
-import { Button } from '../ui/button'
+import DashboardSideNav from './DashboardSideNav'
+import { Sheet, SheetContent, SheetTrigger } from '../../ui/sheet'
+import { Button } from '../../ui/button'
 import { Menu } from 'lucide-react'
 
 const ProjectDasboard = () => {

@@ -24,6 +24,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     const setFolder = useFolderStore(state => state.setFolder)
     const setSelectedFolder = useFolderStore(state => state.setSelectedFolder)
     const selectedFolder = useFolderStore(state => state.selectedFolder)
+    const setLoading = useFolderStore(state => state.setLoading)
 
     function addFileFolder(id: string) {
         if (inputValue.current) {
@@ -49,12 +50,14 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     }, [newFolder]);
 
     async function deleteFolderFile(id: string) {
+        setLoading(true)
         axiosInstance.delete(`/file`, {
             data: {
                 file_id: id,
                 project_id: project?.Id,
             }
         }).then(data => {
+            setLoading(false)
             const res = data.data
             const json = JSON.parse(atob(res))
             setFolder(json)
@@ -70,7 +73,8 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     }
 
     function rename(event: React.FormEvent, fileId: string) {
-        event.preventDefault()
+        event.preventDefault();
+        setLoading(true)
         axiosInstance.post("/file/rename",
             {
                 file_id: fileId,
@@ -78,6 +82,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                 name: renameInputValue.current?.value
             }
         ).then(data => {
+            setLoading(false)
             const res = data.data
             const json = JSON.parse(atob(res))
             setFolder(json)

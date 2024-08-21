@@ -60,8 +60,8 @@ const Editor = () => {
   const project = useProjectStore(state => state.project)
 
   useEffect(() => {
-    function handleChange(value: any) {
-      console.log('value', value);
+    function handleChange() {
+      // console.log('value', value);
     }
     setEditor(editor)
     editor.on('change', handleChange);
@@ -72,14 +72,14 @@ const Editor = () => {
 
   useEffect(() => {
     if (selectedFolder?.fileId === undefined) return
-    axiosInstance.get(`/file/get` , {
-      params : {
-        proj : project?.Id,
-        file : selectedFolder?.fileId
+    axiosInstance.get(`/file/get`, {
+      params: {
+        proj: project?.Id,
+        file: selectedFolder?.fileId
       }
     }).then(data => {
       let base64 = data.data
-      if(base64 === "") {
+      if (base64 === "") {
         setPageContent({})
         return
       }
