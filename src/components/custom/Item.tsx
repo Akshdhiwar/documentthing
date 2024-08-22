@@ -4,7 +4,7 @@ import {  LucideIcon } from 'lucide-react'
 type Props = {
     label: string,
     icon: LucideIcon,
-    onClick: () => void,
+    onClick: (event? : any) => void,
     className? : string
 }
 

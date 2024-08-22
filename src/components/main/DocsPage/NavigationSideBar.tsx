@@ -9,7 +9,7 @@ import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
 import { useNavigate } from "react-router-dom"
-import { convertIntoLinkedList, linkedList } from "./Links"
+import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 
 const NavigationSideBar = () => {
     const navigate = useNavigate()
@@ -22,6 +22,7 @@ const NavigationSideBar = () => {
     const setSelectedFile = useFolderStore(state => state.setSelectedFolder)
     const isLoading = useFolderStore(state => state.loading)
     const setLoading = useFolderStore(state => state.setLoading)
+    const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
 
     useEffect(() => {
         setLoading(true)
@@ -29,7 +30,7 @@ const NavigationSideBar = () => {
             const res = data.data
             const json: Folder[] = JSON.parse(atob(res))
             setFolder(json)
-            convertIntoLinkedList(json, linkedList)
+            convertIntoLinkedList(json)
             if (json.length > 0) {
                 setSelectedFile(json[0])
             }

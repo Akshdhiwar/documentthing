@@ -5,10 +5,8 @@ import Toolbar from "../components/main/DocsPage/Toolbar"
 import NavigationSideBar from "@/components/main/DocsPage/NavigationSideBar"
 import Editor from "@/components/main/DocsPage/YooptaEditor"
 import NextPrevious from "@/components/main/DocsPage/NextPrevious"
-import { initializeLinks } from "@/components/main/DocsPage/Links"
 
 const DocsPage = () => {
-    initializeLinks()
     // const NavigationSideBar = lazy(() => import('../components/main/NavigationSideBar'))
     // const Editor = lazy(() => import("../components/main/YooptaEditor"))
 
@@ -25,8 +23,8 @@ const DocsPage = () => {
                     <div>
                         <Toolbar></Toolbar>
                     </div>
-                    <div className="flex justify-center mt-6 flex-1 overflow-auto">
-                        <div className="w-full max-w-3xl ">
+                    <div className="flex justify-center mt-6 flex-1  overflow-auto">
+                        <div className="w-full max-w-3xl h-full flex-1 basis-auto flex flex-col justify-between">
                             <Editor />
                             <NextPrevious/>
                         </div>

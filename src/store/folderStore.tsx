@@ -1,6 +1,7 @@
 import axiosInstance from "@/shared/axios intercepter/axioshandler";
 import { create } from "zustand";
 import useProjectStore from "./projectStore";
+import useDoublyLinkedListStore from "./nextPreviousLinks";
 
 type folderStoreType = {
     folder: Folder[]
@@ -10,8 +11,8 @@ type folderStoreType = {
     selectedFolder: Folder | null;
     setSelectedFolder: (folder: Folder) => void,
     Url: string,
-    loading : boolean,
-    setLoading : (val : boolean) => void
+    loading: boolean,
+    setLoading: (val: boolean) => void
 }
 
 // Define the store
@@ -24,7 +25,7 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
     },
     createPage: async (name: string) => {
         set(() => ({
-            loading : true
+            loading: true
         }))
         const newFolder: Folder = {
             id: crypto.randomUUID(),
@@ -39,12 +40,12 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         // Update the state with the new folder
         set((state) => ({
             folder: [...state.folder, newFolder],
-            loading : false
+            loading: false
         }));
     },
     addPage: async (name: string, id: string) => {
         set(() => ({
-            loading : true
+            loading: true
         }))
         let obj: Folder = {
             id: crypto.randomUUID(),
@@ -56,7 +57,7 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         await saveFolderStructure(updatedFolder, obj.fileId)
         set(() => ({
             folder: updatedFolder,
-            loading : false
+            loading: false
         }))
     },
     selectedFolder: null,
@@ -67,10 +68,10 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         }))
     },
     Url: "",
-    loading : false,
-    setLoading : (value : boolean) => {
+    loading: false,
+    setLoading: (value: boolean) => {
         set({
-            loading : value,
+            loading: value,
         })
     }
 }));
@@ -108,6 +109,9 @@ async function saveFolderStructure(folderStructure: any[], fileID: string) {
         id: project?.Id,
         file_id: fileID,
     })
+
+    useDoublyLinkedListStore.getState().clearList();
+    useDoublyLinkedListStore.getState().convertIntoLinkedList(folderStructure)
     return response.status
 }
 

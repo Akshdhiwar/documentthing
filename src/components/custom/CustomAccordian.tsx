@@ -8,6 +8,7 @@ import Item from "./Item";
 import axiosInstance from "@/shared/axios intercepter/axioshandler";
 import useFolderStore from "@/store/folderStore";
 import useProjectStore from "@/store/projectStore";
+import useDoublyLinkedListStore from "@/store/nextPreviousLinks";
 
 interface FolderInterface {
     child: Folder
@@ -25,6 +26,16 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     const setSelectedFolder = useFolderStore(state => state.setSelectedFolder)
     const selectedFolder = useFolderStore(state => state.selectedFolder)
     const setLoading = useFolderStore(state => state.setLoading)
+    const clearLinkedList = useDoublyLinkedListStore(state => state.clearList)
+    const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
+
+    useEffect(() => {
+        child.children.forEach(file => {
+            if (file.fileId === selectedFolder?.fileId) {
+                setOpen(true)
+            }
+        })
+    }, [selectedFolder])
 
     function addFileFolder(id: string) {
         if (inputValue.current) {
@@ -38,7 +49,8 @@ const CustomAccordian = ({ child }: FolderInterface) => {
         setOpen(prev => !prev)
     }
 
-    function openNew() {
+    function openNew(event : React.MouseEvent<HTMLButtonElement>) {
+        event.stopPropagation()
         setNewFolder(true)
     }
 
@@ -61,6 +73,8 @@ const CustomAccordian = ({ child }: FolderInterface) => {
             const res = data.data
             const json = JSON.parse(atob(res))
             setFolder(json)
+            clearLinkedList()
+            convertIntoLinkedList(json)
         })
 
     }
@@ -87,6 +101,8 @@ const CustomAccordian = ({ child }: FolderInterface) => {
             const json = JSON.parse(atob(res))
             setFolder(json)
             setRenameOpen(false)
+            clearLinkedList()
+            convertIntoLinkedList(json)
         })
     }
 
@@ -130,8 +146,8 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                                                         <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
                                                     </PopoverTrigger>
                                                     <PopoverContent className="flex flex-col w-48 p-1 gap-1">
-                                                        <Item label="Rename" onClick={() => { renameFolder() }} icon={SquarePen} className={"text-sm"}></Item>
-                                                        <Item label="Delete" onClick={() => { deleteFolderFile(child.fileId) }} icon={Trash} className={"text-sm text-red-500"}></Item>
+                                                        <Item label="Rename" onClick={() => renameFolder} icon={SquarePen} className={"text-sm"}></Item>
+                                                        <Item label="Delete" onClick={() => deleteFolderFile(child.fileId)} icon={Trash} className={"text-sm text-red-500"}></Item>
                                                     </PopoverContent>
                                                 </Popover>
                                                 <TooltipContent side='bottom'>
@@ -139,7 +155,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                                                 </TooltipContent>
                                             </Tooltip>
                                             <Tooltip>
-                                                <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} onClick={() => openNew()} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Plus className="h-[14px] w-[14px]"></Plus></Button></TooltipTrigger>
+                                                <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} onClick={() => openNew} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Plus className="h-[14px] w-[14px]"></Plus></Button></TooltipTrigger>
                                                 <TooltipContent side='bottom'>
                                                     <p>Create new file</p>
                                                 </TooltipContent>
