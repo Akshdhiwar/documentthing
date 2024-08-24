@@ -5,10 +5,13 @@ import Toolbar from "../components/main/DocsPage/Toolbar"
 import NavigationSideBar from "@/components/main/DocsPage/NavigationSideBar"
 import Editor from "@/components/main/DocsPage/YooptaEditor"
 import NextPrevious from "@/components/main/DocsPage/NextPrevious"
+import useFolderStore from "@/store/folderStore"
 
 const DocsPage = () => {
     // const NavigationSideBar = lazy(() => import('../components/main/NavigationSideBar'))
     // const Editor = lazy(() => import("../components/main/YooptaEditor"))
+
+    const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
 
     return (
         <ResizablePanelGroup
@@ -24,10 +27,12 @@ const DocsPage = () => {
                         <Toolbar></Toolbar>
                     </div>
                     <div className="flex justify-center mt-6 flex-1  overflow-auto">
-                        <div className="w-full max-w-3xl h-full flex-1 basis-auto flex flex-col justify-between">
-                            <Editor />
-                            <NextPrevious/>
-                        </div>
+                        {
+                            !isNoFilePresent && <div className="w-full max-w-3xl h-full flex-1 basis-auto flex flex-col justify-between">
+                                <Editor />
+                                <NextPrevious />
+                            </div>
+                        }
                     </div>
                 </div>
             </ResizablePanel>

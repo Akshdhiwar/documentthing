@@ -6,6 +6,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { Label } from '@radix-ui/react-label'
 import { Loader } from 'lucide-react'
 import { Dispatch,  useRef, useState } from 'react'
+import useUserStore from '@/store/userStore'
 
 type Props = {
     close: Dispatch<any>
@@ -17,6 +18,7 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
     const inputValue = useRef<HTMLInputElement>(null)
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
+    const user = useUserStore(state => state.user)
 
     const createNewProject = async (event: any) => {
         event.preventDefault();
@@ -33,7 +35,7 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
         setLoading(true)
 
         // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
-        const response = await axiosInstance.post("/project/create-project", { name: inputValue.current.value , id : "1cdfeb8d-f468-4828-8d38-8e5c2e092d08"})
+        const response = await axiosInstance.post("/project/create-project", { name: inputValue.current.value , id : user?.ID})
         if (response.status !== 201) {
             toast({
                 title: "Error",

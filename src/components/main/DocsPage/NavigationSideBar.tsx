@@ -22,7 +22,9 @@ const NavigationSideBar = () => {
     const setSelectedFile = useFolderStore(state => state.setSelectedFolder)
     const isLoading = useFolderStore(state => state.loading)
     const setLoading = useFolderStore(state => state.setLoading)
+    const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
     const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
+    const clearLinkList = useDoublyLinkedListStore(state => state.clearList)
 
     useEffect(() => {
         setLoading(true)
@@ -30,13 +32,23 @@ const NavigationSideBar = () => {
             const res = data.data
             const json: Folder[] = JSON.parse(atob(res))
             setFolder(json)
-            convertIntoLinkedList(json)
             if (json.length > 0) {
+                clearLinkList()
+                convertIntoLinkedList(json)
                 setSelectedFile(json[0])
             }
             setLoading(false)
         })
+        return () => {
+            clearLinkList()
+            useFolderStore.getState().setIsNoFilePresent(false)
+            useFolderStore.getState().setFolder([])
+        }
     }, [])
+
+    useEffect(()=>{
+        console.log(folder)
+    },[folder])
 
     function createFolder() {
         setNewFolder(true)
@@ -55,10 +67,14 @@ const NavigationSideBar = () => {
         }
     }, [newFolder]);
 
+    function goToHome() {
+        navigate("/dashboard")
+    }
+
     return (
         <div className="h-full flex flex-col w-full relative">
             <div className="m-2">
-                <Item label="Home" onClick={() => { navigate("/dashboard") }} icon={ChevronLeft}></Item>
+                <Item label="Home" onClick={() => { goToHome() }} icon={ChevronLeft}></Item>
                 <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
             </div>
             <Separator />
@@ -71,9 +87,13 @@ const NavigationSideBar = () => {
                     </form>
                 )
             }
-            <div className="flex-1 overflow-auto m-2">
-                <FolderStructure folder={folder} />
-            </div>
+            {
+                isNoFilePresent ? <div className="flex-1 m-2 flex items-center justify-center text-center">
+                    <p className="text-muted-foreground">Look's like no file is been created</p>
+                </div> : <div className="flex-1 overflow-auto m-2">
+                    <FolderStructure folder={folder} />
+                </div>
+            }
             <Separator />
             <div className="m-2 flex flex-col gap-1">
                 {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}

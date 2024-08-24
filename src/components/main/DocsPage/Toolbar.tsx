@@ -17,6 +17,7 @@ const Toolbar = () => {
     const project = useProjectStore(state => state.project)
     const editor = useEditorStore(state => state.editor)
     const Url = useFolderStore(state => state.Url)
+    const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
 
     const fetchToServer = async (data: string) => {
         setLoading(true)
@@ -44,7 +45,7 @@ const Toolbar = () => {
 
     return (
         <div className="flex items-center justify-between p-1 mx-4">
-            <div className="md:hidden">
+            <div className="md:hidden order-1">
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button size={"icon"} className="p-1" variant={"ghost"}><Menu height={18} width={18}></Menu></Button>
@@ -54,10 +55,17 @@ const Toolbar = () => {
                     </SheetContent>
                 </Sheet>
             </div>
-            <BreadCrums UrlString={Url}/>
-            <Button size={"sm"} className="w-14" disabled={!selectedFolder || isLoading} onClick={onSaveToServer}>{
+            <div className="order-2">
+                {
+                    !isNoFilePresent && <BreadCrums UrlString={Url} />
+                }
+            </div>
+            <div className="order-3">
+                <Button size={"sm"} className="w-14" disabled={!selectedFolder || isLoading} onClick={onSaveToServer}>{
                 isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : "Save"
             }</Button>
+            </div>
+            
         </div>
     )
 }

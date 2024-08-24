@@ -12,13 +12,34 @@ type folderStoreType = {
     setSelectedFolder: (folder: Folder) => void,
     Url: string,
     loading: boolean,
-    setLoading: (val: boolean) => void
+    setLoading: (val: boolean) => void,
+    isNoFilePresent : boolean,
+    setIsNoFilePresent : (val : boolean) => void
 }
 
 // Define the store
 const useFolderStore = create<folderStoreType>((set, get) => ({
     folder: [],
     setFolder: (content: Folder[] | []) => {
+
+        if(content.length === 0){
+            set(()=>({
+                isNoFilePresent : true
+            }))
+        }
+
+        if(content.length > 0 && useFolderStore.getState().isNoFilePresent){
+            set(()=>({
+                isNoFilePresent : false
+            }))
+        }
+
+        if(content.length === 1 && content[0].children.length ===0){
+            set(()=>({
+                selectedFolder : content[0]
+            }))
+        }
+
         set(() => ({
             folder: content
         }))
@@ -40,7 +61,8 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         // Update the state with the new folder
         set((state) => ({
             folder: [...state.folder, newFolder],
-            loading: false
+            loading: false,
+            isNoFilePresent : false
         }));
     },
     addPage: async (name: string, id: string) => {
@@ -73,7 +95,9 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         set({
             loading: value,
         })
-    }
+    },
+    isNoFilePresent : false,
+    setIsNoFilePresent: (value: boolean) => set({ isNoFilePresent: value }),
 }));
 
 export default useFolderStore;

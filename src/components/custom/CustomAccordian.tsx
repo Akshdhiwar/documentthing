@@ -49,8 +49,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
         setOpen(prev => !prev)
     }
 
-    function openNew(event : React.MouseEvent<HTMLButtonElement>) {
-        event.stopPropagation()
+    function openNew() {
         setNewFolder(true)
     }
 
@@ -155,7 +154,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                                                 </TooltipContent>
                                             </Tooltip>
                                             <Tooltip>
-                                                <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} onClick={() => openNew} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Plus className="h-[14px] w-[14px]"></Plus></Button></TooltipTrigger>
+                                                <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} onClick={() => openNew()} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Plus className="h-[14px] w-[14px]"></Plus></Button></TooltipTrigger>
                                                 <TooltipContent side='bottom'>
                                                     <p>Create new file</p>
                                                 </TooltipContent>
