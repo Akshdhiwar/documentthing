@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button'
 import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
-import { Label } from '@radix-ui/react-label'
-import { Loader } from 'lucide-react'
-import { Dispatch,  useRef, useState } from 'react'
+import {  Loader } from 'lucide-react'
+import { Dispatch, useEffect, useRef, useState } from 'react'
 import useUserStore from '@/store/userStore'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 type Props = {
     close: Dispatch<any>
@@ -19,6 +20,15 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
     const user = useUserStore(state => state.user)
+    const [isChecked, setIsChecked] = useState(false)
+    const [value, setValue] = useState("")
+    const [orgs, setOrgs] = useState<any[]>([])
+
+    useEffect(() => {
+        axiosInstance.get("/orgs").then(data => {
+            setOrgs(data.data)
+        })
+    }, [])
 
     const createNewProject = async (event: any) => {
         event.preventDefault();
@@ -35,7 +45,7 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
         setLoading(true)
 
         // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
-        const response = await axiosInstance.post("/project/create-project", { name: inputValue.current.value , id : user?.ID})
+        const response = await axiosInstance.post("/project/create-project", { name: inputValue.current.value, id: user?.ID , org : value })
         if (response.status !== 201) {
             toast({
                 title: "Error",
@@ -54,6 +64,12 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
         close(false)
     }
 
+    useEffect(()=>{
+        if(isChecked === false){
+            setValue("")
+        }
+    } ,[isChecked])
+
     return (
 
         <div>
@@ -63,15 +79,41 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
                     Enter the name for your new project.
                 </DialogDescription>
             </DialogHeader>
-            
+
             <form onSubmit={createNewProject}>
                 <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                            Name
-                        </Label>
-                        <Input id="name" ref={inputValue} autoComplete='off' className="col-span-3" />
+                    <div >
+                        <Input id="name" ref={inputValue} placeholder='Project Name' autoComplete='off' className='w-full' />
                     </div>
+                    <div className="flex items-center space-x-2">
+                        <Checkbox id="terms" checked={isChecked} onClick={() => setIsChecked(prev => !prev)} />
+                        <label
+                            htmlFor="terms"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                            Create project in company organization
+                        </label>
+                    </div>
+                    {
+                        isChecked && <div className='w-full'>
+                            <Select onValueChange={(event) => setValue(event)}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select a fruit" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Select Organization</SelectLabel>
+                                        {
+                                            orgs.map(org => (
+                                                <SelectItem value={org.login}>{org.login}</SelectItem>
+                                            ))
+                                        }
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    }
+
                 </div>
                 <DialogFooter>
                     <Button type='submit' size={"sm"} >Create

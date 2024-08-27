@@ -25,7 +25,7 @@ const NextPrevious = () => {
     return (
         <div className="flex items-start justify-between pb-10">
             {activeLink?.prev ? (
-                <Button variant={"ghost"} className="p-4 h-min flex justify-start group gap-2 min-w-2/12" onClick={() => { goToNextPrevDoc(activeLink.prev.data) }}>
+                <Button variant={"secondary"} className="p-4 h-min flex justify-start group gap-2 min-w-2/12" onClick={() => { goToNextPrevDoc(activeLink.prev.data) }}>
                     <ChevronLeft className="text-muted-foreground" />
                     <div className="flex flex-col items-start">
                         <p className="text-muted-foreground" >PREVIOUS</p>
@@ -34,7 +34,7 @@ const NextPrevious = () => {
                 </Button>
             ) : <div></div>}
             {activeLink?.next ? (
-                <Button variant={"ghost"} className="p-4 h-min flex justify-end gap-2 min-w-2/12 group" onClick={() => { goToNextPrevDoc(activeLink.next.data) }}>
+                <Button variant={"secondary"} className="p-4 h-min flex justify-end gap-2 min-w-2/12 group" onClick={() => { goToNextPrevDoc(activeLink.next.data) }}>
                     <div className="flex flex-col items-end">
                         <p className="text-muted-foreground" >NEXT</p>
                         <p className="group-hover:underline">{activeLink.next.data.name}</p>
