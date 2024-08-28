@@ -8,11 +8,10 @@ import { Button } from "../../ui/button"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
-import { useNavigate } from "react-router-dom"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
+import Link from "@/components/custom/Link"
 
 const NavigationSideBar = () => {
-    const navigate = useNavigate()
     const [newFolder, setNewFolder] = useState(false)
     let InputRef = useRef<HTMLInputElement>(null)
     const createPage = useFolderStore(state => state.createPage)
@@ -67,14 +66,10 @@ const NavigationSideBar = () => {
         }
     }, [newFolder]);
 
-    function goToHome() {
-        navigate("/dashboard")
-    }
-
     return (
         <div className="h-full flex flex-col w-full relative">
             <div className="m-2">
-                <Item label="Home" onClick={() => { goToHome() }} icon={ChevronLeft}></Item>
+                <Link label="Home" href="/dashboard" icon={ChevronLeft}></Link>
                 <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
             </div>
             <Separator />
@@ -97,7 +92,7 @@ const NavigationSideBar = () => {
             <Separator />
             <div className="m-2 flex flex-col gap-1">
                 {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
-                <Item label="Setting" onClick={() => { alert("hello") }} icon={Settings}></Item>
+                <Link label="Setting" href={`/project/${projectId?.Id}/settings`} icon={Settings}></Link>
             </div>
             {
                 isLoading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">

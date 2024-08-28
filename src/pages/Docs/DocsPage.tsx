@@ -1,7 +1,6 @@
 
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable"
-import Toolbar from "../components/main/DocsPage/Toolbar"
-// import { lazy } from "react"
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../components/ui/resizable"
+import Toolbar from "../../components/main/DocsPage/Toolbar"
 import NavigationSideBar from "@/components/main/DocsPage/NavigationSideBar"
 import Editor from "@/components/main/DocsPage/YooptaEditor"
 import NextPrevious from "@/components/main/DocsPage/NextPrevious"
