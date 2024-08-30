@@ -5,8 +5,8 @@ import { Toaster } from "./components/ui/toaster";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
 import { lazy, Suspense } from "react";
 import Loader from "./shared/components/Loader";
-import Members from "./components/main/DocsPage/Settings/Member/Members";
 import MemberTable from "./components/main/DocsPage/Settings/Member/MemberTable";
+import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDetails";
 // import DocsPage from "./pages/DocsPage";
 
 const Login = lazy(() => import("./pages/Login"))
@@ -14,6 +14,7 @@ const DocsWrapper = lazy(() => import("./pages/Docs/DocsWrapper"))
 const DocsPage = lazy(() => import("./pages/Docs/DocsPage"))
 const ProjectSetting = lazy(() => import("./pages/Docs/ProjectSettings"))
 const ProjectDasboard = lazy(() => import('./components/main/Dashboard/ProjectDasboard'))
+const Members = lazy(()=> import("./components/main/DocsPage/Settings/Member/Members"))
 
 const App = () => {
   return (
@@ -33,7 +34,9 @@ const App = () => {
               <Route index element={<Navigate to="members" />}></Route>
               <Route path="members" element={<Members></Members>}>
                   <Route index element={<Navigate to="list" />}></Route>
-                  <Route path="list" element={<MemberTable></MemberTable>}></Route>
+                  <Route path="list" element={<MemberTable></MemberTable>}>
+                  </Route>
+                  <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
               </Route>
             </Route>
           </Route>
