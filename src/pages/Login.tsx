@@ -1,8 +1,6 @@
 import { supabase } from '@/shared/constant/supabase';
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { Auth } from '@supabase/auth-ui-react'
-import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage';
 import { Button } from '../components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
@@ -12,17 +10,41 @@ import useUserStore from '@/store/userStore';
 const Login = () => {
     let navigate = useNavigate();
     const [session, setSession] = useState<unknown>(null);
-    const { setItem } = useSessionStorage("user")
+    const { getItem , setItem } = useSessionStorage("invite")
     const setUser = useUserStore(state => state.setUserData)
+    const user = useUserStore(state => state.user)
 
     function loginWithGithub() {
-        const clientID = "Ov23li8wPmHr2aUiox1X"
-        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID + "&scope=repo,user")
+        const clientID = import.meta.env.VITE_GITHUB_CLIENT
+        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID + "&scope=repo,user" )
     }
 
     useEffect(() => {
         githubLogin()
+        lookInviteToken()
     }, [])
+
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY2QiLCJleHAiOjE3MjUzMDM4ODUsImdpdGh1Yk5hbWUiOiJBa3NoZGhpd2FyIiwicHJvamVjdElEIjoiZjEzNTIwYTQtODI4Yy00OWVkLWI5OWMtZDFkOTZjMzEyYWFjIiwic3ViIjoiNjQxMTVhMDUtMTFlZS00MmJkLTg0MGMtMzdlYTNlMGFlNzEyIn0.vo_HDpSRpLsQy4jSd31oYXX88eI4DSFTbqgV0ZjaPQo"
+
+    function lookInviteToken(){
+        const queryString = window.location.search;
+        const urlParam = new URLSearchParams(queryString);
+        const inviteCode = urlParam.get("invite");
+        if(inviteCode){
+            setItem(inviteCode)
+        }
+    }
+
+    function sendInviteIfExists(){
+        if(user && getItem()){
+            axiosInstance.post("/invite/accept" , {
+                name : user?.GithubName,
+                token : JSON.parse(getItem()),
+                id : user.ID
+            })
+        }
+    }
+    
 
     async function githubLogin() {
         const queryString = window.location.search;
@@ -38,10 +60,10 @@ const Login = () => {
             const userDetials : UserInterface = await axiosInstance.get("/account/user-details").then(res => {
                 return res.data.userDetails;
             })
-            setItem(userDetials)
             setUser(userDetials)
             navigate("/dashboard");
         }
+        sendInviteIfExists()
     }
 
     useEffect(() => {
@@ -75,15 +97,6 @@ const Login = () => {
                     </p>
                 </div>
                 <Button className='w-full gap-2' onClick={loginWithGithub}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
-
-                <Auth
-                    supabaseClient={supabase}
-                    appearance={{ theme: ThemeSupa }}
-                    providers={["google", "github"]}
-                    socialLayout="vertical"
-                    theme="light"
-                    onlyThirdPartyProviders
-                />
             </div>
         </div>
     )

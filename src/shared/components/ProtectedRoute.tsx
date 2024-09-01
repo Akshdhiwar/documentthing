@@ -1,5 +1,5 @@
 
-import { useSessionStorage } from "@/shared/custom hooks/useSessionStorage";
+import useUserStore from "@/store/userStore";
 import React, { useState } from "react";
 
 interface ProtectedRouteProps {
@@ -7,8 +7,8 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    const {getItem} = useSessionStorage("user")
-    const [user] = useState(getItem)
+    const data = useUserStore(state => state.user)
+    const [user] = useState(data)
 
     return user ? <>{children}</> : <Unauthorized />;
 };

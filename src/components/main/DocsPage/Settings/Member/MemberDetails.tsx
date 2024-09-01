@@ -2,9 +2,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
-import { Loader } from "lucide-react"
+import { ChevronLeft, Loader } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 const MemberDetails = () => {
 
@@ -25,10 +25,26 @@ const MemberDetails = () => {
         getUserDetail()
     }, [])
 
+    function inviteUser(email : string){
+        email = "abcd"
+        if (email === null) {
+            return
+        }
+
+        axiosInstance.post("/invite/create" , {
+            github_name : memberName,
+            email : email,
+            project_id : project?.Id
+        }).then(data => {
+            console.log(data)
+        })
+    }
+
 
     return (
         <div className="h-full flex flex-col gap-2">
             <header className="flex gap-2 items-center">
+                <Link to={".."}><ChevronLeft></ChevronLeft></Link>
                 {
                     !isLoading && <Avatar>
                         <AvatarImage src={user?.avatar} alt={user?.name} />
@@ -59,7 +75,7 @@ const MemberDetails = () => {
                             <p className="text-muted-foreground">{user?.isActive === null ? 
                             <div className="flex gap-4 items-center">
                                 <span>This user is not invited in this project</span>
-                                <Button size={"sm"}>Invite</Button>
+                                <Button size={"sm"} onClick={()=>{inviteUser(user.email)}}>Invite</Button>
                             </div>
                             : user?.isActive}</p>
                         </div>
