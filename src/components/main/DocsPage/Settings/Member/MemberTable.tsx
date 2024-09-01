@@ -63,7 +63,7 @@ const MemberTable = () => {
                         </TableHeader>
                         <TableBody>
                             {members.map((member: Member) => (
-                                <TableRow className="group">
+                                <TableRow className="group" key={member.id}>
                                     <TableCell className="font-medium"><Avatar>
                                         <AvatarImage src={member.avatar} alt={member.name} />
                                         <AvatarFallback>{member.name[0]}</AvatarFallback>

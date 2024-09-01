@@ -45,10 +45,6 @@ const NavigationSideBar = () => {
         }
     }, [])
 
-    useEffect(()=>{
-        console.log(folder)
-    },[folder])
-
     function createFolder() {
         setNewFolder(true)
     }

@@ -4,8 +4,33 @@ import DashboardSideNav from './DashboardSideNav'
 import { Sheet, SheetContent, SheetTrigger } from '../../ui/sheet'
 import { Button } from '../../ui/button'
 import { Menu } from 'lucide-react'
+import useUserStore from '@/store/userStore'
+import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage'
+import axiosInstance from '@/shared/axios intercepter/axioshandler'
+import { useEffect } from 'react'
 
 const ProjectDasboard = () => {
+    const { getItem } = useSessionStorage("invite")
+    const user = useUserStore(state => state.user)
+
+    function sendInviteIfExists(){
+        if(user && getItem()){
+            axiosInstance.post("/invite/accept" , {
+                name : user?.GithubName,
+                token : JSON.parse(getItem()),
+                id : user.ID
+            }).then(data => {
+                if (data.status === 200) {
+                    sessionStorage.removeItem("invite")
+                }
+            })
+        }
+    }
+
+    useEffect(()=>{
+        sendInviteIfExists()
+    },[])
+
     return (
         <div className='h-full flex'>
             <div className='hidden md:flex'>

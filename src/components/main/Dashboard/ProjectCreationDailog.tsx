@@ -116,7 +116,7 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
 
                 </div>
                 <DialogFooter>
-                    <Button type='submit' size={"sm"} >Create
+                    <Button type='submit' size={"sm"} disabled={loading} >Create
                         {loading &&
                             <Loader height={18} width={18} className='ml-1 animate-spin'></Loader>
                         }
