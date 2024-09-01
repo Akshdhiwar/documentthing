@@ -1,10 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
 import { ChevronLeft, Loader } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
+import MemberInviteDialog from "./MemberInviteDialog"
 
 const MemberDetails = () => {
 
@@ -12,6 +14,7 @@ const MemberDetails = () => {
     const [isLoading, setLoading] = useState(false)
     const project = useProjectStore(state => state.project)
     const [user, setUser] = useState<UserDetails | null>(null)
+    const [openDialog, setOpenDialog] = useState(false)
 
     function getUserDetail() {
         setLoading(true);
@@ -25,20 +28,6 @@ const MemberDetails = () => {
         getUserDetail()
     }, [])
 
-    function inviteUser(email : string){
-        email = "abcd"
-        if (email === null) {
-            return
-        }
-
-        axiosInstance.post("/invite/create" , {
-            github_name : memberName,
-            email : email,
-            project_id : project?.Id
-        }).then(data => {
-            console.log(data)
-        })
-    }
 
 
     return (
@@ -72,12 +61,20 @@ const MemberDetails = () => {
                         </div>
                         <div className="my-4">
                             <p className="tracking-tight">Project</p>
-                            <p className="text-muted-foreground">{user?.isActive === null ? 
-                            <div className="flex gap-4 items-center">
-                                <span>This user is not invited in this project</span>
-                                <Button size={"sm"} onClick={()=>{inviteUser(user.email)}}>Invite</Button>
-                            </div>
-                            : user?.isActive}</p>
+                            <p className="text-muted-foreground">{user?.isActive === null ?
+                                <div className="flex gap-4 items-center">
+                                    <span>This user is not invited in this project</span>
+                                    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                                        <DialogTrigger asChild>
+                                            <Button size={"sm"}>Invite</Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-[425px]">
+                                            <MemberInviteDialog name={user.githubName} projectId={project?.Id} />
+                                        </DialogContent>
+                                    </Dialog>
+                                    {/* <Button size={"sm"} onClick={() => { inviteUser(user.email) }}>Invite</Button> */}
+                                </div>
+                                : user?.isActive}</p>
                         </div>
                         <div className="my-4">
                             <p className="tracking-tight">Company</p>

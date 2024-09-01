@@ -98,7 +98,7 @@ const ProjectCreationDailog = ({ close, refresh }: Props) => {
                         isChecked && <div className='w-full'>
                             <Select onValueChange={(event) => setValue(event)}>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select a fruit" />
+                                    <SelectValue placeholder="Select organization" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
