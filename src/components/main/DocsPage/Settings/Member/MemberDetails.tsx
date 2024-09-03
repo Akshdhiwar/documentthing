@@ -12,6 +12,7 @@ const MemberDetails = () => {
 
     const { memberName } = useParams()
     const [isLoading, setLoading] = useState(false)
+    const [refresh, setRefresh] = useState(false)
     const project = useProjectStore(state => state.project)
     const [user, setUser] = useState<UserDetails | null>(null)
     const [openDialog, setOpenDialog] = useState(false)
@@ -26,9 +27,7 @@ const MemberDetails = () => {
 
     useEffect(() => {
         getUserDetail()
-    }, [])
-
-
+    }, [refresh])
 
     return (
         <div className="h-full flex flex-col gap-2">
@@ -69,7 +68,7 @@ const MemberDetails = () => {
                                             <Button size={"sm"}>Invite</Button>
                                         </DialogTrigger>
                                         <DialogContent className="sm:max-w-[425px]">
-                                            <MemberInviteDialog name={user.githubName} projectId={project?.Id} />
+                                            <MemberInviteDialog name={user.githubName} projectId={project?.Id} refresh={setRefresh} />
                                         </DialogContent>
                                     </Dialog>
                                     {/* <Button size={"sm"} onClick={() => { inviteUser(user.email) }}>Invite</Button> */}

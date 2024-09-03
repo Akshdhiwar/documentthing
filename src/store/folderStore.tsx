@@ -18,7 +18,7 @@ type folderStoreType = {
 }
 
 // Define the store
-const useFolderStore = create<folderStoreType>((set, get) => ({
+const useFolderStore = create<folderStoreType>((set) => ({
     folder: [],
     setFolder: (content: Folder[] | []) => {
 
@@ -51,12 +51,11 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         const newFolder: Folder = {
             id: crypto.randomUUID(),
             name: name,
-            fileId: crypto.randomUUID(),
             children: [],
         };
 
         // Simulate saving folder structure (replace with your actual function)
-        await saveFolderStructure([...get().folder, newFolder], newFolder.fileId);
+        await saveFolderStructure(newFolder);
 
         // Update the state with the new folder
         set((state) => ({
@@ -66,22 +65,27 @@ const useFolderStore = create<folderStoreType>((set, get) => ({
         }));
     },
     addPage: async (name: string, id: string) => {
-        set(() => ({
-            loading: true
-        }))
-        let obj: Folder = {
-            id: crypto.randomUUID(),
-            name: name,
-            fileId: crypto.randomUUID(),
-            children: []
+        try {
+            set({ loading: true });
+    
+            let obj: Folder = {
+                id: crypto.randomUUID(),
+                name: name,
+                children: []
+            };
+    
+            const updatedFolder = await saveFolderStructure(obj, id);
+    
+            set({
+                folder: updatedFolder,
+                loading: false
+            });
+        } catch (error) {
+            console.error("Failed to add page:", error);
+            set({ loading: false });
         }
-        const updatedFolder = recursive(name, id, get().folder, obj);
-        await saveFolderStructure(updatedFolder, obj.fileId)
-        set(() => ({
-            folder: updatedFolder,
-            loading: false
-        }))
     },
+    
     selectedFolder: null,
     setSelectedFolder: (folder: Folder) => {
         set(() => ({
@@ -124,28 +128,18 @@ function getUrlFromFolder(selectedFolder: Folder, folder: Folder[]): string | un
     // Return undefined if no match found
     return undefined;
 }
-async function saveFolderStructure(folderStructure: any[], fileID: string) {
+async function saveFolderStructure(folder: Folder , parentID? : string) {
 
     const project = useProjectStore.getState().project; // Access project dynamically
 
-    const response = await axiosInstance.post(`/folder/update`, {
-        folder_object: btoa(JSON.stringify(folderStructure)),
+    const response : any = await axiosInstance.post(`/folder/update`, {
+        // folder_object: btoa(JSON.stringify(folderStructure)),
         id: project?.Id,
-        file_id: fileID,
+        folder : folder,
+        parentID : parentID ? parentID : "",
     })
 
     useDoublyLinkedListStore.getState().clearList();
-    useDoublyLinkedListStore.getState().convertIntoLinkedList(folderStructure)
-    return response.status
-}
-
-function recursive(name: any, id: any, folder: any, obj: any) {
-    return folder.map((node: any) => {
-        if (node.id === id) {
-            return { ...node, children: [...node.children, obj] }
-        } else if (node.children.length > 0 && node.id !== id) {
-            return { ...node, children: recursive(name, id, node.children, obj) }
-        }
-        return node
-    })
+    useDoublyLinkedListStore.getState().convertIntoLinkedList(response.data)
+    return response.data
 }

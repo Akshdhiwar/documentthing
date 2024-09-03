@@ -5,24 +5,25 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useToast } from "@/components/ui/use-toast"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import { Loader } from "lucide-react"
-import { useRef, useState } from "react"
+import { Dispatch, useRef, useState } from "react"
 
 interface MemberInviteType {
-    name : string
-    projectId : string | undefined
+    name: string
+    projectId: string | undefined
+    refresh: Dispatch<any>
 }
 
 const RoleMap = [
-    "Admin" , "Editor"
+    "Admin", "Editor"
 ]
 
-const MemberInviteDialog = ( {name , projectId} : MemberInviteType) => {
+const MemberInviteDialog = ({ name, projectId, refresh }: MemberInviteType) => {
     const inputValue = useRef<HTMLInputElement>(null)
     const { toast } = useToast()
     const [value, setValue] = useState("")
     const [loading, setLoading] = useState(false)
 
-    function inviteUser(event:any){
+    function inviteUser(event: any) {
         event.preventDefault();
         if (!inputValue.current || !inputValue.current.value) {
             toast({
@@ -36,11 +37,11 @@ const MemberInviteDialog = ( {name , projectId} : MemberInviteType) => {
 
         setLoading(true)
 
-        axiosInstance.post("/invite/create" , {
-            github_name : name,
-            email : inputValue.current.value,
-            project_id : projectId ,
-            role : value
+        axiosInstance.post("/invite/create", {
+            github_name: name,
+            email: inputValue.current.value,
+            project_id: projectId,
+            role: value
         }).then(data => {
             console.log(data)
             setLoading(false)
@@ -49,6 +50,7 @@ const MemberInviteDialog = ( {name , projectId} : MemberInviteType) => {
                 description: "Invite will be expired after 48 hours",
                 variant: "success"
             })
+            refresh((prev: boolean) => !prev)
         })
     }
 

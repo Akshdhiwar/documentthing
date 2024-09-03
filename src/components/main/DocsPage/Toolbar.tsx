@@ -23,7 +23,7 @@ const Toolbar = () => {
         setLoading(true)
         axiosInstance.put(`/file/update`, {
             project_id: project?.Id,
-            file_id: selectedFolder?.fileId,
+            file_id: selectedFolder?.id,
             content: btoa(JSON.stringify(data))
         }).then(() =>
             setLoading(false)

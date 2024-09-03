@@ -31,7 +31,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
 
     useEffect(() => {
         child.children.forEach(file => {
-            if (file.fileId === selectedFolder?.fileId) {
+            if (file.id === selectedFolder?.id) {
                 setOpen(true)
             }
         })
@@ -109,7 +109,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
         <div className="my-1">
             {
                 renameOpen ?
-                    <form onSubmit={(e) => rename(e, child.fileId)} className="flex gap-1 items-center m-2 mx-1">
+                    <form onSubmit={(e) => rename(e, child.id)} className="flex gap-1 items-center m-2 mx-1">
                         <Input className="flex-1 h-8" ref={renameInputValue} defaultValue={child.name}></Input>
                         <Button className="p-1 h-8 w-8" type="submit"><Check className="h-[16px]"></Check></Button>
                         <Button className="p-1 h-8 w-8" onClick={() => { setRenameOpen(false) }}><X className="h-[16px]"></X></Button>
@@ -146,7 +146,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                                                     </PopoverTrigger>
                                                     <PopoverContent className="flex flex-col w-48 p-1 gap-1">
                                                         <Item label="Rename" onClick={() => renameFolder} icon={SquarePen} className={"text-sm"}></Item>
-                                                        <Item label="Delete" onClick={() => deleteFolderFile(child.fileId)} icon={Trash} className={"text-sm text-red-500"}></Item>
+                                                        <Item label="Delete" onClick={() => deleteFolderFile(child.id)} icon={Trash} className={"text-sm text-red-500"}></Item>
                                                     </PopoverContent>
                                                 </Popover>
                                                 <TooltipContent side='bottom'>

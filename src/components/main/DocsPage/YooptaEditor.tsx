@@ -71,11 +71,11 @@ const Editor = () => {
   }, [editor]);
 
   useEffect(() => {
-    if (selectedFolder?.fileId === undefined) return
+    if (selectedFolder?.id === undefined) return
     axiosInstance.get(`/file/get`, {
       params: {
         proj: project?.Id,
-        file: selectedFolder?.fileId
+        file: selectedFolder?.id
       }
     }).then(data => {
       let base64 = data.data

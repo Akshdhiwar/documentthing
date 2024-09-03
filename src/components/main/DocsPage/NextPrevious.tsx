@@ -12,8 +12,8 @@ const NextPrevious = () => {
     const version = useDoublyLinkedListStore(state => state.version)
 
     useEffect(() => {
-        if (selectedFile?.fileId) {
-            const node = findNode(selectedFile.fileId);
+        if (selectedFile?.id) {
+            const node = findNode(selectedFile.id);
             setActiveLink(node);
         }
     }, [selectedFile, version]);

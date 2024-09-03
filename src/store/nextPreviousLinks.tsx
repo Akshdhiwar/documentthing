@@ -57,7 +57,7 @@ const useDoublyLinkedListStore = create<DoublyLinkedListState>((set, get) => ({
     findById: (fileID: any) => {
         let current = get().head;
         while (current) {
-            if (current.data.fileId === fileID) {
+            if (current.data.id === fileID) {
                 return current;
             }
             current = current.next;
