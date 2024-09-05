@@ -1,5 +1,4 @@
-import { supabase } from '@/shared/constant/supabase';
-import { useEffect, useState } from 'react'
+import { useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage';
 import { Button } from '../components/ui/button';
@@ -9,7 +8,6 @@ import useUserStore from '@/store/userStore';
 
 const Login = () => {
     let navigate = useNavigate();
-    const [session, setSession] = useState<unknown>(null);
     const { setItem } = useSessionStorage("invite")
     const setUser = useUserStore(state => state.setUserData)
 
@@ -37,38 +35,20 @@ const Login = () => {
         const urlParam = new URLSearchParams(queryString);
         const code = urlParam.get("code");
         if (code) {
-            const token = await axiosInstance.post("/account/get-access-token", { code: code }).then(res => {
-                return res.data.access_token;
-            })
-            localStorage.setItem("gth-access-token", token)
-        }
-        if (code || localStorage.getItem("gth-access-token")) {
-            const userDetials : UserInterface = await axiosInstance.get("/account/user-details").then(res => {
+            const userDetials = await axiosInstance.post("/account/get-access-token", { code: code }).then(res => {
                 return res.data.userDetails;
             })
             setUser(userDetials)
             navigate("/dashboard");
         }
+        // if (code || localStorage.getItem("gth-access-token")) {
+        //     const userDetials : UserInterface = await axiosInstance.get("/account/user-details").then(res => {
+        //         return res.data.userDetails;
+        //     })
+        //     setUser(userDetials)
+        //     navigate("/dashboard");
+        // }
     }
-
-    useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-        });
-
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            setSession(session);
-        });
-
-        if (session) {
-            setItem(session)
-            navigate("/dashboard");
-        }
-
-        return () => subscription.unsubscribe();
-    }, [session]);
 
     return (
         <div className='h-screen w-screen flex items-center justify-center'>

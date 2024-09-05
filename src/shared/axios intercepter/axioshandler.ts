@@ -1,29 +1,29 @@
+import useUserStore from "@/store/userStore";
 import axios from "axios";
 
 // Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: "http://localhost:3000/api/v1", // Replace with your API base URL
   timeout: 300000, // Set a timeout (in milliseconds)
+  withCredentials: true, // Send cookies with requests
 });
 
-function getAccessToken() {
-  const data = localStorage.getItem(`gth-access-token`);
-  return data;
+// Function to get user ID from store
+function getUserID() {
+  return useUserStore.getState().user?.ID;
 }
 
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken: any = getAccessToken();
-    // Add authentication token
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+    const userID = getUserID();
+    if (userID) {
+      config.headers["X-User-Id"] = userID;
     }
 
     return config;
   },
   (error) => {
-    // Handle request error
     console.error("Request error", error);
     return Promise.reject(error);
   }
@@ -31,26 +31,19 @@ axiosInstance.interceptors.request.use(
 
 // Response interceptor
 axiosInstance.interceptors.response.use(
-  (response) => {
-
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response) {
-      // Server responded with a status other than 2xx
       console.error("Response error", error.response);
       if (error.response.status === 401) {
-        // Handle 401 Unauthorized error (e.g., redirect to login)
         console.error("Unauthorized, redirecting to login...");
+        // Handle unauthorized access here
       }
     } else if (error.request) {
-      // Request was made but no response received
       console.error("No response received", error.request);
     } else {
-      // Something else happened while setting up the request
       console.error("Error", error.message);
     }
-
     return Promise.reject(error);
   }
 );
