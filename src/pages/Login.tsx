@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import axiosInstance from '@/shared/axios intercepter/axioshandler';
 import useUserStore from '@/store/userStore';
+import {Icons} from '../shared/Icons'
 
 const Login = () => {
     let navigate = useNavigate();
@@ -14,6 +15,12 @@ const Login = () => {
     function loginWithGithub() {
         const clientID = import.meta.env.VITE_GITHUB_CLIENT
         window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID + "&scope=repo,user" )
+    }
+
+    function loginWithGoogle() {
+        axiosInstance.get("/account/auth/google").then(data => {
+            window.location.href = data.data
+        })
     }
 
     useEffect(() => {
@@ -39,20 +46,22 @@ const Login = () => {
                 return res.data.userDetails;
             })
             setUser(userDetials)
+            localStorage.setItem("betterDocs" , "true")
+            navigate("/dashboard");
+            return
+        }
+        if (localStorage.getItem("betterDocs")) {
+            const userDetials : UserInterface = await axiosInstance.get("/account/user-details").then(res => {
+                return res.data.userDetails;
+            })
+            setUser(userDetials)
             navigate("/dashboard");
         }
-        // if (code || localStorage.getItem("gth-access-token")) {
-        //     const userDetials : UserInterface = await axiosInstance.get("/account/user-details").then(res => {
-        //         return res.data.userDetails;
-        //     })
-        //     setUser(userDetials)
-        //     navigate("/dashboard");
-        // }
     }
 
     return (
         <div className='h-screen w-screen flex items-center justify-center'>
-            <div className="w-[350px] py-6 box-border">
+            <div className="w-[350px] py-6 box-border space-y-2">
                 <div className='text-center'>
                     <p className="text-2xl leading-tight tracking-tighter md:text-3xl lg:leading-[1.1] text-primary">
                         better<span className='font-semibold'>Docs</span>
@@ -62,6 +71,7 @@ const Login = () => {
                     </p>
                 </div>
                 <Button className='w-full gap-2' onClick={loginWithGithub}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
+                <Button className='w-full gap-2' onClick={loginWithGoogle}><Icons.google className='h-[16px]'></Icons.google> Google</Button>
             </div>
         </div>
     )
