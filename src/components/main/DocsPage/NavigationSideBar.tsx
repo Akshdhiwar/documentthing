@@ -17,7 +17,7 @@ const NavigationSideBar = () => {
     const createPage = useFolderStore(state => state.createPage)
     const setFolder = useFolderStore(state => state.setFolder)
     const folder = useFolderStore(state => state.folder)
-    const projectId = useProjectStore(state => state.project)
+    const project = useProjectStore(state => state.project)
     const setSelectedFile = useFolderStore(state => state.setSelectedFolder)
     const isLoading = useFolderStore(state => state.loading)
     const setLoading = useFolderStore(state => state.setLoading)
@@ -27,7 +27,7 @@ const NavigationSideBar = () => {
 
     useEffect(() => {
         setLoading(true)
-        axiosInstance.get(`/folder/${projectId?.Id}`).then(data => {
+        axiosInstance.get(`/folder/${project?.Id}`).then(data => {
             const res = data.data
             const json: Folder[] = JSON.parse(atob(res))
             setFolder(json)
@@ -85,11 +85,15 @@ const NavigationSideBar = () => {
                     <FolderStructure folder={folder} />
                 </div>
             }
-            <Separator />
-            <div className="m-2 flex flex-col gap-1">
-                {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
-                <Link label="Setting" href={`/project/${projectId?.Id}/settings`} icon={Settings}></Link>
-            </div>
+            {
+                project?.Role === "Admin" && <>
+                    <Separator />
+                    <div className="m-2 flex flex-col gap-1">
+                        {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
+                        <Link label="Setting" href={`/project/${project?.Id}/settings`} icon={Settings}></Link>
+                    </div>
+                </>
+            }
             {
                 isLoading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
                     <Loader className="animate-spin"></Loader>

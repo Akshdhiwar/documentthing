@@ -18,7 +18,7 @@ const useUserStore = create<UserStoreType>()(
         }),
         {
             name: 'user-storage', // name of the item in the storage (must be unique)
-            storage: createJSONStorage(() => sessionStorage), // default is localStorage; using sessionStorage here
+            storage: createJSONStorage(() => localStorage), // default is localStorage; using sessionStorage here
         }
     )
 );
