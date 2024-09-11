@@ -8,6 +8,7 @@ import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
 import { useState } from "react"
 import BreadCrums from "./BreadCrums"
+import Export from "./Export"
 // import {plainText , markdown , html} from "@yoopta/exports"
 
 const Toolbar = () => {
@@ -60,12 +61,12 @@ const Toolbar = () => {
                     !isNoFilePresent && <BreadCrums UrlString={Url} />
                 }
             </div>
-            <div className="order-3">
+            <div className="order-3 flex gap-2">
+                <Export></Export>
                 <Button size={"sm"} className="w-14" disabled={!selectedFolder || isLoading} onClick={onSaveToServer}>{
-                isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : "Save"
-            }</Button>
+                    isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : "Save"
+                }</Button>
             </div>
-            
         </div>
     )
 }

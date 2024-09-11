@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { ChevronRight, Loader, Plus, Search } from "lucide-react"
+import { ChevronRight, Loader, Plus } from "lucide-react"
 import ProjectCreationDailog from "./ProjectCreationDailog"
 import { useEffect, useState } from "react"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
@@ -46,12 +45,12 @@ const ProjectList = () => {
   return (
     <div className="p-5">
       <div className="flex gap-2 items-center justify-between">
-        <div className="relative">
+        {/* <div className="relative">
           <Input className="pl-8 h-[32px]"></Input>
           <Search height={18} width={18} className="absolute top-[7px] left-2 text-slate-400"></Search>
-        </div>
+        </div> */}
         <div className="flex items-center gap-2">
-          <Button variant={"outline"} className=" h-[32px]">New Organization</Button>
+          {/* <Button variant={"outline"} className=" h-[32px]">New Organization</Button> */}
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogTrigger asChild>
               <Button className="flex items-center justify-center gap-1  h-[32px]"><Plus height={18} width={18}></Plus> <p>New Project</p></Button>
