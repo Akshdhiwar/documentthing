@@ -4,7 +4,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_ENVIRONMENT === "Local" ? "http://localhost:3000/api/v1" : "betterdocs-backend-production.up.railway.app/api/v1", // Replace with your API base URL
+  baseURL: import.meta.env.VITE_ENVIRONMENT === "Local" ? "http://localhost:3000/api/v1" : "https://betterdocs-backend-production.up.railway.app/api/v1", // Replace with your API base URL
   timeout: 300000, // Set a timeout (in milliseconds)
   withCredentials: true, // Send cookies with requests
 });
