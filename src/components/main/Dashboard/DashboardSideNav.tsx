@@ -1,12 +1,6 @@
-import { supabase } from "@/shared/constant/supabase";
 import { ArrowUpRight, LogOut } from "lucide-react"
 
 const DashboardSideNav = () => {
-
-    function logout() {
-        supabase.auth.signOut();
-        sessionStorage.removeItem("user")
-    }
     return (
         <aside className="h-full">
             <div className="w-64 border-r border-default h-full overflow-auto">
@@ -80,7 +74,7 @@ const DashboardSideNav = () => {
                         </div>
                         <div className="border-b py-5 px-6 border-default">
                             <ul className="space-y-1">
-                                <a onClick={logout}>
+                                <a>
                                     <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
                                         <LogOut className="text-secondary-foreground text-slate-600" height={18} width={18} />
                                         <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">Logout</span>
