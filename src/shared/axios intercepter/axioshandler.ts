@@ -1,4 +1,4 @@
-import useProjectStore from "@/store/projectStore";
+// import useProjectStore from "@/store/projectStore";
 import useUserStore from "@/store/userStore";
 import axios from "axios";
 
@@ -13,9 +13,9 @@ const axiosInstance = axios.create({
 function getUserID() {
   return useUserStore.getState().user?.ID;
 }
-function getProjectID() {
-  return useProjectStore.getState().project?.Id;
-}
+// function getProjectID() {
+//   return useProjectStore.getState().project?.Id;
+// }
 
 // Request interceptor
 axiosInstance.interceptors.request.use(
@@ -24,10 +24,10 @@ axiosInstance.interceptors.request.use(
     if (userID) {
       config.headers["X-User-Id"] = userID;
     }
-    const projectID = getProjectID();
-    if (projectID) {
-      config.headers["X-Project-Id"] = projectID;
-    }
+    // const projectID = getProjectID();
+    // if (projectID) {
+    //   config.headers["X-Project-Id"] = projectID;
+    // }
 
     return config;
   },
