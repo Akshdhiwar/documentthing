@@ -25,9 +25,9 @@ axiosInstance.interceptors.request.use(
       config.headers["X-User-Id"] = userID;
     }
     const projectID = getProjectID();
-    if (projectID) {
+    // if (projectID) {
       config.headers["X-Project-Id"] = projectID;
-    }
+    // }
 
     return config;
   },
