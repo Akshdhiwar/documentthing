@@ -1,5 +1,5 @@
-// import useProjectStore from "@/store/projectStore";
-// import useUserStore from "@/store/userStore";
+import useProjectStore from "@/store/projectStore";
+import useUserStore from "@/store/userStore";
 import axios from "axios";
 
 // Create an Axios instance
@@ -10,24 +10,24 @@ const axiosInstance = axios.create({
 });
 
 // Function to get user ID from store
-// function getUserID() {
-//   return useUserStore.getState().user?.ID;
-// }
-// function getProjectID() {
-//   return useProjectStore.getState().project?.Id;
-// }
+function getUserID() {
+  return useUserStore.getState().user?.ID;
+}
+function getProjectID() {
+  return useProjectStore.getState().project?.Id;
+}
 
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    // const userID = getUserID();
-    // if (userID) {
-    //   config.headers["X-User-Id"] = userID;
-    // }
-    // const projectID = getProjectID();
-    // if (projectID) {
-    //   config.headers["X-Project-Id"] = projectID;
-    // }
+    const userID = getUserID();
+    if (userID) {
+      config.headers["X-User-Id"] = userID;
+    }
+    const projectID = getProjectID();
+    if (projectID) {
+      config.headers["X-Project-Id"] = projectID;
+    }
 
     return config;
   },
