@@ -1,17 +1,13 @@
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { ChevronRight, Loader, Plus } from "lucide-react"
-import ProjectCreationDailog from "./ProjectCreationDailog"
 import { useEffect, useState } from "react"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
-import { useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import useUserStore from "@/store/userStore"
 import useProjectStore from "@/store/projectStore"
 
 
 const ProjectList = () => {
-  const [openDialog, setOpenDialog] = useState(false)
-  const [refresh, setRefresh] = useState(false)
   const [loading, setLoading] = useState(true)
   const [projects, setProjects] = useState<Project[]>([])
   const navigate = useNavigate()
@@ -33,14 +29,14 @@ const ProjectList = () => {
     })
   }
 
+  useEffect(() => {
+    getProjectList()
+  }, [])
+
   function goToSpecificProject(project: Project) {
     setProject(project)
     navigate(`/project/${project.Id}`)
   }
-
-  useEffect(() => {
-    getProjectList()
-  }, [refresh])
 
   return (
     <div className="p-5">
@@ -51,14 +47,7 @@ const ProjectList = () => {
         </div> */}
         <div className="flex items-center gap-2">
           {/* <Button variant={"outline"} className=" h-[32px]">New Organization</Button> */}
-          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-            <DialogTrigger asChild>
-              <Button className="flex items-center justify-center gap-1  h-[32px]"><Plus height={18} width={18}></Plus> <p>New Project</p></Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <ProjectCreationDailog close={setOpenDialog} refresh={setRefresh} />
-            </DialogContent>
-          </Dialog>
+          <Button className=" h-[32px]"><NavLink to={"new"} className={"flex items-center justify-center gap-1 "}><Plus height={18} width={18}></Plus> <p>New Project</p></NavLink></Button>
         </div>
       </div>
       <div className="my-6">
