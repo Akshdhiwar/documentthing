@@ -1,6 +1,6 @@
 import ProjectList from "./components/main/Dashboard/ProjectList";
 import FullScreen from "./shared/components/FullScreen"
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
 import { lazy, Suspense } from "react";
