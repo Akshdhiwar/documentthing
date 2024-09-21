@@ -1,127 +1,204 @@
 import axiosInstance from '@/shared/axios intercepter/axioshandler'
 import { Button } from '@/components/ui/button'
-import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
-import {  Loader } from 'lucide-react'
-import { Dispatch, useEffect, useRef, useState } from 'react'
+import { Loader, LoaderIcon, RefreshCw } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import useUserStore from '@/store/userStore'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
-type Props = {
-    close: Dispatch<any>
-    refresh: Dispatch<any>
+interface InstallationType {
+    name: string
+    installation_id: number
+    type: string
 }
 
-const ProjectCreationDailog = ({ close, refresh }: Props) => {
-
-    const inputValue = useRef<HTMLInputElement>(null)
+const ProjectCreationDailog = () => {
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
     const user = useUserStore(state => state.user)
-    const [isChecked, setIsChecked] = useState(false)
-    const [value, setValue] = useState("")
-    const [orgs, setOrgs] = useState<any[]>([])
+    const [value, setValue] = useState<string>("")
+    const [selectedRepo, setSelectedRepo] = useState<string>("")
+    const [accounts, setAccounts] = useState<InstallationType[] | null>(null)
+    const [repos, setRepos] = useState<any>(null)
+    const navigate = useNavigate()
 
-    useEffect(() => {
-        axiosInstance.get("/orgs").then(data => {
-            setOrgs(data.data)
-        })
-    }, [])
 
     const createNewProject = async (event: any) => {
         event.preventDefault();
-        if (!inputValue.current || !inputValue.current.value) {
+        if (value === "") {
             toast({
                 title: "Project name not present",
                 description: "Please provide a project name to create one.",
                 variant: "destructive"
             })
-            inputValue.current?.focus()
             return;
         }
 
         setLoading(true)
 
+        let org = ""
+        let name = ""
+        accounts?.map(account => {
+            if(account.installation_id.toString() === value && account.type === "Organization"){
+                org = account.name
+            }
+
+            if(account.installation_id.toString() === value){
+                name = account.name
+            }
+        })
+
         // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
-        const response = await axiosInstance.post("/project/create-project", { name: inputValue.current.value, id: user?.ID , org : value })
+        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: org , owner : name })
         if (response.status !== 201) {
             toast({
                 title: "Error",
                 description: response.data.message,
                 variant: "destructive"
             })
+            setLoading(false)
         } else {
             toast({
                 title: "Success",
                 description: response.data.message,
                 variant: "success"
             })
+            setLoading(false)
+            navigate(-1)
         }
-
-        refresh((prev: boolean) => !prev)
-        close(false)
     }
 
-    useEffect(()=>{
-        if(isChecked === false){
-            setValue("")
+    function getInstallations() {
+        axiosInstance.get("/project/installation").then(res => {
+            setAccounts(res.data)
+        })
+    }
+
+    async function getInstallationTokenAndRepository() {
+        if (value) {
+            let token
+            setLoading(true)
+            await axiosInstance.post(`/project/installation/access_token/${value}`).then(result => {
+                token = result.data
+            }).catch(() => {
+                toast({
+                    title: "Error",
+                    description: "Failed to get installation token and repository",
+                    variant: "destructive"
+                })
+                setLoading(false)
+                return
+            })
+
+            // api to get the repo with the installation id of github app from githubapis and send the token in headers
+            await axios.get(`https://api.github.com/installation/repositories`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            }).then(result => {
+                setRepos(result.data.repositories)
+            }).catch(() => {
+                toast({
+                    title: "Error",
+                    description: "Failed to get repository",
+                    variant: "destructive"
+                })
+                setLoading(false)
+                return
+            })
+            setLoading(false)
+
         }
-    } ,[isChecked])
+    }
+
+
+    useEffect(() => {
+        getInstallations()
+    }, [])
+
+    useEffect(() => {
+        getInstallationTokenAndRepository()
+    }, [value])
 
     return (
 
-        <div>
-            <DialogHeader>
-                <DialogTitle>Create new project</DialogTitle>
-                <DialogDescription>
-                    Enter the name for your new project.
-                </DialogDescription>
-            </DialogHeader>
-
+        <div className='w-full max-w-4xl m-auto px-8'>
+            <div className='my-10'>
+                <p className='text-2xl font-semibold leading-none tracking-tight'>Create new project</p>
+            </div>
             <form onSubmit={createNewProject}>
-                <div className="grid gap-4 py-4">
-                    <div >
-                        <Input id="name" ref={inputValue} placeholder='Project Name' autoComplete='off' className='w-full' />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <Checkbox id="terms" checked={isChecked} onClick={() => setIsChecked(prev => !prev)} />
-                        <label
-                            htmlFor="terms"
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                            Create project in company organization
-                        </label>
-                    </div>
-                    {
-                        isChecked && <div className='w-full'>
+                <div className="grid gap-8 py-4">
+                    <div className='grid grid-cols-5 gap-4 '>
+                        <div className='col-span-3'>
+                            <p className='font-semibold leading-none tracking-tight'>Select Account</p>
+                            <span className='text-muted-foreground text-sm tracking-wide'>Choose the Github Installation, user or organization &nbsp;</span>
+                            <a className='text-sm underline text-secondary-foreground tracking-wide' href="https://github.com/apps/betterdocs-com/installations/new">Install the Github App</a>
+                        </div>
+                        <div className='flex gap-1 col-span-2'>
                             <Select onValueChange={(event) => setValue(event)}>
                                 <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select organization" />
+                                    <SelectValue placeholder="Choose Account" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectLabel>Select Organization</SelectLabel>
+                                        <SelectLabel>Accounts</SelectLabel>
                                         {
-                                            orgs.map(org => (
-                                                <SelectItem value={org.login}>{org.login}</SelectItem>
+                                            accounts?.map((account: InstallationType, index: number) => (
+                                                <SelectItem key={index} value={account.installation_id.toString()}>{account.name}</SelectItem>
                                             ))
                                         }
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            <Button type='button' variant={"ghost"} size={"sm"} className='p-2 text-muted-foreground' onClick={() => getInstallations()}><RefreshCw height={18} width={18}></RefreshCw></Button>
+                        </div>
+                    </div>
+                    {
+                        value !== "" && !loading &&
+                        <div className='grid grid-cols-5 gap-4'>
+                            <div className='col-span-3'>
+                                <p className='font-semibold leading-none tracking-tight'>Select Repository</p>
+                                <span className='text-muted-foreground text-sm tracking-wide'>Choose the GitHub repository to sync with. This repository should be authorized in the &nbsp;</span>
+                                <a className='text-sm underline text-secondary-foreground tracking-wide' href={`https://github.com/settings/installations/${value}`}>GitHub installation.</a>
+                            </div>
+                            <div className='flex gap-1 col-span-2'>
+                                <Select onValueChange={(event) => setSelectedRepo(event)}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Choose Repo" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Repositories</SelectLabel>
+                                            {
+                                                repos?.map((repo : any, index: number) => (
+                                                    <SelectItem key={index} value={repo.name}>{repo.name}</SelectItem>
+                                                ))
+                                            }
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                     }
-
+                    {
+                        loading &&
+                        <div className='flex items-center justify-center py-4'>
+                            <LoaderIcon className='animate-spin' />
+                        </div>
+                    }
                 </div>
-                <DialogFooter>
+                <div className='flex items-center justify-between'>
+                    <Button variant="outline" size="sm" onClick={() => navigate(-1)} type="button">
+                        Back
+                    </Button>
                     <Button type='submit' size={"sm"} disabled={loading} >Create
                         {loading &&
                             <Loader height={18} width={18} className='ml-1 animate-spin'></Loader>
                         }
                     </Button>
-                </DialogFooter>
+                </div>
             </form>
         </div>
     )

@@ -13,8 +13,8 @@ const Login = () => {
     const setUser = useUserStore(state => state.setUserData)
 
     function loginWithGithub() {
-        const clientID = import.meta.env.VITE_ENVIRONMENT === "Local" ? import.meta.env.VITE_GITHUB_CLIENT : import.meta.env.VITE_GITHUB_CLIENT_PROD
-        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID + "&scope=repo,user" )
+        const clientID = import.meta.env.VITE_ENVIRONMENT === "Local" ? import.meta.env.VITE_GITHUB_APP_CLIENT : import.meta.env.VITE_GITHUB_CLIENT_PROD
+        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID  )
     }
 
     function loginWithGoogle() {
