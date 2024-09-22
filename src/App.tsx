@@ -7,6 +7,8 @@ import { lazy, Suspense } from "react";
 import Loader from "./shared/components/Loader";
 import MemberTable from "./components/main/DocsPage/Settings/Member/MemberTable";
 import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDetails";
+import ProjectCreationDailog from "./components/main/Dashboard/ProjectCreationDailog";
+import Dashboard from "./pages/Dashboard";
 // import DocsPage from "./pages/DocsPage";
 
 const Login = lazy(() => import("./pages/Login"))
@@ -23,9 +25,12 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Navigate to="login" />}></Route>
           <Route index path="/login" Component={Login}></Route>
-          <Route path="/dashboard" element={<ProtectedRoute><ProjectDasboard></ProjectDasboard></ProtectedRoute>}>
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
             <Route index element={<Navigate to="projects" />}></Route>
-            <Route path="projects" element={<ProjectList />}></Route>
+            <Route path="projects" element={<ProjectDasboard></ProjectDasboard>}>
+              <Route index element={<ProjectList></ProjectList>}></Route>
+              <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
+            </Route>
           </Route>
           <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
             <Route index element={<Navigate to="docs" />}></Route>
