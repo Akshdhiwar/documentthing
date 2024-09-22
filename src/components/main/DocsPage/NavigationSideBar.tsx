@@ -1,4 +1,4 @@
-import { Check, ChevronLeft, Loader, PlusCircle, Settings, X } from "lucide-react"
+import { Check, Loader, PlusCircle, Settings, X } from "lucide-react"
 import Item from "../../custom/Item"
 import { Separator } from "../../ui/separator"
 import FolderStructure from "./FolderStructure"
@@ -10,6 +10,7 @@ import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import Link from "@/components/custom/Link"
+import useEditChangesStore from "@/store/changes"
 
 const NavigationSideBar = () => {
     const [newFolder, setNewFolder] = useState(false)
@@ -24,7 +25,7 @@ const NavigationSideBar = () => {
     const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
     const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
     const clearLinkList = useDoublyLinkedListStore(state => state.clearList)
-
+    const isEditing = useEditChangesStore(state => state.isEditing)
     useEffect(() => {
         setLoading(true)
         axiosInstance.get(`/folder/${project?.Id}`).then(data => {
@@ -64,10 +65,12 @@ const NavigationSideBar = () => {
 
     return (
         <div className="h-full flex flex-col w-full relative">
-            <div className="m-2">
-                <Link label="Home" href="/dashboard" icon={ChevronLeft}></Link>
-                <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
-            </div>
+            {
+                isEditing && <div className="m-2">
+                    {/* <Link label="Home" href="/dashboard" icon={ChevronLeft}></Link> */}
+                    <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
+                </div>
+            }
             <Separator />
             {
                 newFolder && (

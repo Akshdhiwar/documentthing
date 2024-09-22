@@ -17,6 +17,7 @@ import axiosInstance from '@/shared/axios intercepter/axioshandler';
 import useFolderStore from '@/store/folderStore';
 import useEditorStore from '@/store/editorStore';
 import useProjectStore from '@/store/projectStore';
+import useEditChangesStore from '@/store/changes';
 
 const plugins: any = [
   Paragraph,
@@ -58,6 +59,7 @@ const Editor = () => {
   const selectedFolder = useFolderStore(state => state.selectedFolder)
   const setEditor = useEditorStore(state => state.setEditor)
   const project = useProjectStore(state => state.project)
+  const isEditing = useEditChangesStore(state => state.isEditing)
 
   useEffect(() => {
     function handleChange() {
@@ -91,7 +93,7 @@ const Editor = () => {
 
   useEffect(() => {
     setEditorID(generateId)
-  }, [pageContent])
+  }, [pageContent , isEditing])
 
   return (
     <div
@@ -109,6 +111,7 @@ const Editor = () => {
         value={pageContent}
         autoFocus
         className="yoopta-editor"
+        readOnly={!isEditing}
       />
     </div>
   );

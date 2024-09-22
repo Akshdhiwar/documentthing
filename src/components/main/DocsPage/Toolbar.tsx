@@ -9,7 +9,7 @@ import useProjectStore from "@/store/projectStore"
 import { useState } from "react"
 import BreadCrums from "./BreadCrums"
 import Export from "./Export"
-// import {plainText , markdown , html} from "@yoopta/exports"
+import useEditChangesStore from "@/store/changes"
 
 const Toolbar = () => {
 
@@ -19,6 +19,8 @@ const Toolbar = () => {
     const editor = useEditorStore(state => state.editor)
     const Url = useFolderStore(state => state.Url)
     const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
+    const isEditing = useEditChangesStore(state => state.isEditing)
+    const setIsEditing = useEditChangesStore(state => state.setIsEditing)
 
     const fetchToServer = async (data: string) => {
         setLoading(true)
@@ -38,12 +40,6 @@ const Toolbar = () => {
         await fetchToServer(JSON.stringify(editorContent))
     }
 
-    // const serializeText = () => {
-    //     const data = editor?.editor.getEditorValue();
-    //     const textString = html.serialize(editor?.editor, data);
-    //     console.log('plain text string', textString);
-    //   };
-
     return (
         <div className="flex items-center justify-between p-1 mx-4">
             <div className="md:hidden order-1">
@@ -61,12 +57,16 @@ const Toolbar = () => {
                     !isNoFilePresent && <BreadCrums UrlString={Url} />
                 }
             </div>
-            <div className="order-3 flex gap-2">
-                <Export></Export>
-                <Button size={"sm"} className="w-14" disabled={!selectedFolder || isLoading} onClick={onSaveToServer}>{
-                    isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : "Save"
-                }</Button>
-            </div>
+            {
+                isEditing ? <div className="order-3 flex gap-2">
+                    <Export></Export>
+                    <Button size={"sm"} className="w-14" disabled={!selectedFolder || isLoading} onClick={onSaveToServer}>{
+                        isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : "Save"
+                    }</Button>
+                    <Button className="order-3" size={"sm"} onClick={()=> setIsEditing(false)}>Cancel Editing</Button>
+                </div> : <Button className="order-3" size={"sm"} onClick={()=> setIsEditing(true)}>Edit</Button>
+            }
+
         </div>
     )
 }

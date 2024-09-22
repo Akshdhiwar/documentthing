@@ -9,6 +9,7 @@ import axiosInstance from "@/shared/axios intercepter/axioshandler";
 import useFolderStore from "@/store/folderStore";
 import useProjectStore from "@/store/projectStore";
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks";
+import useEditChangesStore from "@/store/changes";
 
 interface FolderInterface {
     child: Folder
@@ -28,7 +29,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     const setLoading = useFolderStore(state => state.setLoading)
     const clearLinkedList = useDoublyLinkedListStore(state => state.clearList)
     const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
-
+    const isEditing = useEditChangesStore(state => state.isEditing)
     useEffect(() => {
         child.children.forEach(file => {
             if (file.id === selectedFolder?.id) {
@@ -134,36 +135,38 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                                 {child.name}
                             </div>
                         </div>
-                        <div className='group-hover:flex items-center justify-center shrink-0 grow-0 h-100'>
-                            <div className='opacity-0 transition-opacity group-hover:opacity-100'>
-                                <div className='block absolute overflow-hidden whitespace-nowrap h-[0px] w-[0px] group-hover:flex group-hover:static group-hover:overflow-auto group-hover:whitespace-normal group-hover:h-full group-hover:w-full'>
-                                    <div className='flex items-center justify-center h-full z-10'>
-                                        <TooltipProvider delayDuration={200}>
-                                            <Tooltip>
-                                                <Popover>
-                                                    <PopoverTrigger>
-                                                        <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="flex flex-col w-48 p-1 gap-1">
-                                                        <Item label="Rename" onClick={() => renameFolder} icon={SquarePen} className={"text-sm"}></Item>
-                                                        <Item label="Delete" onClick={() => deleteFolderFile(child.id)} icon={Trash} className={"text-sm text-red-500"}></Item>
-                                                    </PopoverContent>
-                                                </Popover>
-                                                <TooltipContent side='bottom'>
-                                                    <p>more</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                            <Tooltip>
-                                                <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} onClick={() => openNew()} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Plus className="h-[14px] w-[14px]"></Plus></Button></TooltipTrigger>
-                                                <TooltipContent side='bottom'>
-                                                    <p>Create new file</p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                        </TooltipProvider>
+                        {
+                            isEditing && <div className='group-hover:flex items-center justify-center shrink-0 grow-0 h-100'>
+                                <div className='opacity-0 transition-opacity group-hover:opacity-100'>
+                                    <div className='block absolute overflow-hidden whitespace-nowrap h-[0px] w-[0px] group-hover:flex group-hover:static group-hover:overflow-auto group-hover:whitespace-normal group-hover:h-full group-hover:w-full'>
+                                        <div className='flex items-center justify-center h-full z-10'>
+                                            <TooltipProvider delayDuration={200}>
+                                                <Tooltip>
+                                                    <Popover>
+                                                        <PopoverTrigger>
+                                                            <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent className="flex flex-col w-48 p-1 gap-1">
+                                                            <Item label="Rename" onClick={() => renameFolder} icon={SquarePen} className={"text-sm"}></Item>
+                                                            <Item label="Delete" onClick={() => deleteFolderFile(child.id)} icon={Trash} className={"text-sm text-red-500"}></Item>
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                    <TooltipContent side='bottom'>
+                                                        <p>more</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                                <Tooltip>
+                                                    <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} onClick={() => openNew()} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Plus className="h-[14px] w-[14px]"></Plus></Button></TooltipTrigger>
+                                                    <TooltipContent side='bottom'>
+                                                        <p>Create new file</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     </div>
             }
 
