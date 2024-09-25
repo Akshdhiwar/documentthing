@@ -1,6 +1,6 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 import useProjectStore from "@/store/projectStore"
-import { FolderGit2, Home } from "lucide-react"
+import { FileText, FolderGit2, FolderOpen, Home } from "lucide-react"
 import React from "react"
 
 type BreadcrumType = {
@@ -31,7 +31,7 @@ const BreadCrums: React.FC<BreadcrumType> = ({ UrlString }) => {
                             <div className="flex items-center ">
                                 <BreadcrumbItem>
                                     {
-                                        index !== resultArray.length - 1 ? <BreadcrumbLink>{ele}</BreadcrumbLink> : <BreadcrumbPage>{ele}</BreadcrumbPage>
+                                        index !== resultArray.length - 1 ? <BreadcrumbLink className="flex gap-1 items-center"><FolderOpen height={16}></FolderOpen>{ele}</BreadcrumbLink> : <BreadcrumbPage className="flex gap-1 items-center"><FileText height={16}></FileText>{ele}</BreadcrumbPage>
                                     }
                                 </BreadcrumbItem>
                                 {

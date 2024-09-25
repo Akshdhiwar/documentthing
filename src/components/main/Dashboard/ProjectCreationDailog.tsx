@@ -134,7 +134,7 @@ const ProjectCreationDailog = () => {
                         <div className='col-span-3'>
                             <p className='font-semibold leading-none tracking-tight'>Select Account</p>
                             <span className='text-muted-foreground text-sm tracking-wide'>Choose the Github Installation, user or organization &nbsp;</span>
-                            <a className='text-sm underline text-secondary-foreground tracking-wide' href="https://github.com/apps/betterdocs-com/installations/new">Install the Github App</a>
+                            <a className='text-sm underline text-secondary-foreground tracking-wide' href={`https://github.com/apps/${import.meta.env.VITE_ENVIRONMENT === "Local" ? "betterdocs-com" : "betterdocs-prod"}/installations/new`}>Install the Github App</a>
                         </div>
                         <div className='flex gap-1 col-span-2'>
                             <Select onValueChange={(event) => setValue(event)}>
