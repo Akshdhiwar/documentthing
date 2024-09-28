@@ -5,21 +5,20 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const NextPrevious = () => {
-    const selectedFile = useFolderStore((state) => state.selectedFolder);
+    const {selectedFolder , setSelectedFolder } = useFolderStore((state) => state);
     const [activeLink, setActiveLink] = useState<any>(null);
-    const setActiveFolder = useFolderStore(state => state.setSelectedFolder)
     const findNode = useDoublyLinkedListStore(state => state.findById)
     const version = useDoublyLinkedListStore(state => state.version)
 
     useEffect(() => {
-        if (selectedFile?.id) {
-            const node = findNode(selectedFile.id);
+        if (selectedFolder?.id) {
+            const node = findNode(selectedFolder.id);
             setActiveLink(node);
         }
-    }, [selectedFile, version]);
+    }, [selectedFolder, version]);
 
     function goToNextPrevDoc(folder: Folder) {
-        setActiveFolder(folder)
+        setSelectedFolder(folder)
     }
 
     return (

@@ -1,4 +1,4 @@
-import { Loader, Menu } from "lucide-react"
+import { Loader, Menu, SaveAll } from "lucide-react"
 import { Button } from "../../ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet"
 import NavigationSideBar from "./NavigationSideBar"
@@ -14,13 +14,11 @@ import useEditChangesStore from "@/store/changes"
 const Toolbar = () => {
 
     const [isLoading, setLoading] = useState(false)
-    const selectedFolder = useFolderStore(state => state.selectedFolder)
     const project = useProjectStore(state => state.project)
     const editor = useEditorStore(state => state.editor)
-    const Url = useFolderStore(state => state.Url)
-    const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
-    const isEditing = useEditChangesStore(state => state.isEditing)
-    const setIsEditing = useEditChangesStore(state => state.setIsEditing)
+    const { Url, isNoFilePresent } = useFolderStore(state => state)
+    const selectedFolder = useFolderStore(state => state.selectedFolder)
+    const { isEditing, setIsEditing, editedFiles , reset } = useEditChangesStore(state => state)
 
     const fetchToServer = async (data: string) => {
         setLoading(true)
@@ -39,6 +37,7 @@ const Toolbar = () => {
         const editorContent = editor.getEditorValue();
         await fetchToServer(JSON.stringify(editorContent))
     }
+
 
     return (
         <div className="flex items-center justify-between p-1 mx-4">
@@ -60,11 +59,11 @@ const Toolbar = () => {
             {
                 isEditing ? <div className="order-3 flex gap-2">
                     <Export></Export>
-                    <Button size={"sm"} className="w-14" disabled={!selectedFolder || isLoading} onClick={onSaveToServer}>{
-                        isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : "Save"
-                    }</Button>
-                    <Button className="order-3" size={"sm"} onClick={()=> setIsEditing(false)}>Cancel Editing</Button>
-                </div> : <Button className="order-3" size={"sm"} onClick={()=> setIsEditing(true)}>Edit</Button>
+                    <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading} onClick={onSaveToServer}>{
+                        isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
+                    } Save changes</Button>
+                    <Button className="order-3" size={"sm"} onClick={() => reset()}>Cancel Editing</Button>
+                </div> : <Button className="order-3" size={"sm"} onClick={() => setIsEditing(true)}>Edit</Button>
             }
 
         </div>
