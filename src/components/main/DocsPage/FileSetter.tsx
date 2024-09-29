@@ -20,7 +20,7 @@ const FileSetter = () => {
 
             if (existingFile) {
                 // Update only if the content has actually changed
-                const newContent = JSON.stringify(value ?? content);
+                const newContent = value ?? content;
                 if (existingFile.changedContent !== newContent) {
                     const updatedFiles = editedFiles.map(file =>
                         file.id === folderId ? { ...file, changedContent: newContent } : file
@@ -31,8 +31,8 @@ const FileSetter = () => {
                 addEditedFile(
                     folderId,
                     "file",
-                    JSON.stringify(value ?? content),
-                    JSON.stringify(value ?? content),
+                    value ?? content,
+                    value ?? content,
                     selectedFolder.name
                 );
             }

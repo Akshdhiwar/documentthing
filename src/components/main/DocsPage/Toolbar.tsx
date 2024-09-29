@@ -3,7 +3,6 @@ import { Button } from "../../ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet"
 import NavigationSideBar from "./NavigationSideBar"
 import useFolderStore from "@/store/folderStore"
-import useEditorStore from "@/store/editorStore"
 import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
 import { useState } from "react"
@@ -15,27 +14,52 @@ const Toolbar = () => {
 
     const [isLoading, setLoading] = useState(false)
     const project = useProjectStore(state => state.project)
-    const editor = useEditorStore(state => state.editor)
     const { Url, isNoFilePresent } = useFolderStore(state => state)
-    const selectedFolder = useFolderStore(state => state.selectedFolder)
-    const { isEditing, setIsEditing, editedFiles , reset } = useEditChangesStore(state => state)
+    const { isEditing, setIsEditing, editedFiles, reset, editedFolder } = useEditChangesStore(state => state)
 
-    const fetchToServer = async (data: string) => {
-        setLoading(true)
-        axiosInstance.put(`/file/update`, {
-            project_id: project?.Id,
-            file_id: selectedFolder?.id,
-            content: btoa(JSON.stringify(data))
-        }).then(() =>
-            setLoading(false)
-        ).catch(err => {
-            console.error(err)
-        })
-    }
+    // const fetchToServer = async (data: string) => {
+    //     setLoading(true)
+    //     axiosInstance.put(`/file/update`, {
+    //         project_id: project?.Id,
+    //         file_id: selectedFolder?.id,
+    //         content: btoa(JSON.stringify(data))
+    //     }).then(() =>
+    //         setLoading(false)
+    //     ).catch(err => {
+    //         console.error(err)
+    //     })
+    // }
 
     const onSaveToServer = async () => {
-        const editorContent = editor.getEditorValue();
-        await fetchToServer(JSON.stringify(editorContent))
+        setLoading(true)
+        let files = editedFiles.map(file => {
+            if (file.changedContent !== file.originalContent) {
+                return {
+                    ...file,
+                    changedContent: JSON.stringify(file.changedContent!),
+                    originalContent: JSON.stringify(file.originalContent!)
+                }
+            }
+        })
+
+        let folder = editedFolder.map(folder => {
+            return {
+                ...folder,
+                changedContent: JSON.stringify(folder.changedContent!),
+                originalContent: JSON.stringify(folder.originalContent!)
+            }
+        })
+        // setLoading(true)
+        axiosInstance.post("/commit/save", {
+            project_id: project?.Id,
+            content: [...files, ...folder]
+        }).then(()=>{
+            setLoading(false)
+            reset()
+        })
+
+        // const editorContent = editor.getEditorValue();
+        // await fetchToServer(JSON.stringify(editorContent))
     }
 
 

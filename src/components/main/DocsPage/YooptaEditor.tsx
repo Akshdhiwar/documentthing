@@ -1,4 +1,4 @@
-import YooptaEditor, { createYooptaEditor, YooptaMark, generateId, YooptaContentValue } from '@yoopta/editor';
+import YooptaEditor, { createYooptaEditor, YooptaMark, generateId } from '@yoopta/editor';
 import Paragraph from '@yoopta/paragraph';
 import Blockquote from '@yoopta/blockquote';
 import Embed from '@yoopta/embed';
@@ -56,15 +56,14 @@ const Editor = () => {
   const editor = useMemo(() => createYooptaEditor(), []);
   const selectionRef = useRef(null);
   const [editorID, setEditorID] = useState(generateId())
-  const [pageContent, setPageContent] = useState<YooptaContentValue | undefined>(undefined);
+  const [pageContent, setPageContent] = useState<any>(undefined);
   const selectedFolder = useFolderStore(state => state.selectedFolder)
   const setEditor = useEditorStore(state => state.setEditor)
   const project = useProjectStore(state => state.project)
   const { isEditing, editedFiles } = useEditChangesStore(state => state)
 
   useEffect(() => {
-    function handleChange(value: any) {
-      console.log('value', value)
+    function handleChange() {
     }
     setEditor(editor)
     editor.on('change', handleChange);
@@ -81,7 +80,7 @@ const Editor = () => {
     })
 
     if (isSelectedFilePresentInEditedFilesArray) {
-      setPageContent(JSON.parse(isSelectedFilePresentInEditedFilesArray.changedContent!))
+      setPageContent(isSelectedFilePresentInEditedFilesArray.changedContent)
       return
     }
     axiosInstance.get(`/file/get`, {
@@ -97,7 +96,7 @@ const Editor = () => {
       }
       let content = atob(base64)
       let obj = JSON.parse(content)
-      setPageContent(JSON.parse(obj))
+      setPageContent(obj)
     })
   }, [selectedFolder , isEditing])
 

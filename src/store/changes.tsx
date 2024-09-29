@@ -63,6 +63,7 @@ const useEditChangesStore = create<editorStoreType>()(
                 set(() => ({
                     isEditing: false,
                     editedFiles: [],
+                    editedFolder: []
                 }));
             },
             addEditedFolder: (id, type, ogContent, modifiedContent, name) => {
@@ -71,7 +72,7 @@ const useEditChangesStore = create<editorStoreType>()(
                     editedFolder: [
                         {
                             type: type,
-                            path: id? `simpledocs/files/${id}.json` : null,
+                            path: `simpledocs/folder/folder.json` ,
                             name: name,
                             id: id,
                             originalContent: ogContent,

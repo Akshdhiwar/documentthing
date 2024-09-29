@@ -38,7 +38,7 @@ const NavigationSideBar = () => {
         } else {
             axiosInstance.get(`/folder/${project?.Id}`).then(data => {
                 const res = data.data
-                const json: Folder[] = JSON.parse(atob(res))
+                const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
                 setFolder(json)
                 if (json.length > 0) {
                     clearLinkList()
