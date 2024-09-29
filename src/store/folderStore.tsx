@@ -1,7 +1,8 @@
-import axiosInstance from "@/shared/axios intercepter/axioshandler";
+// import axiosInstance from "@/shared/axios intercepter/axioshandler";
 import { create } from "zustand";
-import useProjectStore from "./projectStore";
+// import useProjectStore from "./projectStore";
 import useDoublyLinkedListStore from "./nextPreviousLinks";
+import useEditChangesStore from "./changes";
 
 type folderStoreType = {
     folder: Folder[]
@@ -13,39 +14,47 @@ type folderStoreType = {
     Url: string,
     loading: boolean,
     setLoading: (val: boolean) => void,
-    isNoFilePresent : boolean,
-    setIsNoFilePresent : (val : boolean) => void
+    isNoFilePresent: boolean,
+    setIsNoFilePresent: (val: boolean) => void
+    originalFolder: Folder[],
 }
 
 // Define the store
 const useFolderStore = create<folderStoreType>((set) => ({
     folder: [],
+    originalFolder: [],
     setFolder: (content: Folder[] | []) => {
 
-        if(content.length === 0){
-            set(()=>({
-                isNoFilePresent : true
+        if (content.length === 0) {
+            set((state) => ({
+                ...state,
+                isNoFilePresent: true
             }))
         }
 
-        if(content.length > 0 && useFolderStore.getState().isNoFilePresent){
-            set(()=>({
-                isNoFilePresent : false
+        if (content.length > 0 && useFolderStore.getState().isNoFilePresent) {
+            set((state) => ({
+                ...state,
+                isNoFilePresent: false
             }))
         }
 
-        if(content.length === 1 && content[0].children.length ===0){
-            set(()=>({
-                selectedFolder : content[0]
+        if (content.length === 1 && content[0].children.length === 0) {
+            set((state) => ({
+                ...state,
+                selectedFolder: content[0]
             }))
         }
 
-        set(() => ({
-            folder: content
+        set((state) => ({
+            ...state,
+            folder: content,
+            originalFolder: [...content]
         }))
     },
     createPage: async (name: string) => {
-        set(() => ({
+        set((state) => ({
+            ...state,
             loading: true
         }))
         const newFolder: Folder = {
@@ -55,40 +64,43 @@ const useFolderStore = create<folderStoreType>((set) => ({
         };
 
         // Simulate saving folder structure (replace with your actual function)
-        await saveFolderStructure(newFolder);
+        let updatedFolder = saveFolderStructure(newFolder);
 
         // Update the state with the new folder
         set((state) => ({
-            folder: [...state.folder, newFolder],
+            ...state,
+            folder: updatedFolder,
             loading: false,
-            isNoFilePresent : false
+            isNoFilePresent: false
         }));
     },
     addPage: async (name: string, id: string) => {
         try {
-            set({ loading: true });
-    
+            set((state) => ({ ...state, loading: true }));
+
             let obj: Folder = {
                 id: crypto.randomUUID(),
                 name: name,
                 children: []
             };
-    
-            const updatedFolder = await saveFolderStructure(obj, id);
-    
-            set({
+
+            const updatedFolder = saveFolderStructure(obj, id);
+
+            set((state) => ({
+                ...state,
                 folder: updatedFolder,
                 loading: false
-            });
+            }));
         } catch (error) {
             console.error("Failed to add page:", error);
-            set({ loading: false });
+            set((state) => ({ ...state, loading: false }));
         }
     },
-    
+
     selectedFolder: null,
     setSelectedFolder: (folder: Folder) => {
-        set(() => ({
+        set((state) => ({
+            ...state,
             selectedFolder: folder,
             Url: getUrlFromFolder(folder, useFolderStore.getState().folder)
         }))
@@ -96,12 +108,13 @@ const useFolderStore = create<folderStoreType>((set) => ({
     Url: "",
     loading: false,
     setLoading: (value: boolean) => {
-        set({
+        set((state) => ({
+            ...state,
             loading: value,
-        })
+        }))
     },
-    isNoFilePresent : false,
-    setIsNoFilePresent: (value: boolean) => set({ isNoFilePresent: value }),
+    isNoFilePresent: false,
+    setIsNoFilePresent: (value: boolean) => set(state => ({ ...state, isNoFilePresent: value })),
 }));
 
 export default useFolderStore;
@@ -128,18 +141,83 @@ function getUrlFromFolder(selectedFolder: Folder, folder: Folder[]): string | un
     // Return undefined if no match found
     return undefined;
 }
-async function saveFolderStructure(folder: Folder , parentID? : string) {
+function saveFolderStructure(folder: Folder, parentID?: string) {
 
-    const project = useProjectStore.getState().project; // Access project dynamically
+    // const project = useProjectStore.getState().project; // Access project dynamically
 
-    const response : any = await axiosInstance.post(`/folder/update`, {
-        // folder_object: btoa(JSON.stringify(folderStructure)),
-        id: project?.Id,
-        folder : folder,
-        parentID : parentID ? parentID : "",
+    // const response : any = await axiosInstance.post(`/folder/update`, {
+    //     // folder_object: btoa(JSON.stringify(folderStructure)),
+    //     id: project?.Id,
+    //     folder : folder,
+    //     parentID : parentID ? parentID : "",
+    // })
+
+    // useDoublyLinkedListStore.getState().clearList();
+    // useDoublyLinkedListStore.getState().convertIntoLinkedList(response.data)
+    // return response.data
+
+    let changesStore = useEditChangesStore.getState()
+    const originalFolder = useFolderStore.getState().originalFolder;
+
+    const isFolderPresentInEditedFolderArray = changesStore.editedFiles.some(file => {
+        return file.type === "folder"
     })
 
+    if (parentID) {
+        let updatedFolder = recursivelyAddFileInNestedFolder(originalFolder, folder, parentID)
+
+        if (isFolderPresentInEditedFolderArray) {
+            let folderStructure = changesStore.editedFolder
+            folderStructure.forEach(file => {
+                if (file.type === "folder") {
+                    file.changedContent = JSON.stringify(updatedFolder)
+                }
+            })
+            useEditChangesStore.setState((state) => {
+                return {
+                    ...state,
+                    editedFolder: [...folderStructure]
+                }
+            })
+            changesStore.addEditedFile(folder.id, "file", JSON.stringify({}), JSON.stringify({}), folder.name)
+        } else {
+            changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(updatedFolder), null)
+            changesStore.addEditedFile(folder.id, "file", JSON.stringify({}), JSON.stringify({}), folder.name)
+        }
+
+    } else {
+        if (isFolderPresentInEditedFolderArray) {
+            let folderStructure = changesStore.editedFiles
+            folderStructure.forEach(file => {
+                if (file.type === "folder") {
+                    file.changedContent = JSON.stringify([...JSON.parse(file.changedContent!), folder])
+                }
+            })
+            changesStore.setEditedFolder([...folderStructure])
+            changesStore.addEditedFile(folder.id, "file", JSON.stringify({}), JSON.stringify({}), folder.name)
+        } else {
+            originalFolder.push(folder)
+            changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(originalFolder), null)
+            changesStore.addEditedFile(folder.id, "file", JSON.stringify({}), JSON.stringify({}), folder.name)
+        }
+    }
+
     useDoublyLinkedListStore.getState().clearList();
-    useDoublyLinkedListStore.getState().convertIntoLinkedList(response.data)
-    return response.data
+    useDoublyLinkedListStore.getState().convertIntoLinkedList(originalFolder)
+
+    return originalFolder
+
+}
+
+function recursivelyAddFileInNestedFolder(folder: Folder[], file: Folder, parentId: string) {
+    for (let i = 0; i < folder.length; i++) {
+        if (folder[i].id === parentId) {
+            folder[i].children.push(file)
+            return folder
+        }
+        if (folder[i].children.length > 0) {
+            folder[i].children = recursivelyAddFileInNestedFolder(folder[i].children, file, parentId)
+        }
+    }
+    return folder;
 }

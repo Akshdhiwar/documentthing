@@ -15,36 +15,46 @@ import useEditChangesStore from "@/store/changes"
 const NavigationSideBar = () => {
     const [newFolder, setNewFolder] = useState(false)
     let InputRef = useRef<HTMLInputElement>(null)
-    const createPage = useFolderStore(state => state.createPage)
-    const setFolder = useFolderStore(state => state.setFolder)
-    const folder = useFolderStore(state => state.folder)
+    const { createPage, setFolder, folder, setSelectedFolder, loading, setLoading, isNoFilePresent } = useFolderStore(state => state)
     const project = useProjectStore(state => state.project)
-    const setSelectedFile = useFolderStore(state => state.setSelectedFolder)
-    const isLoading = useFolderStore(state => state.loading)
-    const setLoading = useFolderStore(state => state.setLoading)
-    const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
     const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
     const clearLinkList = useDoublyLinkedListStore(state => state.clearList)
-    const isEditing = useEditChangesStore(state => state.isEditing)
+    const { isEditing, editedFolder } = useEditChangesStore(state => state)
+
     useEffect(() => {
         setLoading(true)
-        axiosInstance.get(`/folder/${project?.Id}`).then(data => {
-            const res = data.data
-            const json: Folder[] = JSON.parse(atob(res))
-            setFolder(json)
-            if (json.length > 0) {
-                clearLinkList()
-                convertIntoLinkedList(json)
-                setSelectedFile(json[0])
-            }
-            setLoading(false)
+        // check if folder is present in editedFilesArray
+
+        const isFolderExists = editedFolder.find(file => {
+            return file.type === "folder"
         })
+
+        if (isFolderExists && isEditing) {
+            let folder = JSON.parse(isFolderExists.changedContent!)
+            setFolder(folder)
+            convertIntoLinkedList(folder)
+            setSelectedFolder(folder[0])
+            setLoading(false)
+        } else {
+            axiosInstance.get(`/folder/${project?.Id}`).then(data => {
+                const res = data.data
+                const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
+                setFolder(json)
+                if (json.length > 0) {
+                    clearLinkList()
+                    convertIntoLinkedList(json)
+                    setSelectedFolder(json[0])
+                }
+                setLoading(false)
+            })
+        }
+
         return () => {
             clearLinkList()
             useFolderStore.getState().setIsNoFilePresent(false)
             useFolderStore.getState().setFolder([])
         }
-    }, [])
+    }, [editedFolder])
 
     function createFolder() {
         setNewFolder(true)
@@ -98,7 +108,7 @@ const NavigationSideBar = () => {
                 </>
             }
             {
-                isLoading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
+                loading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
                     <Loader className="animate-spin"></Loader>
                 </div>
             }

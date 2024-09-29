@@ -1,4 +1,4 @@
-import YooptaEditor, { createYooptaEditor, YooptaMark, generateId, YooptaContentValue } from '@yoopta/editor';
+import YooptaEditor, { createYooptaEditor, YooptaMark, generateId } from '@yoopta/editor';
 import Paragraph from '@yoopta/paragraph';
 import Blockquote from '@yoopta/blockquote';
 import Embed from '@yoopta/embed';
@@ -18,6 +18,7 @@ import useFolderStore from '@/store/folderStore';
 import useEditorStore from '@/store/editorStore';
 import useProjectStore from '@/store/projectStore';
 import useEditChangesStore from '@/store/changes';
+import FileSetter from './FileSetter';
 
 const plugins: any = [
   Paragraph,
@@ -55,15 +56,14 @@ const Editor = () => {
   const editor = useMemo(() => createYooptaEditor(), []);
   const selectionRef = useRef(null);
   const [editorID, setEditorID] = useState(generateId())
-  const [pageContent, setPageContent] = useState<YooptaContentValue | undefined>(undefined);
+  const [pageContent, setPageContent] = useState<any>(undefined);
   const selectedFolder = useFolderStore(state => state.selectedFolder)
   const setEditor = useEditorStore(state => state.setEditor)
   const project = useProjectStore(state => state.project)
-  const isEditing = useEditChangesStore(state => state.isEditing)
+  const { isEditing, editedFiles } = useEditChangesStore(state => state)
 
   useEffect(() => {
     function handleChange() {
-      // console.log('value', value);
     }
     setEditor(editor)
     editor.on('change', handleChange);
@@ -74,6 +74,15 @@ const Editor = () => {
 
   useEffect(() => {
     if (selectedFolder?.id === undefined) return
+
+    const isSelectedFilePresentInEditedFilesArray = editedFiles.find(file => {
+      return file.id === selectedFolder?.id;
+    })
+
+    if (isSelectedFilePresentInEditedFilesArray) {
+      setPageContent(isSelectedFilePresentInEditedFilesArray.changedContent)
+      return
+    }
     axiosInstance.get(`/file/get`, {
       params: {
         proj: project?.Id,
@@ -87,13 +96,13 @@ const Editor = () => {
       }
       let content = atob(base64)
       let obj = JSON.parse(content)
-      setPageContent(JSON.parse(obj))
+      setPageContent(obj)
     })
-  }, [selectedFolder])
+  }, [selectedFolder , isEditing])
 
   useEffect(() => {
-    setEditorID(generateId)
-  }, [pageContent , isEditing])
+    setEditorID(generateId())
+  }, [pageContent, isEditing])
 
   return (
     <div
@@ -113,6 +122,7 @@ const Editor = () => {
         className="yoopta-editor"
         readOnly={!isEditing}
       />
+      <FileSetter/>
     </div>
   );
 }
