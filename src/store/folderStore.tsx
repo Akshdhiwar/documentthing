@@ -179,10 +179,10 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                     editedFolder: [...folderStructure]
                 }
             })
-            changesStore.addEditedFile(folder.id, "file", JSON.stringify({}), JSON.stringify({}), folder.name)
+            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify({}), folder.name)
         } else {
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(updatedFolder), null)
-            changesStore.addEditedFile(folder.id, "file", JSON.stringify({}), JSON.stringify({}), folder.name)
+            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify({}), folder.name)
         }
 
     } else {
@@ -194,11 +194,11 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 }
             })
             changesStore.setEditedFolder([...folderStructure])
-            changesStore.addEditedFile(folder.id, "file", JSON.stringify({}), JSON.stringify({}), folder.name)
+            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify({}), folder.name)
         } else {
             originalFolder.push(folder)
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(originalFolder), null)
-            changesStore.addEditedFile(folder.id, "file", JSON.stringify({}), JSON.stringify({}), folder.name)
+            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify({}), folder.name)
         }
     }
 
