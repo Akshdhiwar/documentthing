@@ -6,8 +6,8 @@ type editedFilesInterface = {
     path: string | null,
     name: string | null,
     id: string | null,
-    originalContent: string | null,
-    changedContent: string | null,
+    originalContent: any,
+    changedContent: any,
 }
 
 type editorStoreType = {
@@ -17,8 +17,8 @@ type editorStoreType = {
     editedFolder : editedFilesInterface[];
     setEditedFolder : (data : editedFilesInterface[]) => void
     setEditedFiles : (data : editedFilesInterface[]) => void
-    addEditedFile: (id: string | null, type: "file" | "folder", ogContent: string | null, modifiedContent: string | null, name: string | null) => void;
-    addEditedFolder: (id: string | null, type: "file" | "folder", ogContent: string | null, modifiedContent: string | null, name: string | null) => void;
+    addEditedFile: (id: string | null, type: "file" | "folder", ogContent: any, modifiedContent: any, name: string | null) => void;
+    addEditedFolder: (id: string | null, type: "file" | "folder", ogContent: any, modifiedContent: any, name: string | null) => void;
     reset: () => void
 }
 

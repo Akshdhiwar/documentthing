@@ -179,10 +179,30 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                     editedFolder: [...folderStructure]
                 }
             })
-            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify({}), folder.name)
+            changesStore.addEditedFile(folder.id, "file", "",  JSON.stringify([{
+                children: [],
+                content: [],
+                id: "7af2d8c4-d4b1-480c-b833-be99737a340f",
+                props: {
+                    textColor: "default",
+                    backgroundColor: "default",
+                    textAlignment: "left"
+                },
+                type: "paragraph"
+            }]), folder.name)
         } else {
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(updatedFolder), null)
-            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify({}), folder.name)
+            changesStore.addEditedFile(folder.id, "file", "", [{
+                children: [],
+                content: [],
+                id: "7af2d8c4-d4b1-480c-b833-be99737a340f",
+                props: {
+                    textColor: "default",
+                    backgroundColor: "default",
+                    textAlignment: "left"
+                },
+                type: "paragraph"
+            }], folder.name)
         }
 
     } else {
@@ -194,11 +214,31 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 }
             })
             changesStore.setEditedFolder([...folderStructure])
-            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify({}), folder.name)
+            changesStore.addEditedFile(folder.id, "file", "", [{
+                children: [],
+                content: [],
+                id: "7af2d8c4-d4b1-480c-b833-be99737a340f",
+                props: {
+                    textColor: "default",
+                    backgroundColor: "default",
+                    textAlignment: "left"
+                },
+                type: "paragraph"
+            }], folder.name)
         } else {
             originalFolder.push(folder)
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(originalFolder), null)
-            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify({}), folder.name)
+            changesStore.addEditedFile(folder.id, "file", "", [{
+                children: [],
+                content: [],
+                id: "7af2d8c4-d4b1-480c-b833-be99737a340f",
+                props: {
+                    textColor: "default",
+                    backgroundColor: "default",
+                    textAlignment: "left"
+                },
+                type: "paragraph"
+            }], folder.name)
         }
     }
 
