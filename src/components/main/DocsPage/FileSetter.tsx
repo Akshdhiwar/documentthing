@@ -1,17 +1,16 @@
 import useEditChangesStore from '@/store/changes';
 import useEditorStore from '@/store/editorStore';
 import useFolderStore from '@/store/folderStore';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect } from 'react';
 
 const FileSetter = () => {
     // Use Zustand hooks to get the current state
     const selectedFolder = useFolderStore(state => state.selectedFolder);
-    const { editedFiles, setEditedFiles, addEditedFile } = useEditChangesStore(state => state);
-    const { editor } = useEditorStore(state => state);
-    const [content, setContent] = useState<any>("");
+    const { editedFiles, setEditedFiles, addEditedFile, isEditing } = useEditChangesStore(state => state);
+    const { content, initialContent } = useEditorStore(state => state);
 
     // Callback to avoid re-creating the function on every render
-    const setEditingContents = useCallback(
+    const setEditingContents =
         (value?: any) => {
             if (!selectedFolder) return;
 
@@ -20,7 +19,7 @@ const FileSetter = () => {
 
             if (existingFile) {
                 // Update only if the content has actually changed
-                const newContent = value ?? content;
+                const newContent = value;
                 if (existingFile.changedContent !== newContent) {
                     const updatedFiles = editedFiles.map(file =>
                         file.id === folderId ? { ...file, changedContent: newContent } : file
@@ -31,29 +30,20 @@ const FileSetter = () => {
                 addEditedFile(
                     folderId,
                     "file",
-                    value ?? content,
-                    value ?? content,
+                    value,
+                    value,
                     selectedFolder.name
                 );
             }
-        },
-        [selectedFolder, editedFiles, content, setEditedFiles, addEditedFile]
-    );
+        }
 
     // Effect to handle editor changes
     useEffect(() => {
-        if (!editor) return;
+        if (!isEditing) return;
+        if (JSON.stringify(initialContent) === JSON.stringify(content)) return
+        setEditingContents(content);
 
-        const handleChange = (value: any) => {
-            setContent(value);
-            setEditingContents(value);
-        };
-
-        editor.on('change', handleChange);
-        return () => {
-            editor.off('change', handleChange);
-        };
-    }, [editor, setEditingContents]);
+    }, [content]);
 
     // // Effect to handle changes in the selected folder
     // useEffect(() => {

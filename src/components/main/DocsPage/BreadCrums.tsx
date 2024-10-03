@@ -28,7 +28,7 @@ const BreadCrums: React.FC<BreadcrumType> = ({ UrlString }) => {
                     <BreadcrumbSeparator></BreadcrumbSeparator>
                     {
                         resultArray.map((ele, index) => (
-                            <div className="flex items-center ">
+                            <div className="flex items-center " key={index}>
                                 <BreadcrumbItem>
                                     {
                                         index !== resultArray.length - 1 ? <BreadcrumbLink className="flex gap-1 items-center"><FolderOpen height={16}></FolderOpen>{ele}</BreadcrumbLink> : <BreadcrumbPage className="flex gap-1 items-center"><FileText height={16}></FileText>{ele}</BreadcrumbPage>

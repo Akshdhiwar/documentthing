@@ -2,9 +2,9 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../components/ui/resizable"
 import Toolbar from "../../components/main/DocsPage/Toolbar"
 import NavigationSideBar from "@/components/main/DocsPage/NavigationSideBar"
-import Editor from "@/components/main/DocsPage/YooptaEditor"
 import NextPrevious from "@/components/main/DocsPage/NextPrevious"
 import useFolderStore from "@/store/folderStore"
+import BlockNoteEditor from "@/components/main/DocsPage/BlockNoteEditor"
 
 const DocsPage = () => {
     // const NavigationSideBar = lazy(() => import('../components/main/NavigationSideBar'))
@@ -28,7 +28,7 @@ const DocsPage = () => {
                     <div className="flex justify-center mt-6 flex-1  overflow-auto">
                         {
                             !isNoFilePresent && <div className="w-full max-w-3xl h-full flex-1 basis-auto flex flex-col justify-between">
-                                <Editor />
+                                <BlockNoteEditor />
                                 <NextPrevious />
                             </div>
                         }
