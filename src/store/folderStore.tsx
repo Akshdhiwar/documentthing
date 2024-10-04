@@ -38,18 +38,12 @@ const useFolderStore = create<folderStoreType>((set) => ({
                 isNoFilePresent: false
             }))
         }
-
-        if (content.length === 1 && content[0].children.length === 0) {
-            set((state) => ({
-                ...state,
-                selectedFolder: content[0]
-            }))
-        }
-
+        
         set((state) => ({
             ...state,
             folder: content,
-            originalFolder: [...content]
+            originalFolder: [...content],
+            selectedFolder: content[0]
         }))
     },
     createPage: async (name: string) => {
