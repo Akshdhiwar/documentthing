@@ -8,6 +8,7 @@ type BreadcrumType = {
 }
 
 const BreadCrums: React.FC<BreadcrumType> = ({ UrlString }) => {
+    if(!UrlString) return
     const project = useProjectStore(state => state.project)
     const resultArray = UrlString.split(" / ").map(str => str.trim());
 

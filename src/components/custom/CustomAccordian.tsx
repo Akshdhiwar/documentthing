@@ -22,14 +22,12 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     const [open, setOpen] = useState(false)
     const [renameOpen, setRenameOpen] = useState(false)
     const project = useProjectStore(state => state.project)
-    const addPage = useFolderStore(state => state.addPage)
-    const setFolder = useFolderStore(state => state.setFolder)
-    const setSelectedFolder = useFolderStore(state => state.setSelectedFolder)
-    const selectedFolder = useFolderStore(state => state.selectedFolder)
-    const setLoading = useFolderStore(state => state.setLoading)
-    const clearLinkedList = useDoublyLinkedListStore(state => state.clearList)
-    const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
-    const isEditing = useEditChangesStore(state => state.isEditing)
+    const { addPage, setFolder, setSelectedFolder, selectedFolder, setLoading, folder } = useFolderStore(state => state)
+    const { clearList, convertIntoLinkedList } = useDoublyLinkedListStore(state => state)
+    const {isEditing , addEditedFile , addEditedFolder} = useEditChangesStore(state => state)
+
+
+
     useEffect(() => {
         child.children.forEach(file => {
             if (file.id === selectedFolder?.id) {
@@ -61,21 +59,41 @@ const CustomAccordian = ({ child }: FolderInterface) => {
         }
     }, [newFolder]);
 
-    async function deleteFolderFile(id: string) {
-        setLoading(true)
-        axiosInstance.delete(`/file`, {
-            data: {
-                file_id: id,
-                project_id: project?.Id,
+    function deleteFolderRecursive(id: string, folder: Folder[]) {
+        let temp : Folder[] = []
+
+        folder.forEach((file) => {
+            if (file.id === id){
+                if (file.children.length > 0) {
+                    deleteFile(file.children)
+                }
+                addEditedFile(file.id , "file" , file , null , file.name)
+                return
             }
-        }).then(data => {
-            setLoading(false)
-            const res = data.data
-            const json = JSON.parse(atob(res))
-            setFolder(json)
-            clearLinkedList()
-            convertIntoLinkedList(json)
+            if ( file.children.length > 0) {
+                file.children = deleteFolderRecursive(id, file.children)
+            }
+            temp.push(file)
         })
+        return temp
+    }
+
+    function deleteFile(folder : Folder[]){
+        folder.forEach(file => {
+            if(file.children.length > 0){
+                deleteFile(file.children)
+            }
+
+            addEditedFile(file.id , "file" , file , null , file.name )
+        })
+    }
+
+    async function deleteFolderFile(id: string) {
+
+        let updatedFolder = deleteFolderRecursive(id, folder)
+        addEditedFolder(null, "folder" , JSON.stringify(folder) , JSON.stringify(updatedFolder) , null)
+        clearList()
+        convertIntoLinkedList(updatedFolder)
 
     }
 
@@ -101,7 +119,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
             const json = JSON.parse(atob(res))
             setFolder(json)
             setRenameOpen(false)
-            clearLinkedList()
+            clearList()
             convertIntoLinkedList(json)
         })
     }
