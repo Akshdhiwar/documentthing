@@ -9,6 +9,10 @@ import "@blocknote/mantine/style.css";
 import { useEffect, useMemo, useState } from "react";
 import { BlockNoteEditor as BNE, PartialBlock } from "@blocknote/core";
 import FileSetter from "./FileSetter";
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+import useUserStore from "@/store/userStore";
+// ...
 
 const BlockNoteEditor = () => {
     // State for page content and editor
@@ -16,11 +20,36 @@ const BlockNoteEditor = () => {
     const selectedFolder = useFolderStore((state) => state.selectedFolder);
     const { isEditing, editedFiles } = useEditChangesStore((state) => state);
     const project = useProjectStore((state) => state.project);
-    const { setContent , setInitialContent } = useEditorStore((state) => state);
+    const { setContent, setInitialContent } = useEditorStore((state) => state);
+    const { user } = useUserStore(state => state)
 
     // Editor instance
     const editor = useMemo(() => {
-        const editor = BNE.create({ initialContent : pageContent });
+        let editor: any
+        if (isEditing) {
+            const doc = new Y.Doc();
+
+            const provider = new WebrtcProvider(project?.Id! + selectedFolder?.id, doc);
+            editor = BNE.create({
+                initialContent: pageContent,
+                collaboration: {
+                    // The Yjs Provider responsible for transporting updates:
+                    provider,
+                    // Where to store BlockNote data in the Y.Doc:
+                    fragment: doc.getXmlFragment("document-store"),
+                    // Information (name and color) for this user:
+                    user: {
+                        name: user?.GithubName!,
+                        color: "#ff0000",
+                    },
+                },
+            });
+        } else {
+            editor = BNE.create({
+                initialContent: pageContent
+            })
+        }
+
         return editor
     }, [pageContent]);
 

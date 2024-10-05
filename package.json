@@ -61,6 +61,8 @@
     "react-router-dom": "^6.24.1",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "y-webrtc": "^10.3.0",
+    "yjs": "^13.6.19",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
