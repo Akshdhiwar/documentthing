@@ -22,10 +22,10 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     const [open, setOpen] = useState(false)
     const [renameOpen, setRenameOpen] = useState(false)
     const project = useProjectStore(state => state.project)
-    const { addPage, setFolder, setSelectedFolder, selectedFolder, setLoading, folder } = useFolderStore(state => state)
+    const { addPage, setFolder, setSelectedFolder, selectedFolder, setLoading, folder , Url } = useFolderStore(state => state)
     const { clearList, convertIntoLinkedList } = useDoublyLinkedListStore(state => state)
-    const {isEditing , addEditedFile , addEditedFolder} = useEditChangesStore(state => state)
-
+    const {isEditing , addEditedFile , addEditedFolder , addEditedMarkdown} = useEditChangesStore(state => state)
+    let flag = false;
 
 
     useEffect(() => {
@@ -65,6 +65,7 @@ const CustomAccordian = ({ child }: FolderInterface) => {
         folder.forEach((file) => {
             if (file.id === id){
                 if (file.children.length > 0) {
+                    flag = true
                     deleteFile(file.children)
                 }
                 addEditedFile(file.id , "file" , file , null , file.name)
@@ -92,6 +93,10 @@ const CustomAccordian = ({ child }: FolderInterface) => {
 
         let updatedFolder = deleteFolderRecursive(id, folder)
         addEditedFolder(null, "folder" , JSON.stringify(folder) , JSON.stringify(updatedFolder) , null)
+        if(flag){
+            addEditedMarkdown(id , "markdown" , null , null , null , Url.replace(/\s/g, ''))
+        }
+        addEditedMarkdown(id , "markdown" , null , null , null , Url.replace(/\s/g, '')+".md")
         clearList()
         convertIntoLinkedList(updatedFolder)
 

@@ -152,6 +152,8 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
 
     let changesStore = useEditChangesStore.getState()
     const originalFolder = useFolderStore.getState().originalFolder;
+    const url = useFolderStore.getState().Url;
+
 
     const isFolderPresentInEditedFolderArray = changesStore.editedFiles.some(file => {
         return file.type === "folder"
@@ -184,6 +186,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }]), folder.name)
+            changesStore.addEditedMarkdown( folder.id ,  "markdown", null , null ,null , url.replace(/\s/g, '') + "/" + folder.name + ".md")
         } else {
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(updatedFolder), null)
             changesStore.addEditedFile(folder.id, "file", "", [{
@@ -197,6 +200,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }], folder.name)
+            changesStore.addEditedMarkdown(folder.id ,"markdown" , null , null , null , url.replace(/\s/g, '') + "/" + folder.name + ".md")
         }
 
     } else {
@@ -219,6 +223,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }], folder.name)
+            changesStore.addEditedMarkdown(folder.id ,"markdown" , null , null, null , folder.name + ".md")
         } else {
             originalFolder.push(folder)
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(originalFolder), null)
@@ -233,6 +238,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }], folder.name)
+            changesStore.addEditedMarkdown(folder.id ,"markdown" , null , null , null , folder.name + ".md")
         }
     }
 

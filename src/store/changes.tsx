@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 type editedFilesInterface = {
-    type: "file" | "folder",
+    type: "file" | "folder" | "markdown",
     path: string | null,
     name: string | null,
     id: string | null,
@@ -14,11 +14,14 @@ type editorStoreType = {
     isEditing: boolean;
     setIsEditing: (data: boolean) => void;
     editedFiles: editedFilesInterface[];
-    editedFolder : editedFilesInterface[];
-    setEditedFolder : (data : editedFilesInterface[]) => void
-    setEditedFiles : (data : editedFilesInterface[]) => void
+    editedFolder: editedFilesInterface[];
+    editedMarkdown: editedFilesInterface[];
+    setEditedFolder: (data: editedFilesInterface[]) => void
+    setEditedFiles: (data: editedFilesInterface[]) => void
+    setMarkdownFiles: (data: editedFilesInterface[]) => void,
     addEditedFile: (id: string | null, type: "file" | "folder", ogContent: any, modifiedContent: any, name: string | null) => void;
     addEditedFolder: (id: string | null, type: "file" | "folder", ogContent: any, modifiedContent: any, name: string | null) => void;
+    addEditedMarkdown: (id: string | null, type: "markdown", ogContent: any, modifiedContent: any, name: string | null , path : string) => void;
     reset: () => void
 }
 
@@ -32,16 +35,37 @@ const useEditChangesStore = create<editorStoreType>()(
                 }));
             },
             editedFiles: [],
-            editedFolder : [],
-            setEditedFolder : (data : editedFilesInterface[]) => {
+            editedFolder: [],
+            editedMarkdown: [],
+            addEditedMarkdown: (id , type , ogContent , modifiedContent , name , path) => {
+                set((state)=>({
+                    editedMarkdown : [
+                        ...state.editedMarkdown,
+                        {
+                            type: type,
+                            path: path,
+                            name: name,
+                            id: id,
+                            originalContent: ogContent,
+                            changedContent: modifiedContent,
+                        }
+                    ]
+                }))
+            },
+            setEditedFolder: (data: editedFilesInterface[]) => {
                 set(() => ({
                     editedFolder: data
                 }));
             },
-            setEditedFiles : (data : editedFilesInterface[]) => {
+            setEditedFiles: (data: editedFilesInterface[]) => {
                 set(() => ({
                     editedFiles: data
                 }));
+            },
+            setMarkdownFiles: (data: editedFilesInterface[]) => {
+                set(() => ({
+                    editedMarkdown: data
+                }))
             },
             addEditedFile: (id, type, ogContent, modifiedContent, name) => {
                 set((state) => ({
@@ -63,7 +87,8 @@ const useEditChangesStore = create<editorStoreType>()(
                 set(() => ({
                     isEditing: false,
                     editedFiles: [],
-                    editedFolder: []
+                    editedFolder: [],
+                    editedMarkdown: [],
                 }));
             },
             addEditedFolder: (id, type, ogContent, modifiedContent, name) => {
@@ -72,7 +97,7 @@ const useEditChangesStore = create<editorStoreType>()(
                     editedFolder: [
                         {
                             type: type,
-                            path: `simpledocs/folder/folder.json` ,
+                            path: `simpledocs/folder/folder.json`,
                             name: name,
                             id: id,
                             originalContent: ogContent,
