@@ -22,9 +22,9 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     const [open, setOpen] = useState(false)
     const [renameOpen, setRenameOpen] = useState(false)
     const project = useProjectStore(state => state.project)
-    const { addPage, setFolder, setSelectedFolder, selectedFolder, setLoading, folder , Url } = useFolderStore(state => state)
+    const { addPage, setFolder, setSelectedFolder, selectedFolder, setLoading, folder, Url } = useFolderStore(state => state)
     const { clearList, convertIntoLinkedList } = useDoublyLinkedListStore(state => state)
-    const {isEditing , addEditedFile , addEditedFolder , addEditedMarkdown} = useEditChangesStore(state => state)
+    const { isEditing, addEditedFile, addEditedFolder, addEditedMarkdown } = useEditChangesStore(state => state)
     let flag = false;
 
 
@@ -60,18 +60,18 @@ const CustomAccordian = ({ child }: FolderInterface) => {
     }, [newFolder]);
 
     function deleteFolderRecursive(id: string, folder: Folder[]) {
-        let temp : Folder[] = []
+        let temp: Folder[] = []
 
         folder.forEach((file) => {
-            if (file.id === id){
+            if (file.id === id) {
                 if (file.children.length > 0) {
                     flag = true
                     deleteFile(file.children)
                 }
-                addEditedFile(file.id , "file" , file , null , file.name)
+                addEditedFile(file.id, "file", file, null, file.name)
                 return
             }
-            if ( file.children.length > 0) {
+            if (file.children.length > 0) {
                 file.children = deleteFolderRecursive(id, file.children)
             }
             temp.push(file)
@@ -79,24 +79,24 @@ const CustomAccordian = ({ child }: FolderInterface) => {
         return temp
     }
 
-    function deleteFile(folder : Folder[]){
+    function deleteFile(folder: Folder[]) {
         folder.forEach(file => {
-            if(file.children.length > 0){
+            if (file.children.length > 0) {
                 deleteFile(file.children)
             }
 
-            addEditedFile(file.id , "file" , file , null , file.name )
+            addEditedFile(file.id, "file", file, null, file.name)
         })
     }
 
     async function deleteFolderFile(id: string) {
 
         let updatedFolder = deleteFolderRecursive(id, folder)
-        addEditedFolder(null, "folder" , JSON.stringify(folder) , JSON.stringify(updatedFolder) , null)
-        if(flag){
-            addEditedMarkdown(id , "markdown" , null , null , null , Url.replace(/\s/g, ''))
+        addEditedFolder(null, "folder", JSON.stringify(folder), JSON.stringify(updatedFolder), null)
+        if (flag) {
+            addEditedMarkdown(id, "markdown", null, "null", null, Url.replace(/\s/g, ''))
         }
-        addEditedMarkdown(id , "markdown" , null , null , null , Url.replace(/\s/g, '')+".md")
+        addEditedMarkdown(id, "markdown", null, "null", null, Url.replace(/\s/g, '') + ".md")
         clearList()
         convertIntoLinkedList(updatedFolder)
 
