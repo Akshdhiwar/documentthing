@@ -16,7 +16,7 @@ const BlockNoteEditor = () => {
     const selectedFolder = useFolderStore((state) => state.selectedFolder);
     const { isEditing, editedFiles } = useEditChangesStore((state) => state);
     const project = useProjectStore((state) => state.project);
-    const { setContent , setInitialContent } = useEditorStore((state) => state);
+    const { setContent , setInitialContent , setMarkdown } = useEditorStore((state) => state);
 
     // Editor instance
     const editor = useMemo(() => {
@@ -59,6 +59,13 @@ const BlockNoteEditor = () => {
             });
     }, [selectedFolder]);
 
+    const onChange = async () => {
+        // Converts the editor's contents from Block objects to Markdown and store to state.
+        const markdown = await editor.blocksToMarkdownLossy(editor.document);
+        setContent(editor.document);
+        setMarkdown(markdown);
+      };
+
     // Render the editor only when it's ready
     return (
         <>
@@ -67,9 +74,7 @@ const BlockNoteEditor = () => {
                     editor={editor}
                     theme={"light"}
                     editable={isEditing}
-                    onChange={() => {
-                        setContent(editor.document);
-                    }}
+                    onChange={onChange}
                 />
             )}
             <FileSetter />

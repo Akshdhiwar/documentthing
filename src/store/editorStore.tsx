@@ -7,6 +7,8 @@ type editorStoreType = {
     setContent : (data : any) => void,
     initialContent : any,
     setInitialContent : (data : any) => void,
+    markdown : any,
+    setMarkdown : (data : any) => void
 }
 
 const useEditorStore = create<editorStoreType>((set)=>({
@@ -26,6 +28,12 @@ const useEditorStore = create<editorStoreType>((set)=>({
     setInitialContent : (data) => {
         set(()=>({
             initialContent : data
+        }))
+    },
+    markdown : null,
+    setMarkdown : (data) => {
+        set(()=>({
+            markdown : data
         }))
     }
 }))
