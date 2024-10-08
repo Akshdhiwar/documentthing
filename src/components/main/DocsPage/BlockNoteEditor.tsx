@@ -9,10 +9,10 @@ import "@blocknote/mantine/style.css";
 import { useEffect, useMemo, useState } from "react";
 import { BlockNoteEditor as BNE, PartialBlock } from "@blocknote/core";
 import FileSetter from "./FileSetter";
-import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
+import YPartyKitProvider from "y-partykit/provider";
 import useUserStore from "@/store/userStore";
-// ...
+import * as Y from "yjs";
+
 
 const BlockNoteEditor = () => {
     // State for page content and editor
@@ -23,13 +23,27 @@ const BlockNoteEditor = () => {
     const { setContent, setInitialContent } = useEditorStore((state) => state);
     const { user } = useUserStore(state => state)
 
+    // create a function to get random bright hex code
+    const getRandomColor = () => {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
+
     // Editor instance
     const editor = useMemo(() => {
         let editor: any
         if (isEditing) {
             const doc = new Y.Doc();
-
-            const provider = new WebrtcProvider(project?.Id! + selectedFolder?.id, doc);
+            const provider = new YPartyKitProvider(
+                "blocknote-dev.yousefed.partykit.dev",
+                // use a unique name as a "room" for your application:
+                project?.Id! + selectedFolder?.id,
+                doc,
+            );
             editor = BNE.create({
                 initialContent: pageContent,
                 collaboration: {
@@ -38,12 +52,12 @@ const BlockNoteEditor = () => {
                     // Where to store BlockNote data in the Y.Doc:
                     fragment: doc.getXmlFragment("document-store"),
                     // Information (name and color) for this user:
-                    user: {
-                        name: user?.GithubName!,
-                        color: "#ff0000",
-                    },
-                },
-            });
+                    user : {
+                        name : user?.GithubName!,
+                        color : getRandomColor()// blue color
+                    }
+                  }
+            })
         } else {
             editor = BNE.create({
                 initialContent: pageContent
@@ -51,7 +65,7 @@ const BlockNoteEditor = () => {
         }
 
         return editor
-    }, [pageContent]);
+    }, [selectedFolder , isEditing]);
 
     useEffect(() => {
         if (!selectedFolder?.id) return;
