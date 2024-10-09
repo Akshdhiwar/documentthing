@@ -5,9 +5,9 @@ import { useEffect } from 'react';
 
 const FileSetter = () => {
     // Use Zustand hooks to get the current state
-    const selectedFolder = useFolderStore(state => state.selectedFolder);
-    const { editedFiles, setEditedFiles, addEditedFile, isEditing } = useEditChangesStore(state => state);
-    const { content, initialContent } = useEditorStore(state => state);
+    const {selectedFolder , Url} = useFolderStore(state => state);
+    const { editedFiles, setEditedFiles, addEditedFile, setMarkdownFiles, addEditedMarkdown, isEditing, editedMarkdown } = useEditChangesStore(state => state);
+    const { content, initialContent, markdown } = useEditorStore(state => state);
 
     // Callback to avoid re-creating the function on every render
     const setEditingContents =
@@ -25,6 +25,12 @@ const FileSetter = () => {
                         file.id === folderId ? { ...file, changedContent: newContent } : file
                     );
                     setEditedFiles(updatedFiles);
+
+                    const updatedMarkdownFiles = editedMarkdown.map(file => {
+                        return file.id === folderId ? { ...file , changedContent : markdown } : file;
+                    })
+
+                    setMarkdownFiles(updatedMarkdownFiles)
                 }
             } else {
                 addEditedFile(
@@ -34,6 +40,9 @@ const FileSetter = () => {
                     value,
                     selectedFolder.name
                 );
+                const url = Url
+                const flag = Url.includes("/")
+                addEditedMarkdown(folderId ,"markdown" , null , markdown ,null , flag ? url.replace(/\s/g, '') + ".md" : selectedFolder.name + ".md")
             }
         }
 
@@ -42,7 +51,6 @@ const FileSetter = () => {
         if (!isEditing) return;
         if (JSON.stringify(initialContent) === JSON.stringify(content)) return
         setEditingContents(content);
-
     }, [content]);
 
     // // Effect to handle changes in the selected folder

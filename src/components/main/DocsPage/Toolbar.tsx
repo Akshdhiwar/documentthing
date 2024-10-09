@@ -15,7 +15,7 @@ const Toolbar = () => {
     const [isLoading, setLoading] = useState(false)
     const project = useProjectStore(state => state.project)
     const { Url, isNoFilePresent } = useFolderStore(state => state)
-    const { isEditing, setIsEditing, editedFiles, reset, editedFolder } = useEditChangesStore(state => state)
+    const { isEditing, setIsEditing, editedFiles, reset, editedFolder , editedMarkdown } = useEditChangesStore(state => state)
 
     // const fetchToServer = async (data: string) => {
     //     setLoading(true)
@@ -49,10 +49,18 @@ const Toolbar = () => {
                 originalContent: JSON.stringify(folder.originalContent!)
             }
         })
+
+        let markdown = editedMarkdown.map(file => {
+            return {
+                ...file,
+                originalContent: JSON.stringify(file.originalContent!)
+            }
+        })
+
         // setLoading(true)
         axiosInstance.post("/commit/save", {
             project_id: project?.Id,
-            content: [...files, ...folder]
+            content: [...files, ...folder , ...markdown]
         }).then(()=>{
             setLoading(false)
             reset()
