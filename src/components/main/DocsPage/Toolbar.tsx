@@ -30,6 +30,11 @@ const Toolbar = () => {
     //     })
     // }
 
+    function cancelEditing() {
+        reset()
+        setLoading(false)
+    }
+
     const onSaveToServer = async () => {
         setLoading(true)
         let files = editedFiles.map(file => {
@@ -40,7 +45,7 @@ const Toolbar = () => {
                     originalContent: JSON.stringify(file.originalContent!)
                 }
             }
-        })
+        }).filter(file => file !== undefined); // Remove undefined values
 
         let folder = editedFolder.map(folder => {
             return {
@@ -48,14 +53,14 @@ const Toolbar = () => {
                 changedContent: JSON.stringify(folder.changedContent!),
                 originalContent: JSON.stringify(folder.originalContent!)
             }
-        })
+        }).filter(file => file !== undefined); // Remove undefined values
 
         let markdown = editedMarkdown.map(file => {
             return {
                 ...file,
                 originalContent: JSON.stringify(file.originalContent!)
             }
-        })
+        }).filter(file => file !== undefined); // Remove undefined values
 
         // setLoading(true)
         axiosInstance.post("/commit/save", {
@@ -94,7 +99,7 @@ const Toolbar = () => {
                     <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading} onClick={onSaveToServer}>{
                         isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
                     } Save changes</Button>
-                    <Button className="order-3" size={"sm"} onClick={() => reset()}>Cancel Editing</Button>
+                    <Button className="order-3" size={"sm"} onClick={() => cancelEditing()}>Cancel Editing</Button>
                 </div> : <Button className="order-3" size={"sm"} onClick={() => setIsEditing(true)}>Edit</Button>
             }
 
