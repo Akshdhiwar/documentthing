@@ -90,7 +90,7 @@ const Toolbar = () => {
             </div>
             <div className="order-2">
                 {
-                    !isNoFilePresent && <BreadCrums UrlString={Url} />
+                    !isNoFilePresent && !Url && <BreadCrums UrlString={Url} />
                 }
             </div>
             {
