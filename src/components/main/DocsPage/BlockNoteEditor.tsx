@@ -39,13 +39,12 @@ const BlockNoteEditor = () => {
         if (isEditing) {
             const doc = new Y.Doc();
             const provider = new YPartyKitProvider(
-                "blocknote-dev.yousefed.partykit.dev",
+                "https://simpledoxs-party.akshdhiwar.partykit.dev",
                 // use a unique name as a "room" for your application:
                 project?.Id! + selectedFolder?.id,
                 doc,
             );
             editor = BNE.create({
-                initialContent: pageContent,
                 collaboration: {
                     // The Yjs Provider responsible for transporting updates:
                     provider,
