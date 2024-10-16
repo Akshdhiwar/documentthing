@@ -20,7 +20,7 @@ const BlockNoteEditor = () => {
     const selectedFolder = useFolderStore((state) => state.selectedFolder);
     const { isEditing, editedFiles } = useEditChangesStore((state) => state);
     const project = useProjectStore((state) => state.project);
-    const { setContent, setInitialContent ,setMarkdown } = useEditorStore((state) => state);
+    const { setContent, setInitialContent ,setMarkdown , setEditor} = useEditorStore((state) => state);
     const { user } = useUserStore(state => state)
 
     // create a function to get random bright hex code
@@ -104,6 +104,7 @@ const BlockNoteEditor = () => {
     const onChange = async () => {
         // Converts the editor's contents from Block objects to Markdown and store to state.
         const markdown = await editor.blocksToMarkdownLossy(editor.document);
+        setEditor(editor)
         setContent(editor.document);
         setMarkdown(markdown);
       };

@@ -63,13 +63,17 @@ const Toolbar = () => {
         }).filter(file => file !== undefined); // Remove undefined values
 
         // setLoading(true)
-        axiosInstance.post("/commit/save", {
+        let response = await axiosInstance.post("/commit/save", {
             project_id: project?.Id,
             content: [...files, ...folder , ...markdown]
-        }).then(()=>{
+        })
+
+        if(response.status === 200){
             setLoading(false)
             reset()
-        })
+        }else{
+            setLoading(false)
+        }
 
         // const editorContent = editor.getEditorValue();
         // await fetchToServer(JSON.stringify(editorContent))

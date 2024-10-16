@@ -1,11 +1,14 @@
+import Item from "@/components/custom/Item"
 import { Button } from "@/components/ui/button"
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu"
 import useEditorStore from "@/store/editorStore"
 import useFolderStore from "@/store/folderStore"
-import {plainText , markdown , html} from "@yoopta/exports"
+import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover"
+import { ChevronDown, CodeXml } from "lucide-react"
+import { useState } from "react"
+import { PopoverClose } from "@radix-ui/react-popover";
 
 const Export = () => {
-
+    const [type, setType] = useState<"Markdown" | "HTML">("Markdown")
     const editor = useEditorStore(state => state.editor)
     const folder = useFolderStore(state => state.selectedFolder)
 
@@ -18,37 +21,39 @@ const Export = () => {
         link.click();
     };
 
-    function exportPlainText() {
-        const data = editor.getEditorValue();
-        const textString = plainText.serialize(editor, data);
-        downloadFile(textString, folder?.name + ".txt", "text/plain");
+    function exportFile() {
+        if (type === "Markdown") {
+            exportMarkdown()
+        } else {
+            exportHTML()
+        }
     }
-    function exportHTML() {
-        const data = editor.getEditorValue();
-        const htmlString = html.serialize(editor, data);
+    async function exportHTML() {
+        const htmlString = await editor.blocksToHTMLLossy(editor.document)
         downloadFile(htmlString, folder?.name + ".html", "text/html");
     }
-    function exportMarkdown() {
-        const data = editor.getEditorValue();
-        const markdownString = markdown.serialize(editor, data);
+    async function exportMarkdown() {
+        const markdownString = await editor.blocksToMarkdownLossy(editor.document)
         downloadFile(markdownString, folder?.name + ".md", "text/markdown");
     }
 
     return (
-        <NavigationMenu>
-            <NavigationMenuList>
-                <NavigationMenuItem>
-                    <NavigationMenuTrigger>Export</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                        <div className="flex flex-col gap-1 p-2">
-                            <Button variant={"ghost"} size={"sm"} onClick={exportPlainText}>Plain Text</Button>
-                            <Button variant={"ghost"} size={"sm"} onClick={exportHTML}>HTML</Button>
-                            <Button variant={"ghost"} size={"sm"} onClick={exportMarkdown}>Markdown</Button>
-                        </div>
-                    </NavigationMenuContent>
-                </NavigationMenuItem>
-            </NavigationMenuList>
-        </NavigationMenu>
+        <div className="flex items-center gap-[1px]">
+            <Button onClick={exportFile} size={"sm"} className="rounded-none rounded-tl-md rounded-bl-md" >Export {type}</Button>
+            <Popover>
+                <PopoverTrigger>
+                    <Button className="h-9 w-6 rounded-none rounded-tr-md rounded-br-md" size={"icon"}><ChevronDown height={16} width={16} /></Button>
+                </PopoverTrigger>
+                <PopoverContent className="flex flex-col w-48 p-1 gap-1 z-20 border mt-2 rounded-sm bg-white">
+                    <PopoverClose>
+                        <Item label="HTML" onClick={() => { setType("HTML") }} icon={CodeXml} className="text-sm"></Item>
+                    </PopoverClose>
+                    <PopoverClose>
+                        <Item label="Markdown" onClick={() => { setType("Markdown") }} icon={CodeXml} className="text-sm"></Item>
+                    </PopoverClose>
+                </PopoverContent>
+            </Popover>
+        </div>
 
     )
 }
