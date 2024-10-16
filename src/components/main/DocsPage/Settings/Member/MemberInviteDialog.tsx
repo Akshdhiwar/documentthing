@@ -3,7 +3,7 @@ import { DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/co
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
-import axiosInstance from "@/shared/axios intercepter/axioshandler"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import { Loader } from "lucide-react"
 import { Dispatch, useRef, useState } from "react"
 
@@ -18,6 +18,7 @@ const RoleMap = [
 ]
 
 const MemberInviteDialog = ({ name, projectId, refresh }: MemberInviteType) => {
+    const axiosInstance = useAxiosWithToast()
     const inputValue = useRef<HTMLInputElement>(null)
     const { toast } = useToast()
     const [value, setValue] = useState("")

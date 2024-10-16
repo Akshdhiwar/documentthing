@@ -1,15 +1,15 @@
 import { useSessionStorage } from "@/shared/custom hooks/useSessionStorage"
 import ProjectDasboard from "../components/main/Dashboard/ProjectDasboard"
 import useUserStore from "@/store/userStore"
-import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import { useEffect } from "react"
 import DashboardSideNav from "@/components/main/Dashboard/DashboardSideNav"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 
 const Dashboard = () => {
-
+    const axiosInstance = useAxiosWithToast()
     const { getItem } = useSessionStorage("invite")
     const user = useUserStore(state => state.user)
 

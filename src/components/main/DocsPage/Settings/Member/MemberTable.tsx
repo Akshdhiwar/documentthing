@@ -1,13 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table"
-import axiosInstance from "@/shared/axios intercepter/axioshandler"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
 import { ChevronRight, Loader } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 const MemberTable = () => {
-
+    const axiosInstance = useAxiosWithToast()
     const project = useProjectStore(state => state.project)
     const [members, setMembers] = useState<Member[]>([])
     const [isNoOrg, setIsNoOrg] = useState<boolean>(false)

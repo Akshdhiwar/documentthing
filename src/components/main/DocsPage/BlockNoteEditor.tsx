@@ -1,4 +1,3 @@
-import axiosInstance from "@/shared/axios intercepter/axioshandler";
 import useEditChangesStore from "@/store/changes";
 import useEditorStore from "@/store/editorStore";
 import useFolderStore from "@/store/folderStore";
@@ -12,10 +11,11 @@ import FileSetter from "./FileSetter";
 import YPartyKitProvider from "y-partykit/provider";
 import useUserStore from "@/store/userStore";
 import * as Y from "yjs";
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
 
 
 const BlockNoteEditor = () => {
-    // State for page content and editor
+    const axiosInstance = useAxiosWithToast()
     const [pageContent, setPageContent] = useState<PartialBlock[] | undefined>(undefined);
     const selectedFolder = useFolderStore((state) => state.selectedFolder);
     const { isEditing, editedFiles } = useEditChangesStore((state) => state);

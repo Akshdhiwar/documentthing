@@ -3,15 +3,15 @@ import { Button } from "../../ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet"
 import NavigationSideBar from "./NavigationSideBar"
 import useFolderStore from "@/store/folderStore"
-import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
 import { useState } from "react"
 import BreadCrums from "./BreadCrums"
 import Export from "./Export"
 import useEditChangesStore from "@/store/changes"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 
 const Toolbar = () => {
-
+    const axiosInstance = useAxiosWithToast()
     const [isLoading, setLoading] = useState(false)
     const project = useProjectStore(state => state.project)
     const { Url, isNoFilePresent } = useFolderStore(state => state)

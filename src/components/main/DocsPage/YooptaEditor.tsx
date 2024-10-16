@@ -13,12 +13,12 @@ import ActionMenuList, { DefaultActionMenuRender } from '@yoopta/action-menu-lis
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import axiosInstance from '@/shared/axios intercepter/axioshandler';
 import useFolderStore from '@/store/folderStore';
 import useEditorStore from '@/store/editorStore';
 import useProjectStore from '@/store/projectStore';
 import useEditChangesStore from '@/store/changes';
 import FileSetter from './FileSetter';
+import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
 
 const plugins: any = [
   Paragraph,
@@ -53,6 +53,7 @@ const TOOLS = {
 
 const MARKS: YooptaMark<any>[] = [Bold, Italic, CodeMark, Underline, Strike, Highlight];
 const Editor = () => {
+  const axiosInstance = useAxiosWithToast()
   const editor = useMemo(() => createYooptaEditor(), []);
   const selectionRef = useRef(null);
   const [editorID, setEditorID] = useState(generateId())

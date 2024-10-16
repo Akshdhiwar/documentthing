@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage';
 import { Button } from '../components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
-import axiosInstance from '@/shared/axios intercepter/axioshandler';
 import useUserStore from '@/store/userStore';
 import {Icons} from '../shared/Icons'
+import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
 
 const Login = () => {
+    const axiosInstance = useAxiosWithToast()
     let navigate = useNavigate();
     const { setItem } = useSessionStorage("invite")
     const setUser = useUserStore(state => state.setUserData)

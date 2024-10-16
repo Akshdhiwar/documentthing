@@ -5,14 +5,15 @@ import FolderStructure from "./FolderStructure"
 import { useEffect, useRef, useState } from "react"
 import { Input } from "../../ui/input"
 import { Button } from "../../ui/button"
-import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import Link from "@/components/custom/Link"
 import useEditChangesStore from "@/store/changes"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 
 const NavigationSideBar = () => {
+    const axiosInstance = useAxiosWithToast()
     const [newFolder, setNewFolder] = useState(false)
     let InputRef = useRef<HTMLInputElement>(null)
     const { createPage, setFolder, folder, setSelectedFolder, loading, setLoading, isNoFilePresent } = useFolderStore(state => state)

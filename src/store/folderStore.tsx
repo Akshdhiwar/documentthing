@@ -1,6 +1,4 @@
-// import axiosInstance from "@/shared/axios intercepter/axioshandler";
 import { create } from "zustand";
-// import useProjectStore from "./projectStore";
 import useDoublyLinkedListStore from "./nextPreviousLinks";
 import useEditChangesStore from "./changes";
 
@@ -136,19 +134,6 @@ function getUrlFromFolder(selectedFolder: Folder, folder: Folder[]): string | un
     return undefined;
 }
 function saveFolderStructure(folder: Folder, parentID?: string) {
-
-    // const project = useProjectStore.getState().project; // Access project dynamically
-
-    // const response : any = await axiosInstance.post(`/folder/update`, {
-    //     // folder_object: btoa(JSON.stringify(folderStructure)),
-    //     id: project?.Id,
-    //     folder : folder,
-    //     parentID : parentID ? parentID : "",
-    // })
-
-    // useDoublyLinkedListStore.getState().clearList();
-    // useDoublyLinkedListStore.getState().convertIntoLinkedList(response.data)
-    // return response.data
 
     let changesStore = useEditChangesStore.getState()
     const originalFolder = useFolderStore.getState().originalFolder;

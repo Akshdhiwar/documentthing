@@ -1,4 +1,4 @@
-import axiosInstance from '@/shared/axios intercepter/axioshandler'
+
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { Loader, LoaderIcon, RefreshCw } from 'lucide-react'
@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import CustomAlert from '@/components/custom/CustomAlert'
+import useAxiosWithToast from '@/shared/axios intercepter/axioshandler'
 
 interface InstallationType {
     name: string
@@ -16,6 +17,7 @@ interface InstallationType {
 }
 
 const ProjectCreationDailog = () => {
+    const axiosInstance = useAxiosWithToast()
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
     const user = useUserStore(state => state.user)

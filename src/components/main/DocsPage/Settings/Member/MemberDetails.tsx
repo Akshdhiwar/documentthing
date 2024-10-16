@@ -1,15 +1,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
-import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
 import { ChevronLeft, Loader } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import MemberInviteDialog from "./MemberInviteDialog"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 
 const MemberDetails = () => {
-
+    const axiosInstance = useAxiosWithToast()
     const { memberName } = useParams()
     const [isLoading, setLoading] = useState(false)
     const [refresh, setRefresh] = useState(false)

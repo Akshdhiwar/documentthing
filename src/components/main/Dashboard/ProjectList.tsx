@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button"
 import { ChevronRight, Loader, Plus } from "lucide-react"
 import { useEffect, useState } from "react"
-import axiosInstance from "@/shared/axios intercepter/axioshandler"
 import { NavLink, useNavigate } from "react-router-dom"
 import useUserStore from "@/store/userStore"
 import useProjectStore from "@/store/projectStore"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 
 
 const ProjectList = () => {
+  const axiosInstance = useAxiosWithToast()
   const [loading, setLoading] = useState(true)
   const [projects, setProjects] = useState<Project[]>([])
   const navigate = useNavigate()

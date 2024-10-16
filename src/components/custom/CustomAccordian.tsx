@@ -5,17 +5,18 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Item from "./Item";
-import axiosInstance from "@/shared/axios intercepter/axioshandler";
 import useFolderStore from "@/store/folderStore";
 import useProjectStore from "@/store/projectStore";
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks";
 import useEditChangesStore from "@/store/changes";
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
 
 interface FolderInterface {
     child: Folder
 }
 
 const CustomAccordian = ({ child }: FolderInterface) => {
+    const axiosInstance = useAxiosWithToast()
     const inputValue = useRef<HTMLInputElement>(null)
     const renameInputValue = useRef<HTMLInputElement>(null)
     const [newFolder, setNewFolder] = useState(false)
