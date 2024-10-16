@@ -36,7 +36,7 @@ const DocsPage = () => {
                                         Please avoid making unnecessary changes to the document. Before saving, ensure you review all your changes carefully to keep the document up-to-date and accurate.
                                     </CustomAlert>
                                 }
-                                <div className="flex-1 p-2 flex flex-col justify-between">
+                                <div className="flex-1 flex flex-col justify-between">
                                     <BlockNoteEditor />
                                     <NextPrevious />
                                 </div>
