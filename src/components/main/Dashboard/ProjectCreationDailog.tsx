@@ -7,6 +7,7 @@ import useUserStore from '@/store/userStore'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import CustomAlert from '@/components/custom/CustomAlert'
 
 interface InstallationType {
     name: string
@@ -41,17 +42,17 @@ const ProjectCreationDailog = () => {
         let org = ""
         let name = ""
         accounts?.map(account => {
-            if(account.installation_id.toString() === value && account.type === "Organization"){
+            if (account.installation_id.toString() === value && account.type === "Organization") {
                 org = account.name
             }
 
-            if(account.installation_id.toString() === value){
+            if (account.installation_id.toString() === value) {
                 name = account.name
             }
         })
 
         // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
-        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: org , owner : name })
+        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: org, owner: name })
         if (response.status !== 201) {
             toast({
                 title: "Error",
@@ -128,6 +129,21 @@ const ProjectCreationDailog = () => {
             <div className='my-10'>
                 <p className='text-2xl font-semibold leading-none tracking-tight'>Create new project</p>
             </div>
+            <CustomAlert type="info" title='Steps to create new project'>
+                - Create a new repository in your github account
+                <br />
+                - Install the Github App
+                <br />
+                - Choose the Github Installation, user or organization
+                <br />
+                - Select the repository from the dropdown
+                <br />
+                - Click on <strong>Create</strong> button
+                <br />
+                - Your project will be created with the selected repository and Github Installation
+                <br />
+                - You can now start writing your documentation and share it with your team!
+            </CustomAlert>
             <form onSubmit={createNewProject}>
                 <div className="grid gap-8 py-4">
                     <div className='grid grid-cols-5 gap-4 '>
@@ -172,7 +188,7 @@ const ProjectCreationDailog = () => {
                                         <SelectGroup>
                                             <SelectLabel>Repositories</SelectLabel>
                                             {
-                                                repos?.map((repo : any, index: number) => (
+                                                repos?.map((repo: any, index: number) => (
                                                     <SelectItem key={index} value={repo.name}>{repo.name}</SelectItem>
                                                 ))
                                             }
