@@ -97,16 +97,17 @@ const Toolbar = () => {
                     !isNoFilePresent && Url && <BreadCrums UrlString={Url} />
                 }
             </div>
+            <div className="order-3 flex  gap-2">
+            <Export></Export>
             {
-                isEditing ? <div className="order-3 flex gap-2">
-                    <Export></Export>
+                isEditing ? <div className="flex gap-2">
                     <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading} onClick={onSaveToServer}>{
                         isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
                     } Save changes</Button>
                     <Button className="order-3" size={"sm"} onClick={() => cancelEditing()}>Cancel Editing</Button>
                 </div> : <Button className="order-3" size={"sm"} onClick={() => setIsEditing(true)}>Edit</Button>
             }
-
+            </div>
         </div>
     )
 }
