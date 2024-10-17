@@ -11,8 +11,12 @@ import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import Link from "@/components/custom/Link"
 import useEditChangesStore from "@/store/changes"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import { useToast } from "@/components/ui/use-toast"
+import { ToastAction } from "@/components/ui/toast"
+import useUserStore from "@/store/userStore"
 
 const NavigationSideBar = () => {
+    const { toast } = useToast()
     const axiosInstance = useAxiosWithToast()
     const [newFolder, setNewFolder] = useState(false)
     let InputRef = useRef<HTMLInputElement>(null)
@@ -21,6 +25,7 @@ const NavigationSideBar = () => {
     const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
     const clearLinkList = useDoublyLinkedListStore(state => state.clearList)
     const { isEditing, editedFolder } = useEditChangesStore(state => state)
+    const { user } = useUserStore(state => state)
 
     useEffect(() => {
         setLoading(true)
@@ -37,17 +42,7 @@ const NavigationSideBar = () => {
             setSelectedFolder(folder[0])
             setLoading(false)
         } else {
-            axiosInstance.get(`/folder/${project?.Id}`).then(data => {
-                const res = data.data
-                const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
-                setFolder(json)
-                if (json.length > 0) {
-                    clearLinkList()
-                    convertIntoLinkedList(json)
-                    setSelectedFolder(json[0])
-                }
-                setLoading(false)
-            })
+            getFolderJson()
         }
 
         return () => {
@@ -56,6 +51,59 @@ const NavigationSideBar = () => {
             useFolderStore.getState().setFolder([])
         }
     }, [editedFolder])
+
+    useEffect(() => {
+        let isPolling = true; // A flag to manage polling loop and cleanup on unmount
+
+        const pollForUpdates = async () => {
+            try {
+                const response = await axiosInstance.get(`/project/${project?.Id}/updates`);
+
+                if (response.status === 200) {
+                    // If an update is received, show a success toast
+                    if (response.data.updatedBy !== user?.ID) {
+                        toast({
+                            variant: "default",
+                            title: 'Someone in your team updated the document',
+                            description: 'Click on refresh to get the latest document',
+                            action: <ToastAction altText="refresh" onClick={getFolderJson}>Refresh</ToastAction>
+
+                        });
+                    }
+
+                }
+            } catch (error) {
+                console.error('Error polling for updates:', error);  // Handle any network or request errors
+            }
+
+            // Continue polling as long as the component is mounted
+            if (isPolling) {
+                setTimeout(pollForUpdates, 100);  // Poll again after 5 seconds (adjust interval as needed)
+            }
+        };
+
+        // Start the polling loop
+        pollForUpdates();
+
+        // Cleanup function to stop polling when the component is unmounted
+        return () => {
+            isPolling = false;  // Stop polling on unmount
+        };
+    }, []);
+
+    function getFolderJson() {
+        axiosInstance.get(`/folder/${project?.Id}`).then(data => {
+            const res = data.data
+            const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
+            setFolder(json)
+            if (json.length > 0) {
+                clearLinkList()
+                convertIntoLinkedList(json)
+                setSelectedFolder(json[0])
+            }
+            setLoading(false)
+        })
+    }
 
     function createFolder() {
         setNewFolder(true)
