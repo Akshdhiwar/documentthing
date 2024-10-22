@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import useUserStore from "@/store/userStore"
 import { Loader } from "lucide-react"
 import { Dispatch, useRef, useState } from "react"
 
@@ -23,6 +24,7 @@ const MemberInviteDialog = ({ name, projectId, refresh }: MemberInviteType) => {
     const { toast } = useToast()
     const [value, setValue] = useState("")
     const [loading, setLoading] = useState(false)
+    const {org } = useUserStore(state => state)
 
     function inviteUser(event: any) {
         event.preventDefault();
@@ -42,7 +44,8 @@ const MemberInviteDialog = ({ name, projectId, refresh }: MemberInviteType) => {
             github_name: name,
             email: inputValue.current.value,
             project_id: projectId,
-            role: value
+            role: value,
+            org_id : org?.id
         }).then(data => {
             console.log(data)
             setLoading(false)

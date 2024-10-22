@@ -7,13 +7,22 @@ import useFolderStore from "@/store/folderStore"
 import BlockNoteEditor from "@/components/main/DocsPage/BlockNoteEditor"
 import CustomAlert from "@/components/custom/CustomAlert"
 import useEditChangesStore from "@/store/changes"
+import { useEffect } from "react"
+import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 
 const DocsPage = () => {
-    // const NavigationSideBar = lazy(() => import('../components/main/NavigationSideBar'))
-    // const Editor = lazy(() => import("../components/main/YooptaEditor"))
 
     const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
     const { isEditing } = useEditChangesStore(state => state)
+    const clearLinkList = useDoublyLinkedListStore(state => state.clearList)
+    
+    useEffect(()=>{
+        return () => {
+            clearLinkList()
+            useFolderStore.getState().setIsNoFilePresent(false)
+            useFolderStore.getState().setFolder([])
+        }
+    },[])
 
     return (
         <ResizablePanelGroup

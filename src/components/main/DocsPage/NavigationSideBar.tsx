@@ -44,12 +44,6 @@ const NavigationSideBar = () => {
         } else {
             getFolderJson()
         }
-
-        return () => {
-            clearLinkList()
-            useFolderStore.getState().setIsNoFilePresent(false)
-            useFolderStore.getState().setFolder([])
-        }
     }, [editedFolder])
 
     useEffect(() => {

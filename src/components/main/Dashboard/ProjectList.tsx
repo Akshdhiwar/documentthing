@@ -10,7 +10,7 @@ const ProjectList = () => {
   const axiosInstance = useAxiosWithToast()
   const [loading, setLoading] = useState(true)
   const [projects, setProjects] = useState<Project[]>([])
-  const user = useUserStore(state => state.user)
+  const {user } = useUserStore(state => state)
   const setProject = useProjectStore(state => state.setProject)
 
   function getProjectList() {

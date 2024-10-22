@@ -5,6 +5,8 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 type UserStoreType = {
     user: UserInterface | null;
     setUserData: (data: UserInterface) => void;
+    org : Org | null;
+    setOrg: (data: Org) => void;
 };
 
 // Create the Zustand store with persistence
@@ -14,6 +16,10 @@ const useUserStore = create<UserStoreType>()(
             user: null,
             setUserData: (data: UserInterface) => {
                 set({ user: data });
+            },
+            org: null,
+            setOrg: (data: Org) => {
+                set({ org: data });
             },
         }),
         {

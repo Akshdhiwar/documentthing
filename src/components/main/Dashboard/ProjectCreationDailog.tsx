@@ -20,7 +20,7 @@ const ProjectCreationDailog = () => {
     const axiosInstance = useAxiosWithToast()
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
-    const user = useUserStore(state => state.user)
+    const {user , org} = useUserStore(state => state)
     const [value, setValue] = useState<string>("")
     const [selectedRepo, setSelectedRepo] = useState<string>("")
     const [accounts, setAccounts] = useState<InstallationType[] | null>(null)
@@ -41,11 +41,11 @@ const ProjectCreationDailog = () => {
 
         setLoading(true)
 
-        let org = ""
+        let orgName = ""
         let name = ""
         accounts?.map(account => {
             if (account.installation_id.toString() === value && account.type === "Organization") {
-                org = account.name
+                orgName = account.name
             }
 
             if (account.installation_id.toString() === value) {
@@ -54,7 +54,7 @@ const ProjectCreationDailog = () => {
         })
 
         // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
-        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: org, owner: name })
+        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: orgName, owner: name , org_id : org?.id })
         if (response.status !== 201) {
             toast({
                 title: "Error",
@@ -128,7 +128,7 @@ const ProjectCreationDailog = () => {
     return (
 
         <div className='w-full max-w-4xl m-auto px-8'>
-            <div className='my-10'>
+            <div className='mt-10 mb-4'>
                 <p className='text-2xl font-semibold leading-none tracking-tight'>Create new project</p>
             </div>
             <CustomAlert type="info" title='Steps to create new project'>
@@ -147,7 +147,7 @@ const ProjectCreationDailog = () => {
                 - You can now start writing your documentation and share it with your team!
             </CustomAlert>
             <form onSubmit={createNewProject}>
-                <div className="grid gap-8 py-4">
+                <div className="grid gap-8 py-4 mt-4">
                     <div className='grid grid-cols-5 gap-4 '>
                         <div className='col-span-3'>
                             <p className='font-semibold leading-none tracking-tight'>Select Account</p>

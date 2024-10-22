@@ -1,11 +1,28 @@
 import Item from "@/components/custom/Item"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import useUserStore from "@/store/userStore"
 import { ArrowUpRight, LogOut } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 const DashboardSideNav = () => {
     const navigate = useNavigate()
+    const axiosInstance = useAxiosWithToast()
+    const {setOrg} = useUserStore(state => state)
+    const [orgName, setOrgName] = useState<string>("")
 
-    function logout(){
+    function getOrg() {
+        axiosInstance.get("/account/org").then((data: any) => {
+            setOrg(data.data.org)
+            setOrgName(data.data.org.name)
+        })
+    }
+
+    useEffect(()=>{
+        getOrg()
+    },[])
+
+    function logout() {
         localStorage.clear()
         navigate("/login")
     }
@@ -41,7 +58,7 @@ const DashboardSideNav = () => {
                             <ul className="space-y-1">
                                 <a href="#">
                                     <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">AECInspire Org</span>
+                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">{orgName}'s Org</span>
                                     </span>
                                 </a>
                             </ul>
@@ -83,7 +100,7 @@ const DashboardSideNav = () => {
                         </div>
                         <div className="border-b py-5 px-6 border-default">
                             <ul className="space-y-1">
-                                <Item label="Logout" onClick={()=>(logout())} icon={LogOut} ></Item>
+                                <Item label="Logout" onClick={() => (logout())} icon={LogOut} ></Item>
                             </ul>
                         </div>
                     </ul>

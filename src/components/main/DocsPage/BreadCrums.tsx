@@ -13,7 +13,7 @@ const BreadCrums: React.FC<BreadcrumType> = ({ UrlString }) => {
     const resultArray = UrlString.split(" / ").map(str => str.trim());
 
     return (
-        <div className="flex items-center gap-3">
+        <div className="items-center gap-3 hidden lg:flex">
             {/* <FileText className="text-muted-foreground"></FileText> */}
             <Breadcrumb>
                 <BreadcrumbList>

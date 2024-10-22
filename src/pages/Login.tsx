@@ -49,7 +49,7 @@ const Login = () => {
             })
             setUser(userDetials)
             localStorage.setItem("betterDocs" , "true")
-            navigate("/dashboard");
+            navigate("/dashboard/projects");
             return
         }
         if (localStorage.getItem("betterDocs")) {
@@ -57,7 +57,7 @@ const Login = () => {
                 return res.data.userDetails;
             })
             setUser(userDetials)
-            navigate("/dashboard");
+            navigate("/dashboard/projects");
         }
     }
 
