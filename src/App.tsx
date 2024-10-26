@@ -17,6 +17,7 @@ const DocsPage = lazy(() => import("./pages/Docs/DocsPage"))
 const ProjectSetting = lazy(() => import("./pages/Docs/ProjectSettings"))
 const ProjectDasboard = lazy(() => import('./components/main/Dashboard/ProjectDasboard'))
 const Members = lazy(()=> import("./components/main/DocsPage/Settings/Member/Members"))
+const Admin = lazy(()=> import("./components/main/Admin/AdminPage"))
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/" element={<Navigate to="login" />}></Route>
           <Route index path="/login" Component={Login}></Route>
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
+            <Route path="admin" element={<Admin/>}></Route>
             <Route index element={<Navigate to="projects" />}></Route>
             <Route path="projects" element={<ProjectDasboard></ProjectDasboard>}>
               <Route index element={<ProjectList></ProjectList>}></Route>

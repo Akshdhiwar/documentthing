@@ -1,15 +1,15 @@
-import Item from "@/components/custom/Item"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import useUserStore from "@/store/userStore"
-import { ArrowUpRight, LogOut } from "lucide-react"
+import { ArrowUpRight, LogOut, ShieldCheck } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const DashboardSideNav = () => {
     const navigate = useNavigate()
     const axiosInstance = useAxiosWithToast()
-    const {setOrg} = useUserStore(state => state)
+    const { setOrg } = useUserStore(state => state)
     const [orgName, setOrgName] = useState<string>("")
+    const { user } = useUserStore(state => state)
 
     function getOrg() {
         axiosInstance.get("/account/org").then((data: any) => {
@@ -18,9 +18,9 @@ const DashboardSideNav = () => {
         })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getOrg()
-    },[])
+    }, [])
 
     function logout() {
         localStorage.clear()
@@ -42,11 +42,11 @@ const DashboardSideNav = () => {
                                 </span>
                             </div>
                             <ul className="space-y-1">
-                                <a href="#">
+                                <Link to="projects">
                                     <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground"> All Projects</span>
+                                        <span title="Projects" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground"> All Projects</span>
                                     </span>
-                                </a>
+                                </Link>
                             </ul>
                         </div>
                         <div className="border-b py-5 px-6 border-default">
@@ -98,9 +98,27 @@ const DashboardSideNav = () => {
                                 </a>
                             </ul>
                         </div>
+                        {
+                            user?.GithubID == import.meta.env.VITE_ADMIN_GITHUB_ID &&
+                            <div className="border-b py-5 px-6 border-default">
+                                <ul className="space-y-1">
+                                    <Link to="admin">
+                                        <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
+                                            <ShieldCheck className="text-secondary-foreground text-slate-600" height={18} width={18} />
+                                            <span title="Super Admin" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">Super Admin</span>
+                                        </span>
+                                    </Link>
+                                </ul>
+                            </div>
+                        }
                         <div className="border-b py-5 px-6 border-default">
                             <ul className="space-y-1">
-                                <Item label="Logout" onClick={() => (logout())} icon={LogOut} ></Item>
+                                <Link to="/login" onClick={() => (logout())}>
+                                    <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
+                                        <LogOut className="text-secondary-foreground text-slate-600" height={18} width={18} />
+                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">Logout</span>
+                                    </span>
+                                </Link>
                             </ul>
                         </div>
                     </ul>
