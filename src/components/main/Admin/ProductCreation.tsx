@@ -23,11 +23,35 @@ const ProductCreation = () => {
         }
     }
 
+    async function createSub() {
+        try {
+            await axiosInstance.post("/subscription-plan/create", {
+                "product_id": "PROD-3UK59828DC895582E",
+                "name": "Pro Plan",
+                "description": "Access to premium features",
+                "price": "20.00",
+                "currency": "USD"
+            });
+        } catch (error) {
+            console.error("Error creating subscription plan:", error);
+        }
+    }
+
+    async function getSub(){
+        try {
+            await axiosInstance.get("/subscription-plan/list");
+        } catch (error) {
+            console.error("Error getting subscription plan:", error);
+        }
+    }
+
 
     return (
         <div>
             <Button onClick={create}>CREATE Product</Button>
             <Button onClick={get}>GET Product</Button>
+            <Button onClick={createSub}>Create Subscription plan</Button>
+            <Button onClick={getSub}>Get Subscription plan</Button>
         </div>
     )
 }
