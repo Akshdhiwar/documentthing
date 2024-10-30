@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
-import useUserStore from '@/store/userStore';
 import {
     PayPalScriptProvider,
     PayPalButtons,
@@ -9,7 +8,6 @@ import {
 const ProductCreation = () => {
 
     const axiosInstance = useAxiosWithToast();
-    const {user} = useUserStore(state => state)
 
     async function create() {
         try {
@@ -68,7 +66,7 @@ const ProductCreation = () => {
             >
                 <PayPalButtons
                     createSubscription={(data:any, actions:any) => {
-                        // console.log(data)
+                        console.log(data)
                         // Check if actions.subscription.create exists before calling it
                         if (!actions || !actions.subscription || !actions.subscription.create) {
                             console.error("Subscription creation method is unavailable.");
