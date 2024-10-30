@@ -9,25 +9,34 @@ import MemberTable from "./components/main/DocsPage/Settings/Member/MemberTable"
 import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDetails";
 import ProjectCreationDailog from "./components/main/Dashboard/ProjectCreationDailog";
 import Dashboard from "./pages/Dashboard";
+import AccountWrapper from "./pages/Account/AccountWrapper";
 // import DocsPage from "./pages/DocsPage";
 
-const Login = lazy(() => import("./pages/Login"))
+const Login = lazy(()=> import("./pages/Account/Login"))
+const EmailVerify = lazy(()=> import("./pages/Account/AddEmail"))
+const VerifyOTP = lazy(()=> import("./pages/Account/VerifyOTP"))
 const DocsWrapper = lazy(() => import("./pages/Docs/DocsWrapper"))
 const DocsPage = lazy(() => import("./pages/Docs/DocsPage"))
 const ProjectSetting = lazy(() => import("./pages/Docs/ProjectSettings"))
 const ProjectDasboard = lazy(() => import('./components/main/Dashboard/ProjectDasboard'))
-const Members = lazy(()=> import("./components/main/DocsPage/Settings/Member/Members"))
-const Admin = lazy(()=> import("./components/main/Admin/AdminPage"))
+const Members = lazy(() => import("./components/main/DocsPage/Settings/Member/Members"))
+const Admin = lazy(() => import("./components/main/Admin/AdminPage"))
 
 const App = () => {
   return (
     <FullScreen>
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<Navigate to="login" />}></Route>
-          <Route index path="/login" Component={Login}></Route>
+          <Route path="/" element={<Navigate to="account" />} />
+          <Route path="/account" element={<AccountWrapper />}>
+            <Route index element={<Navigate to="login" />} />
+            <Route path="login" element={<Login />} />
+            <Route path="verify-email" element={<EmailVerify />} />
+            <Route path="email-otp" element={<VerifyOTP />} />
+          </Route>
+
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
-            <Route path="admin" element={<Admin/>}></Route>
+            <Route path="admin" element={<Admin />}></Route>
             <Route index element={<Navigate to="projects" />}></Route>
             <Route path="projects" element={<ProjectDasboard></ProjectDasboard>}>
               <Route index element={<ProjectList></ProjectList>}></Route>
@@ -40,10 +49,10 @@ const App = () => {
             <Route path="settings" element={<ProtectedRoute><ProjectSetting></ProjectSetting></ProtectedRoute>}>
               <Route index element={<Navigate to="members" />}></Route>
               <Route path="members" element={<Members></Members>}>
-                  <Route index element={<Navigate to="list" />}></Route>
-                  <Route path="list" element={<MemberTable></MemberTable>}>
-                  </Route>
-                  <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
+                <Route index element={<Navigate to="list" />}></Route>
+                <Route path="list" element={<MemberTable></MemberTable>}>
+                </Route>
+                <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
               </Route>
             </Route>
           </Route>

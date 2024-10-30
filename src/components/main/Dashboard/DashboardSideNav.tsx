@@ -24,7 +24,7 @@ const DashboardSideNav = () => {
 
     function logout() {
         localStorage.clear()
-        navigate("/login")
+        navigate("/account/login")
     }
 
     return (
@@ -113,7 +113,7 @@ const DashboardSideNav = () => {
                         }
                         <div className="border-b py-5 px-6 border-default">
                             <ul className="space-y-1">
-                                <Link to="/login" onClick={() => (logout())}>
+                                <Link to="/account" onClick={() => (logout())}>
                                     <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
                                         <LogOut className="text-secondary-foreground text-slate-600" height={18} width={18} />
                                         <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">Logout</span>

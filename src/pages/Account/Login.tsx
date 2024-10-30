@@ -1,10 +1,10 @@
-import { useEffect} from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage';
-import { Button } from '../components/ui/button';
+import { Button } from '../../components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import useUserStore from '@/store/userStore';
-import {Icons} from '../shared/Icons'
+import { Icons } from '../../shared/Icons'
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
 
 const Login = () => {
@@ -14,9 +14,9 @@ const Login = () => {
     const setUser = useUserStore(state => state.setUserData)
 
     function loginWithGithub() {
-        const clientID = import.meta.env.VITE_GITHUB_APP_CLIENT 
+        const clientID = import.meta.env.VITE_GITHUB_APP_CLIENT
         console.log(clientID);
-        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID  )
+        window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID)
     }
 
     function loginWithGoogle() {
@@ -30,15 +30,15 @@ const Login = () => {
         lookInviteToken()
     }, [])
 
-    function lookInviteToken(){
+    function lookInviteToken() {
         const queryString = window.location.search;
         const urlParam = new URLSearchParams(queryString);
         const inviteCode = urlParam.get("invite");
-        if(inviteCode){
+        if (inviteCode) {
             setItem(inviteCode)
         }
     }
-    
+
     async function githubLogin() {
         const queryString = window.location.search;
         const urlParam = new URLSearchParams(queryString);
@@ -48,33 +48,42 @@ const Login = () => {
                 return res.data.userDetails;
             })
             setUser(userDetials)
-            localStorage.setItem("betterDocs" , "true")
+            localStorage.setItem("betterDocs", "true")
+
+            if (userDetials.Email === "") {
+                navigate("/account/verify-email")
+                return;
+            }
+
             navigate("/dashboard/projects");
             return
         }
         if (localStorage.getItem("betterDocs")) {
-            const userDetials : UserInterface = await axiosInstance.get("/account/user-details").then(res => {
+            const userDetials: UserInterface = await axiosInstance.get("/account/user-details").then(res => {
                 return res.data.userDetails;
             })
             setUser(userDetials)
+            if (userDetials.Email === "") {
+                navigate("/account/verify-email")
+                return;
+            }
             navigate("/dashboard/projects");
         }
     }
 
     return (
-        <div className='h-screen w-screen flex items-center justify-center'>
-            <div className="w-[350px] py-6 box-border space-y-2">
-                <div className='text-center'>
-                    <p className="text-2xl leading-tight tracking-tighter md:text-3xl lg:leading-[1.1] text-primary">
-                        better<span className='font-semibold'>Docs</span>
-                    </p>
-                    <p className="text-base text-muted-foreground mb-8">
-                        One step away to create your own docs
-                    </p>
-                </div>
-                <Button className='w-full gap-2' onClick={loginWithGithub}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
-                <Button className='w-full gap-2' onClick={loginWithGoogle}><Icons.google className='h-[16px]'></Icons.google> Google</Button>
+
+        <div className="w-[350px] py-6 box-border space-y-2">
+            <div className='text-center'>
+                <p className="text-2xl leading-tight tracking-tighter md:text-3xl lg:leading-[1.1] text-primary">
+                    better<span className='font-semibold'>Docs</span>
+                </p>
+                <p className="text-base text-muted-foreground mb-8">
+                    One step away to create your own docs
+                </p>
             </div>
+            <Button className='w-full gap-2' onClick={loginWithGithub}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
+            <Button className='w-full gap-2' onClick={loginWithGoogle}><Icons.google className='h-[16px]'></Icons.google> Google</Button>
         </div>
     )
 }

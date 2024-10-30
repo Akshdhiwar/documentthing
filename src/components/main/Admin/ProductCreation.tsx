@@ -1,9 +1,15 @@
 import { Button } from '@/components/ui/button';
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
+import useUserStore from '@/store/userStore';
+import {
+    PayPalScriptProvider,
+    PayPalButtons,
+} from "@paypal/react-paypal-js";
 
 const ProductCreation = () => {
 
     const axiosInstance = useAxiosWithToast();
+    const {user} = useUserStore(state => state)
 
     async function create() {
         try {
@@ -26,10 +32,10 @@ const ProductCreation = () => {
     async function createSub() {
         try {
             await axiosInstance.post("/subscription-plan/create", {
-                "product_id": "PROD-3UK59828DC895582E",
+                "product_id": "PROD-31H43834X52262230",
                 "name": "Pro Plan",
                 "description": "Access to premium features",
-                "price": "20.00",
+                "price": "1.00",
                 "currency": "USD"
             });
         } catch (error) {
@@ -37,7 +43,7 @@ const ProductCreation = () => {
         }
     }
 
-    async function getSub(){
+    async function getSub() {
         try {
             await axiosInstance.get("/subscription-plan/list");
         } catch (error) {
@@ -52,6 +58,42 @@ const ProductCreation = () => {
             <Button onClick={get}>GET Product</Button>
             <Button onClick={createSub}>Create Subscription plan</Button>
             <Button onClick={getSub}>Get Subscription plan</Button>
+            <PayPalScriptProvider
+                options={{
+                    clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
+                    components: "buttons",
+                    intent: "subscription",
+                    vault: true,
+                }}
+            >
+                <PayPalButtons
+                    createSubscription={(data:any, actions:any) => {
+                        // console.log(data)
+                        // Check if actions.subscription.create exists before calling it
+                        if (!actions || !actions.subscription || !actions.subscription.create) {
+                            console.error("Subscription creation method is unavailable.");
+                            return Promise.reject("Subscription creation is unavailable.");
+                        }
+
+                        return actions.subscription
+                            .create({
+                                plan_id: "P-5PA43779E3271994YM4QQDXQ", // Replace with your actual plan ID
+                            })
+                            .then((subscriptionId:string) => {
+                                // Your code here after successfully creating the subscription
+                                console.log("Subscription created with ID:", subscriptionId);
+                                return subscriptionId;
+                            })
+                            .catch((error:any) => {
+                                console.error("Error creating subscription:", error);
+                            });
+                    }}
+                    style={{
+                        label: "subscribe",
+                    }}
+                />
+            </PayPalScriptProvider>
+
         </div>
     )
 }
