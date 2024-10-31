@@ -42,7 +42,7 @@ const FileSetter = () => {
                 );
                 const url = Url
                 const flag = Url.includes("/")
-                addEditedMarkdown(folderId ,"markdown" , null , markdown ,null , flag ? url.replace(/\s/g, '') + ".md" : selectedFolder.name + ".md")
+                addEditedMarkdown(folderId ,"markdown" , null , markdown ,null , flag ? url.replace(/\s*\/\s*/, '/') + ".md" : selectedFolder.name + ".md")
             }
         }
 

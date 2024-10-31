@@ -171,7 +171,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }]), folder.name)
-            changesStore.addEditedMarkdown( folder.id ,  "markdown", null , null ,null , url.replace(/\s/g, '') + "/" + folder.name + ".md")
+            changesStore.addEditedMarkdown( folder.id ,  "markdown", null , null ,null , url.replace(/\s*\/\s*/, '/') + "/" + folder.name + ".md")
         } else {
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(updatedFolder), null)
             changesStore.addEditedFile(folder.id, "file", "", [{
@@ -185,7 +185,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }], folder.name)
-            changesStore.addEditedMarkdown(folder.id ,"markdown" , null , null , null , url.replace(/\s/g, '') + "/" + folder.name + ".md")
+            changesStore.addEditedMarkdown(folder.id ,"markdown" , null , null , null , url.replace(/\s*\/\s*/, '/') + "/" + folder.name + ".md")
         }
 
     } else {
