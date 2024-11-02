@@ -38,6 +38,7 @@ const NavigationSideBar = () => {
         if (isFolderExists && isEditing) {
             let folder = JSON.parse(isFolderExists.changedContent!)
             setFolder(folder)
+            clearLinkList()
             convertIntoLinkedList(folder)
             setSelectedFolder(folder[0])
             setLoading(false)
