@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
+import useUserStore from '@/store/userStore';
 import {
     PayPalScriptProvider,
     PayPalButtons,
@@ -8,6 +9,7 @@ import {
 const ProductCreation = () => {
 
     const axiosInstance = useAxiosWithToast();
+    const { org, user } = useUserStore(state => state)
 
     async function create() {
         try {
@@ -29,7 +31,7 @@ const ProductCreation = () => {
 
     async function createSub() {
         try {
-            await axiosInstance.post("/subscription-plan/create", {
+            await axiosInstance.post("/subscription/plan/create", {
                 "product_id": "PROD-31H43834X52262230",
                 "name": "Pro Plan",
                 "description": "Access to premium features",
@@ -43,7 +45,15 @@ const ProductCreation = () => {
 
     async function getSub() {
         try {
-            await axiosInstance.get("/subscription-plan/list");
+            await axiosInstance.get("/subscription/plan/list");
+        } catch (error) {
+            console.error("Error getting subscription plan:", error);
+        }
+    }
+
+    async function getSubDetails() {
+        try {
+            await axiosInstance.get(`/subscription/details/${org?.id}`);
         } catch (error) {
             console.error("Error getting subscription plan:", error);
         }
@@ -56,6 +66,7 @@ const ProductCreation = () => {
             <Button onClick={get}>GET Product</Button>
             <Button onClick={createSub}>Create Subscription plan</Button>
             <Button onClick={getSub}>Get Subscription plan</Button>
+            <Button onClick={getSubDetails}>Get Subscription Details</Button>
             <PayPalScriptProvider
                 options={{
                     clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
@@ -65,7 +76,7 @@ const ProductCreation = () => {
                 }}
             >
                 <PayPalButtons
-                    createSubscription={(data:any, actions:any) => {
+                    createSubscription={(data: any, actions: any) => {
                         console.log(data)
                         // Check if actions.subscription.create exists before calling it
                         if (!actions || !actions.subscription || !actions.subscription.create) {
@@ -75,14 +86,24 @@ const ProductCreation = () => {
 
                         return actions.subscription
                             .create({
-                                plan_id: "P-5PA43779E3271994YM4QQDXQ", // Replace with your actual plan ID
+                                plan_id: "P-5PA43779E3271994YM4QQDXQ",
+                                custom_id : user?.Email,
+                                subscriber: {
+                                    email_address: user?.Email, // Replace with your actual plan ID
+                                }
                             })
-                            .then((subscriptionId:string) => {
+                            .then((subscriptionId: string) => {
+
+                                axiosInstance.post("/subscription", {
+                                    sub_id: subscriptionId,
+                                    org_id: org?.id
+                                })
+
                                 // Your code here after successfully creating the subscription
                                 console.log("Subscription created with ID:", subscriptionId);
                                 return subscriptionId;
                             })
-                            .catch((error:any) => {
+                            .catch((error: any) => {
                                 console.error("Error creating subscription:", error);
                             });
                     }}
@@ -91,7 +112,6 @@ const ProductCreation = () => {
                     }}
                 />
             </PayPalScriptProvider>
-
         </div>
     )
 }
