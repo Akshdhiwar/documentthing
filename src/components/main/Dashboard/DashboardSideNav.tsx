@@ -56,11 +56,11 @@ const DashboardSideNav = () => {
                                 </span>
                             </div>
                             <ul className="space-y-1">
-                                <a href="#">
+                                <Link to="organization">
                                     <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
                                         <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">{orgName}'s Org</span>
                                     </span>
-                                </a>
+                                </Link>
                             </ul>
                         </div>
                         <div className="border-b py-5 px-6 border-default">

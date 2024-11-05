@@ -1,4 +1,4 @@
-import ProjectList from "./components/main/Dashboard/ProjectList";
+import ProjectList from "./components/main/Dashboard/Project/ProjectList";
 import FullScreen from "./shared/components/FullScreen"
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
@@ -7,12 +7,10 @@ import { lazy, Suspense } from "react";
 import Loader from "./shared/components/Loader";
 import MemberTable from "./components/main/DocsPage/Settings/Member/MemberTable";
 import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDetails";
-import ProjectCreationDailog from "./components/main/Dashboard/ProjectCreationDailog";
+import ProjectCreationDailog from "./components/main/Dashboard/Project/ProjectCreationDailog";
 import Dashboard from "./pages/Dashboard";
 import AccountWrapper from "./pages/Account/AccountWrapper";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
-import ProductPage from "./components/main/Admin/ProductPage";
-// import DocsPage from "./pages/DocsPage";
 
 const Login = lazy(() => import("./pages/Account/Login"))
 const EmailVerify = lazy(() => import("./pages/Account/AddEmail"))
@@ -20,12 +18,13 @@ const VerifyOTP = lazy(() => import("./pages/Account/VerifyOTP"))
 const DocsWrapper = lazy(() => import("./pages/Docs/DocsWrapper"))
 const DocsPage = lazy(() => import("./pages/Docs/DocsPage"))
 const ProjectSetting = lazy(() => import("./pages/Docs/ProjectSettings"))
-const ProjectDasboard = lazy(() => import('./components/main/Dashboard/ProjectDasboard'))
+const ProjectWrapper = lazy(() => import('./components/main/Dashboard/Project/ProjectWrapper'))
 const Members = lazy(() => import("./components/main/DocsPage/Settings/Member/Members"))
-const Admin = lazy(() => import("./components/main/Admin/AdminPage"))
+const Admin = lazy(() => import("./components/main/Dashboard/Admin/AdminPage"))
 const Subscription = lazy(() => import("./pages/Subscription/SubscriptionWrapper"))
 const SubscriptionList = lazy(() => import("./pages/Subscription/SubscriptionList"))
 const SubscriptionPayment = lazy(() => import("./pages/Subscription/SubscriptionPage"))
+const OrgWrapper = lazy(() => import("./components/main/Dashboard/Organization/OrganizationWrapper"))
 
 const App = () => {
   return (
@@ -54,16 +53,13 @@ const App = () => {
               </Route>
             </Route>
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
-              <Route path="admin" element={<Admin />}>
-                {/* Automatically redirect to product when accessing /admin */}
-                <Route index element={<Navigate to="product" replace />} />
-                <Route path="product" element={<ProductPage />} />
-              </Route>
               <Route index element={<Navigate to="projects" />}></Route>
-              <Route path="projects" element={<ProjectDasboard></ProjectDasboard>}>
+              <Route path="projects" element={<ProjectWrapper></ProjectWrapper>}>
                 <Route index element={<ProjectList></ProjectList>}></Route>
                 <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
               </Route>
+              <Route path="organization" element={<OrgWrapper />}></Route>
+              <Route path="admin" element={<Admin />}></Route>
             </Route>
             <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
               <Route index element={<Navigate to="docs" />}></Route>
