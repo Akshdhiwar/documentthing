@@ -11,7 +11,7 @@ const Login = () => {
     const axiosInstance = useAxiosWithToast()
     let navigate = useNavigate();
     const { setItem } = useSessionStorage("invite")
-    const setUser = useUserStore(state => state.setUserData)
+    const { setUserData, setOrg } = useUserStore(state => state)
 
     function loginWithGithub() {
         const clientID = import.meta.env.VITE_GITHUB_APP_CLIENT
@@ -26,8 +26,8 @@ const Login = () => {
     }
 
     useEffect(() => {
-        githubLogin()
         lookInviteToken()
+        githubLogin()
     }, [])
 
     function lookInviteToken() {
@@ -47,11 +47,23 @@ const Login = () => {
             const userDetials = await axiosInstance.post("/account/get-access-token", { code: code }).then(res => {
                 return res.data.userDetails;
             })
-            setUser(userDetials)
+            setUserData(userDetials)
             localStorage.setItem("betterDocs", "true")
+            await axiosInstance.get("/account/org").then((data: any) => {
+                setOrg(data.data.org)
+            })
 
             if (userDetials.Email === "") {
                 navigate("/account/verify-email")
+                return;
+            }
+
+            const isActive: boolean = await axiosInstance.get("/account/status").then(res => {
+                return res.data;
+            })
+
+            if (!isActive) {
+                navigate("/account/subscription")
                 return;
             }
 
@@ -62,9 +74,21 @@ const Login = () => {
             const userDetials: UserInterface = await axiosInstance.get("/account/user-details").then(res => {
                 return res.data.userDetails;
             })
-            setUser(userDetials)
+            setUserData(userDetials)
+            await axiosInstance.get("/account/org").then((data: any) => {
+                setOrg(data.data.org)
+            })
             if (userDetials.Email === "") {
                 navigate("/account/verify-email")
+                return;
+            }
+
+            const isActive: boolean = await axiosInstance.get("/account/status").then(res => {
+                return res.data;
+            })
+
+            if (!isActive) {
+                navigate("/account/subscription")
                 return;
             }
             navigate("/dashboard/projects");

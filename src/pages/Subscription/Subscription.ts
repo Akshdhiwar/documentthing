@@ -11,7 +11,7 @@ const monthltSubs: SubscriptionPlan[] = [
         excluded: false,
       },
       {
-        feature : "Email support",
+        feature: "Email support",
         excluded: false,
       },
       {
@@ -32,10 +32,9 @@ const monthltSubs: SubscriptionPlan[] = [
         excluded: true,
       },
     ],
-    price : 8,
-    popular : false,
-    planID : "a",
-    initialQuantity : "1"
+    price: 8,
+    popular: false,
+    planID: "P-6EJ42226VA951100GM4U6NLY",
   },
   {
     title: "Base",
@@ -49,7 +48,7 @@ const monthltSubs: SubscriptionPlan[] = [
         excluded: false,
       },
       {
-        feature : "Email support",
+        feature: "Email support",
         excluded: false,
       },
       {
@@ -70,10 +69,9 @@ const monthltSubs: SubscriptionPlan[] = [
         excluded: true,
       },
     ],
-    price : 7.50,
-    popular : false,
-    planID : "b",
-    initialQuantity : "3"
+    price: 10,
+    popular: false,
+    planID: "P-29E61596XJ211460LM4U6U2Y",
   },
   {
     title: "Pro",
@@ -87,7 +85,7 @@ const monthltSubs: SubscriptionPlan[] = [
         excluded: false,
       },
       {
-        feature : "Premium email support",
+        feature: "Premium email support",
         excluded: false,
       },
       {
@@ -112,10 +110,9 @@ const monthltSubs: SubscriptionPlan[] = [
         excluded: true,
       },
     ],
-    price : 7,
-    popular : true,
-    planID : "c",
-    initialQuantity : "10"
+    price: 12,
+    popular: true,
+    planID: "P-7E785395E7155463UM4U6DIY",
   },
   {
     title: "Enterprise",
@@ -129,7 +126,7 @@ const monthltSubs: SubscriptionPlan[] = [
         excluded: false,
       },
       {
-        feature : "Premium email and call support",
+        feature: "Premium email and call support",
         excluded: false,
       },
       {
@@ -154,10 +151,9 @@ const monthltSubs: SubscriptionPlan[] = [
         excluded: false,
       },
     ],
-    price : "custom",
-    popular : false,
-    planID : "d",
-    initialQuantity : "25"
+    price: 12.5,
+    popular: false,
+    planID: "P-0GF66336R82534612M4U6DQY",
   },
 ];
 

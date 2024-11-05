@@ -5,7 +5,6 @@ interface SubscriptionPlan {
     price : number | string,
     popular : boolean,
     planID : string,
-    initialQuantity : string
 }
 
 interface FeatureListInterface {

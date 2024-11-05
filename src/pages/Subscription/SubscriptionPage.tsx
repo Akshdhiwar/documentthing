@@ -44,12 +44,11 @@ const SubscriptionPage = () => {
 
             return actions.subscription
               .create({
-                plan_id: "P-7D954345UG455031YM4UQYNY",
+                plan_id: planID,
                 custom_id: user?.Email,
                 subscriber: {
                   email_address: user?.Email, // Replace with your actual plan ID
                 },
-                quantity: details.initialQuantity
               })
               .then((subscriptionId: string) => {
 
@@ -68,6 +67,7 @@ const SubscriptionPage = () => {
           }}
           style={{
             label: "subscribe",
+            color : "black"
           }}
           onApprove={() => {
             return new Promise<void>((resolve) => {

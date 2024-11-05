@@ -7,6 +7,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import useUserStore from "@/store/userStore";
 
 const FormSchema = z.object({
   pin: z.string().min(6, {
@@ -19,8 +20,8 @@ const VerifyOTP = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { email } = location.state || {};
-  const {toast} = useToast()
-
+  const { toast } = useToast()
+  const setUser = useUserStore(state => state.setUserData)
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -28,20 +29,38 @@ const VerifyOTP = () => {
     },
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    axiosInstance.post("/account/verify-otp", {
-      otp: data.pin.toString()
-    }).then(()=>{
-      // show the toast
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      // Verify the OTP
+      await axiosInstance.post("/account/verify-otp", {
+        otp: data.pin.toString()
+      });
+
+      // Show the success toast
       toast({
         title: "Success",
         description: "One-time password has been verified successfully",
         variant: "success",
-      })
+      });
 
-      // Navigate to dashboard after successful OTP verification
-      navigate("/dashboard/projects")
-    })
+      const userDetials: UserInterface = await axiosInstance.get("/account/user-details").then(res => {
+        return res.data.userDetails;
+      })
+      setUser(userDetials)
+
+      // Check account status
+      const isActive: boolean = (await axiosInstance.get("/account/status")).data;
+
+      // Navigate based on account status
+      if (!isActive) {
+        navigate("/account/subscription");
+      } else {
+        navigate("/dashboard/projects");
+      }
+    } catch (error) {
+      console.error("Failed to verify OTP or fetch account status", error);
+      // Optionally handle the error here, e.g., show an error toast
+    }
   }
 
   function onResend() {

@@ -164,9 +164,9 @@ const SubscriptionCreationDialog: React.FC<Subscription> = ({ openNewSub }) => {
                         </FormItem>
                     )}
                 />
-                <div>
-                    <Button type="button" onClick={() => openNewSub(false)}>Cancel</Button>
-                    <Button type="submit">Submit</Button>
+                <div className="flex items-center justify-between">
+                    <Button type="button" size={"sm"} variant={"ghost"} onClick={() => openNewSub(false)}>Cancel</Button>
+                    <Button type="submit" size={"sm"} variant={"outline"}>Submit</Button>
                 </div>
 
             </form>
