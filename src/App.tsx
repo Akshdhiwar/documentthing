@@ -10,56 +10,79 @@ import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDeta
 import ProjectCreationDailog from "./components/main/Dashboard/ProjectCreationDailog";
 import Dashboard from "./pages/Dashboard";
 import AccountWrapper from "./pages/Account/AccountWrapper";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import ProductPage from "./components/main/Admin/ProductPage";
 // import DocsPage from "./pages/DocsPage";
 
-const Login = lazy(()=> import("./pages/Account/Login"))
-const EmailVerify = lazy(()=> import("./pages/Account/AddEmail"))
-const VerifyOTP = lazy(()=> import("./pages/Account/VerifyOTP"))
+const Login = lazy(() => import("./pages/Account/Login"))
+const EmailVerify = lazy(() => import("./pages/Account/AddEmail"))
+const VerifyOTP = lazy(() => import("./pages/Account/VerifyOTP"))
 const DocsWrapper = lazy(() => import("./pages/Docs/DocsWrapper"))
 const DocsPage = lazy(() => import("./pages/Docs/DocsPage"))
 const ProjectSetting = lazy(() => import("./pages/Docs/ProjectSettings"))
 const ProjectDasboard = lazy(() => import('./components/main/Dashboard/ProjectDasboard'))
 const Members = lazy(() => import("./components/main/DocsPage/Settings/Member/Members"))
 const Admin = lazy(() => import("./components/main/Admin/AdminPage"))
+const Subscription = lazy(() => import("./pages/Subscription/SubscriptionWrapper"))
+const SubscriptionList = lazy(() => import("./pages/Subscription/SubscriptionList"))
+const SubscriptionPayment = lazy(() => import("./pages/Subscription/SubscriptionPage"))
 
 const App = () => {
   return (
-    <FullScreen>
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          <Route path="/" element={<Navigate to="account" />} />
-          <Route path="/account" element={<AccountWrapper />}>
-            <Route index element={<Navigate to="login" />} />
-            <Route path="login" element={<Login />} />
-            <Route path="verify-email" element={<EmailVerify />} />
-            <Route path="email-otp" element={<VerifyOTP />} />
-          </Route>
-
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
-            <Route path="admin" element={<Admin />}></Route>
-            <Route index element={<Navigate to="projects" />}></Route>
-            <Route path="projects" element={<ProjectDasboard></ProjectDasboard>}>
-              <Route index element={<ProjectList></ProjectList>}></Route>
-              <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
-            </Route>
-          </Route>
-          <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
-            <Route index element={<Navigate to="docs" />}></Route>
-            <Route path="docs" element={<DocsPage></DocsPage>}> </Route>
-            <Route path="settings" element={<ProtectedRoute><ProjectSetting></ProjectSetting></ProtectedRoute>}>
-              <Route index element={<Navigate to="members" />}></Route>
-              <Route path="members" element={<Members></Members>}>
+    <PayPalScriptProvider
+      options={{
+        clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
+        components: "buttons",
+        intent: "subscription",
+        vault: true,
+        environment: "sandbox"
+      }}
+    >
+      <FullScreen>
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            <Route path="/" element={<Navigate to="account" />} />
+            <Route path="/account" element={<AccountWrapper />}>
+              <Route index element={<Navigate to="login" />} />
+              <Route path="login" element={<Login />} />
+              <Route path="verify-email" element={<EmailVerify />} />
+              <Route path="email-otp" element={<VerifyOTP />} />
+              <Route path="subscription" element={<Subscription></Subscription>}>
                 <Route index element={<Navigate to="list" />}></Route>
-                <Route path="list" element={<MemberTable></MemberTable>}>
-                </Route>
-                <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
+                <Route path="list" element={<SubscriptionList />}></Route>
+                <Route path="payment" element={<SubscriptionPayment />}></Route>
               </Route>
             </Route>
-          </Route>
-        </Routes>
-      </Suspense>
-      <Toaster></Toaster>
-    </FullScreen>
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
+              <Route path="admin" element={<Admin />}>
+                {/* Automatically redirect to product when accessing /admin */}
+                <Route index element={<Navigate to="product" replace />} />
+                <Route path="product" element={<ProductPage />} />
+              </Route>
+              <Route index element={<Navigate to="projects" />}></Route>
+              <Route path="projects" element={<ProjectDasboard></ProjectDasboard>}>
+                <Route index element={<ProjectList></ProjectList>}></Route>
+                <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
+              </Route>
+            </Route>
+            <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
+              <Route index element={<Navigate to="docs" />}></Route>
+              <Route path="docs" element={<DocsPage></DocsPage>}> </Route>
+              <Route path="settings" element={<ProtectedRoute><ProjectSetting></ProjectSetting></ProtectedRoute>}>
+                <Route index element={<Navigate to="members" />}></Route>
+                <Route path="members" element={<Members></Members>}>
+                  <Route index element={<Navigate to="list" />}></Route>
+                  <Route path="list" element={<MemberTable></MemberTable>}>
+                  </Route>
+                  <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
+                </Route>
+              </Route>
+            </Route>
+          </Routes>
+        </Suspense>
+        <Toaster></Toaster>
+      </FullScreen>
+    </PayPalScriptProvider>
   )
 }
 
