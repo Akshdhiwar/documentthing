@@ -16,21 +16,21 @@ const OrgMembers = () => {
             if (response.data === null) return
             // Group data by user_name
             const grouped = response.data.reduce((acc: any, member: any) => {
-                const { user_name, project_name, user_role } = member;
+                const { github_name, project_name, role } = member;
 
                 // Initialize the user_name key if it doesn't exist
-                if (!acc[user_name]) {
-                    acc[user_name] = [];
+                if (!acc[github_name]) {
+                    acc[github_name] = [];
                 }
 
                 // Push the project info to the array for this user_name
-                acc[user_name].push({ project_name, user_role });
+                acc[github_name].push({ project_name, role });
                 return acc;
             }, {});
 
             // Convert grouped object to array
-            const groupedArray = Object.entries(grouped).map(([user_name, projects]) => ({
-                user_name,
+            const groupedArray = Object.entries(grouped).map(([github_name, projects]) => ({
+                github_name,
                 projects
             }));
             setMembers(groupedArray)
@@ -65,9 +65,9 @@ const OrgMembers = () => {
                     {members?.map((member: any, index: number) => (
                         <TableRow key={index}>
                             <TableCell>{index + 1}</TableCell>
-                            <TableCell>{member.user_name}</TableCell>
+                            <TableCell>{member.github_name}</TableCell>
                             <TableCell>{member.projects.map((project: any) => project.project_name).join(', ')}</TableCell>
-                            <TableCell>{member.projects.map((project: any) => project.user_role).join(', ')}</TableCell>
+                            <TableCell>{member.projects.map((project: any) => project.role).join(', ')}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

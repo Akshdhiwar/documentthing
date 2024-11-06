@@ -23,7 +23,7 @@ const OrganizationWrapper = () => {
                         </SheetContent>
                     </Sheet>
                 </div>
-                <p className="text-gray-1100 block px-2 py-1 text-xs leading-5 focus:bg-gray-100 focus:text-gray-900 focus:outline-none "> {user?.Name}'s Organization</p>
+                <p className="text-gray-1100 block px-2 py-1 text-xs leading-5 focus:bg-gray-100 focus:text-gray-900 focus:outline-none "> {user?.GithubName}'s Organization</p>
             </div>
             <div className="flex flex-col flex-1">
                 <Tabs defaultValue="Members" className="w-full h-full">
