@@ -54,7 +54,9 @@ const SubscriptionPage = () => {
 
                 axiosInstance.post("/subscription", {
                   sub_id: subscriptionId,
-                  org_id: org?.id
+                  org_id: org?.id,
+                  sub_name: details.title,
+                  max_user_count : details.maxUser,
                 })
 
                 // Your code here after successfully creating the subscription

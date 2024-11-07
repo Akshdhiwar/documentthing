@@ -1,7 +1,30 @@
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import monthltSubs from "./Subscription"
 import SubscriptionCard from "./SubscriptionCard"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 
 const SubscriptionList = () => {
+
+  const axiosInstance = useAxiosWithToast()
+  const navigate = useNavigate()
+
+  async function getAccountStatus() {
+    const isActive: boolean = await axiosInstance.get("/account/status").then(res => {
+      return res.data;
+    })
+
+    if (isActive) {
+      navigate("/dashboard/projects");
+      return;
+    }
+  }
+
+  useEffect(() => {
+    getAccountStatus()
+  }, [])
+
+
   return (
     <div className="w-full h-full bg-slate-200 flex items-center justify-evenly flex-col overflow-y-auto">
       <div className="text-center py-10">

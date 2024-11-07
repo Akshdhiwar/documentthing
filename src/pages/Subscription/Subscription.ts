@@ -35,6 +35,7 @@ const monthltSubs: SubscriptionPlan[] = [
     price: 8,
     popular: false,
     planID: "P-6EJ42226VA951100GM4U6NLY",
+    maxUser : 1
   },
   {
     title: "Base",
@@ -72,6 +73,7 @@ const monthltSubs: SubscriptionPlan[] = [
     price: 10,
     popular: false,
     planID: "P-29E61596XJ211460LM4U6U2Y",
+    maxUser : 5
   },
   {
     title: "Pro",
@@ -113,6 +115,7 @@ const monthltSubs: SubscriptionPlan[] = [
     price: 12,
     popular: true,
     planID: "P-7E785395E7155463UM4U6DIY",
+    maxUser : 25
   },
   {
     title: "Enterprise",
@@ -154,6 +157,7 @@ const monthltSubs: SubscriptionPlan[] = [
     price: 12.5,
     popular: false,
     planID: "P-0GF66336R82534612M4U6DQY",
+    maxUser : 100
   },
 ];
 

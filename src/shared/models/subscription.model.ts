@@ -5,6 +5,7 @@ interface SubscriptionPlan {
     price : number | string,
     popular : boolean,
     planID : string,
+    maxUser : number
 }
 
 interface FeatureListInterface {
