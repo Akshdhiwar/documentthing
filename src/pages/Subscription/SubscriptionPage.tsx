@@ -57,6 +57,7 @@ const SubscriptionPage = () => {
                   org_id: org?.id,
                   sub_name: details.title,
                   max_user_count : details.maxUser,
+                  plan_id : details.planID
                 })
 
                 // Your code here after successfully creating the subscription
