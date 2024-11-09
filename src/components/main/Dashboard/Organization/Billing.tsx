@@ -28,7 +28,6 @@ const Billing = () => {
 
         await axiosInstance.get(`/orgs/${org?.id}/billing/trasnsactions`).then(res => {
             setTransactions(res.data.transactions)
-            console.log(res.data.transactions)
         })
         setIsLoading(false)
     }
@@ -106,6 +105,9 @@ const Billing = () => {
                                     ))}
                                 </TableBody>
                             </Table >
+                        </div>
+                        <div>
+
                         </div>
                         {
                             details.status === "ACTIVE" ? <div className="p-4 flex items-center gap-2">
