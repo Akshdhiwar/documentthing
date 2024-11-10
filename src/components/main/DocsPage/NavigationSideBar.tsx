@@ -142,15 +142,16 @@ const NavigationSideBar = () => {
                     <FolderStructure folder={folder} />
                 </div>
             }
-            {
-                project?.Role === "Admin" && <>
+            {(project?.Role === "Admin" || project?.Role === "Editor") && (
+                <>
                     <Separator />
                     <div className="m-2 flex flex-col gap-1">
                         {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
                         <Link label="Setting" href={`/project/${project?.Id}/settings`} icon={Settings}></Link>
                     </div>
                 </>
-            }
+            )}
+
             {
                 loading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
                     <Loader className="animate-spin"></Loader>

@@ -51,7 +51,6 @@ const DocsPage = () => {
                                         <NextPrevious />
                                     </div>
                                 }
-
                             </div>
                         }
                     </div>

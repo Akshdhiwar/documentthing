@@ -5,7 +5,7 @@ import DashboardSideNav from '../DashboardSideNav'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import useUserStore from '@/store/userStore'
 import OrgMembers from './OrgMembers'
-import Billing from './Billing'
+// import Billing from './Billing'
 
 const OrganizationWrapper = () => {
 
@@ -30,13 +30,13 @@ const OrganizationWrapper = () => {
                 <Tabs defaultValue="Members" className="w-full h-full">
                     <TabsList className="w-full flex items-center justify-center rounded-none">
                         <TabsTrigger value="Members">Members</TabsTrigger>
-                        <TabsTrigger value="Billing">Billing</TabsTrigger>
+                        {/* <TabsTrigger value="Billing">Billing</TabsTrigger> */}
                     </TabsList>
                     <TabsContent value="Members" className="max-h-[calc(100% - 44px)] m-4">
                         <OrgMembers></OrgMembers>
                     </TabsContent>
-                    <TabsContent value="Billing" className="max-h-[calc(100% - 44px)] m-4"><Billing/>
-                    </TabsContent>
+                    {/* <TabsContent value="Billing" className="max-h-[calc(100% - 44px)] m-4"><Billing/>
+                    </TabsContent> */}
                 </Tabs>
             </div>
         </main>

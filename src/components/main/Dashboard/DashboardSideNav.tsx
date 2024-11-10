@@ -1,26 +1,10 @@
-import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import useUserStore from "@/store/userStore"
 import { ArrowUpRight, LogOut, ShieldCheck } from "lucide-react"
-import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 const DashboardSideNav = () => {
     const navigate = useNavigate()
-    const axiosInstance = useAxiosWithToast()
-    const { setOrg } = useUserStore(state => state)
-    const [orgName, setOrgName] = useState<string>("")
-    const { user } = useUserStore(state => state)
-
-    function getOrg() {
-        axiosInstance.get("/account/org").then((data: any) => {
-            setOrg(data.data.org)
-            setOrgName(data.data.org.name)
-        })
-    }
-
-    useEffect(() => {
-        getOrg()
-    }, [])
+    const { user , org } = useUserStore(state => state)
 
     function logout() {
         localStorage.clear()
@@ -58,7 +42,7 @@ const DashboardSideNav = () => {
                             <ul className="space-y-1">
                                 <Link to="organization">
                                     <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">{orgName}'s Org</span>
+                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">{org?.name}'s Org</span>
                                     </span>
                                 </Link>
                             </ul>

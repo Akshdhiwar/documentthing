@@ -49,14 +49,14 @@ const VerifyOTP = () => {
       setUser(userDetials)
 
       // Check account status
-      const isActive: boolean = (await axiosInstance.get("/account/status")).data;
+      // const isActive: boolean = (await axiosInstance.get("/account/status")).data;
 
-      // Navigate based on account status
-      if (!isActive) {
-        navigate("/account/subscription");
-      } else {
-        navigate("/dashboard/projects");
-      }
+      // // Navigate based on account status
+      // if (!isActive) {
+      //   navigate("/account/subscription");
+      // } else {
+      navigate("/dashboard/projects");
+      // }
     } catch (error) {
       console.error("Failed to verify OTP or fetch account status", error);
       // Optionally handle the error here, e.g., show an error toast

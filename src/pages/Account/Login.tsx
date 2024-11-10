@@ -69,14 +69,14 @@ const Login = () => {
                 return;
             }
 
-            const status: any = await axiosInstance.get("/account/status").then(res => {
-                return res.data;
-            })
+            // const status: any = await axiosInstance.get("/account/status").then(res => {
+            //     return res.data;
+            // })
 
-            if (status.id == null) {
-                navigate("/account/subscription")
-                return;
-            }
+            // if (status.id == null) {
+            //     navigate("/account/subscription")
+            //     return;
+            // }
 
             navigate("/dashboard/projects");
             return
@@ -106,14 +106,14 @@ const Login = () => {
                 })
             }
 
-            const status: any = await axiosInstance.get("/account/status").then(res => {
-                return res.data;
-            })
+            // const status: any = await axiosInstance.get("/account/status").then(res => {
+            //     return res.data;
+            // })
 
-            if (status.id == null) {
-                navigate("/account/subscription")
-                return;
-            }
+            // if (status.id == null) {
+            //     navigate("/account/subscription")
+            //     return;
+            // }
             navigate("/dashboard/projects");
         }
     }
