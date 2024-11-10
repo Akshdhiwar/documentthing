@@ -124,7 +124,7 @@ const MemberDetails = () => {
                                             <Button size={"sm"} disabled={activeUserCount === maxUserCount}>Invite</Button>
                                         </DialogTrigger>
                                         <DialogContent className="sm:max-w-[425px]">
-                                            <MemberInviteDialog name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={activeUserCount === maxUserCount} />
+                                            <MemberInviteDialog email={user.email} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={activeUserCount === maxUserCount} />
                                         </DialogContent>
                                     </Dialog>
                                     {/* <Button size={"sm"} onClick={() => { inviteUser(user.email) }}>Invite</Button> */}

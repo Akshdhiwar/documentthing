@@ -10,7 +10,7 @@ import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
 const Login = () => {
     const axiosInstance = useAxiosWithToast()
     let navigate = useNavigate();
-    const { setItem } = useSessionStorage("invite")
+    const { getItem, setItem } = useSessionStorage("invite")
     const { setUserData, setOrg } = useUserStore(state => state)
 
     function loginWithGithub() {
@@ -52,17 +52,28 @@ const Login = () => {
             await axiosInstance.get("/account/org").then((data: any) => {
                 setOrg(data.data.org)
             })
+            if (userDetials && getItem()) {
+                await axiosInstance.post("/invite/accept", {
+                    name: userDetials?.GithubName,
+                    token: JSON.parse(getItem()),
+                    id: userDetials.ID
+                }).then(data => {
+                    if (data.status === 200) {
+                        sessionStorage.removeItem("invite")
+                    }
+                })
+            }
 
             if (userDetials.Email === "") {
                 navigate("/account/verify-email")
                 return;
             }
 
-            const isActive: boolean = await axiosInstance.get("/account/status").then(res => {
+            const status: any = await axiosInstance.get("/account/status").then(res => {
                 return res.data;
             })
 
-            if (!isActive) {
+            if (status.id == null) {
                 navigate("/account/subscription")
                 return;
             }
@@ -83,11 +94,23 @@ const Login = () => {
                 return;
             }
 
-            const isActive: boolean = await axiosInstance.get("/account/status").then(res => {
+            if (userDetials && getItem()) {
+                await axiosInstance.post("/invite/accept", {
+                    name: userDetials?.GithubName,
+                    token: JSON.parse(getItem()),
+                    id: userDetials.ID
+                }).then(data => {
+                    if (data.status === 200) {
+                        sessionStorage.removeItem("invite")
+                    }
+                })
+            }
+
+            const status: any = await axiosInstance.get("/account/status").then(res => {
                 return res.data;
             })
 
-            if (!isActive) {
+            if (status.id == null) {
                 navigate("/account/subscription")
                 return;
             }

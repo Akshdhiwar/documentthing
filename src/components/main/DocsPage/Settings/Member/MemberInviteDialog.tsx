@@ -10,16 +10,17 @@ import { Dispatch, useRef, useState } from "react"
 
 interface MemberInviteType {
     name: string
+    email: string
     projectId: string | undefined
     refresh: Dispatch<any>
     disabled : boolean
 }
 
 const RoleMap = [
-    "Admin", "Editor"
+    "Admin", "Editor" , "Viewer"
 ]
 
-const MemberInviteDialog = ({ name, projectId, refresh , disabled}: MemberInviteType) => {
+const MemberInviteDialog = ({ name, projectId, refresh , disabled, email}: MemberInviteType) => {
     const axiosInstance = useAxiosWithToast()
     const inputValue = useRef<HTMLInputElement>(null)
     const { toast } = useToast()
@@ -72,7 +73,7 @@ const MemberInviteDialog = ({ name, projectId, refresh , disabled}: MemberInvite
             <form onSubmit={inviteUser}>
                 <div className="grid gap-4 py-4">
                     <div >
-                        <Input id="name" ref={inputValue} placeholder='Email' autoComplete='off' className='w-full' />
+                        <Input id="name" ref={inputValue} value={email} placeholder='Email' autoComplete='off' className='w-full' />
                     </div>
                     <div className='w-full'>
                         <Select onValueChange={(event) => setValue(event)}>
