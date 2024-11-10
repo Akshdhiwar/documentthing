@@ -20,7 +20,7 @@ const DocsPage = lazy(() => import("./pages/Docs/DocsPage"))
 const ProjectSetting = lazy(() => import("./pages/Docs/ProjectSettings"))
 const ProjectWrapper = lazy(() => import('./components/main/Dashboard/Project/ProjectWrapper'))
 const Members = lazy(() => import("./components/main/DocsPage/Settings/Member/Members"))
-const Admin = lazy(() => import("./components/main/Dashboard/Admin/AdminPage"))
+// const Admin = lazy(() => import("./components/main/Dashboard/Admin/AdminPage"))
 // const Subscription = lazy(() => import("./pages/Subscription/SubscriptionWrapper"))
 // const SubscriptionList = lazy(() => import("./pages/Subscription/SubscriptionList"))
 // const SubscriptionPayment = lazy(() => import("./pages/Subscription/SubscriptionPage"))
@@ -59,7 +59,7 @@ const App = () => {
               <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
             </Route>
             <Route path="organization" element={<OrgWrapper />}></Route>
-            <Route path="admin" element={<Admin />}></Route>
+            {/* <Route path="admin" element={<Admin />}></Route> */}
           </Route>
           <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
             <Route index element={<Navigate to="docs" />}></Route>
