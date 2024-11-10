@@ -42,7 +42,7 @@ const Export = () => {
             <Button onClick={exportFile} size={"sm"} className="rounded-none rounded-tl-md rounded-bl-md" >Export {type}</Button>
             <Popover>
                 <PopoverTrigger>
-                    <Button className="h-9 w-6 rounded-none rounded-tr-md rounded-br-md" size={"icon"}><ChevronDown height={16} width={16} /></Button>
+                    <Button className="h-8 w-6 rounded-none rounded-tr-md rounded-br-md" size={"icon"}><ChevronDown height={16} width={16} /></Button>
                 </PopoverTrigger>
                 <PopoverContent className="flex flex-col w-48 p-1 gap-1 z-20 border mt-2 rounded-sm bg-white">
                     <PopoverClose>
@@ -54,7 +54,6 @@ const Export = () => {
                 </PopoverContent>
             </Popover>
         </div>
-
     )
 }
 

@@ -7,6 +7,8 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import MemberInviteDialog from "./MemberInviteDialog"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import useUserStore from "@/store/userStore"
+import monthltSubs from "@/pages/Subscription/Subscription"
 
 const MemberDetails = () => {
     const axiosInstance = useAxiosWithToast()
@@ -16,14 +18,68 @@ const MemberDetails = () => {
     const project = useProjectStore(state => state.project)
     const [user, setUser] = useState<UserDetails | null>(null)
     const [openDialog, setOpenDialog] = useState(false)
+    const [activeUserCount, setActiveUserCount] = useState(0)
+    const [maxUserCount, setMaxUserCount] = useState(0)
+    const { org } = useUserStore(state => state)
+    let planID = ""
 
-    function getUserDetail() {
+    async function getUserDetail() {
         setLoading(true);
         axiosInstance.get(`/member/${project?.Id}/${memberName}`).then((data) => {
             setUser(data.data)
+        }).then(() => {
+            fetchMembers()
+        }).then(() => {
+            fetchDetails()
             setLoading(false)
         })
     }
+
+    async function fetchMembers() {
+        try {
+            const response = await axiosInstance.get(`/orgs/${org?.id}/members`);
+            if (response.data === null) return
+            // Group data by user_name
+            const grouped = response.data.reduce((acc: any, member: any) => {
+                const { github_name, project_name, role } = member;
+
+                // Initialize the user_name key if it doesn't exist
+                if (!acc[github_name]) {
+                    acc[github_name] = [];
+                }
+
+                // Push the project info to the array for this user_name
+                acc[github_name].push({ project_name, role });
+                return acc;
+            }, {});
+
+            // Convert grouped object to array
+            const groupedArray = Object.entries(grouped).map(([github_name, projects]) => ({
+                github_name,
+                projects
+            }));
+            setActiveUserCount(groupedArray.length)
+            console.log(groupedArray)
+
+            // handle the groupedArray as needed
+
+        } catch (error) {
+            console.error("Error fetching members:", error);
+        }
+    }
+
+    async function fetchDetails() {
+        const response = await axiosInstance.get(`/orgs/${org?.id}/billing/details`)
+        planID = (await response).data.subscription_details.plan_id
+
+        monthltSubs.forEach((e) => {
+            if (e.planID === planID) {
+                setMaxUserCount(e.maxUser)
+            }
+        })
+    }
+
+
 
     useEffect(() => {
         getUserDetail()
@@ -65,10 +121,10 @@ const MemberDetails = () => {
                                     <span>This user is not invited in this project</span>
                                     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
                                         <DialogTrigger asChild>
-                                            <Button size={"sm"}>Invite</Button>
+                                            <Button size={"sm"} disabled={activeUserCount === maxUserCount}>Invite</Button>
                                         </DialogTrigger>
                                         <DialogContent className="sm:max-w-[425px]">
-                                            <MemberInviteDialog name={user.githubName} projectId={project?.Id} refresh={setRefresh} />
+                                            <MemberInviteDialog email={user.email} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={activeUserCount === maxUserCount} />
                                         </DialogContent>
                                     </Dialog>
                                     {/* <Button size={"sm"} onClick={() => { inviteUser(user.email) }}>Invite</Button> */}

@@ -1,4 +1,4 @@
-import ProjectList from "./components/main/Dashboard/ProjectList";
+import ProjectList from "./components/main/Dashboard/Project/ProjectList";
 import FullScreen from "./shared/components/FullScreen"
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
@@ -7,32 +7,59 @@ import { lazy, Suspense } from "react";
 import Loader from "./shared/components/Loader";
 import MemberTable from "./components/main/DocsPage/Settings/Member/MemberTable";
 import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDetails";
-import ProjectCreationDailog from "./components/main/Dashboard/ProjectCreationDailog";
+import ProjectCreationDailog from "./components/main/Dashboard/Project/ProjectCreationDailog";
 import Dashboard from "./pages/Dashboard";
-// import DocsPage from "./pages/DocsPage";
+import AccountWrapper from "./pages/Account/AccountWrapper";
+// import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
-const Login = lazy(() => import("./pages/Login"))
+const Login = lazy(() => import("./pages/Account/Login"))
+const EmailVerify = lazy(() => import("./pages/Account/AddEmail"))
+const VerifyOTP = lazy(() => import("./pages/Account/VerifyOTP"))
 const DocsWrapper = lazy(() => import("./pages/Docs/DocsWrapper"))
 const DocsPage = lazy(() => import("./pages/Docs/DocsPage"))
 const ProjectSetting = lazy(() => import("./pages/Docs/ProjectSettings"))
-const ProjectDasboard = lazy(() => import('./components/main/Dashboard/ProjectDasboard'))
-const Members = lazy(()=> import("./components/main/DocsPage/Settings/Member/Members"))
-const Admin = lazy(()=> import("./components/main/Admin/AdminPage"))
+const ProjectWrapper = lazy(() => import('./components/main/Dashboard/Project/ProjectWrapper'))
+const Members = lazy(() => import("./components/main/DocsPage/Settings/Member/Members"))
+const Admin = lazy(() => import("./components/main/Dashboard/Admin/AdminPage"))
+// const Subscription = lazy(() => import("./pages/Subscription/SubscriptionWrapper"))
+// const SubscriptionList = lazy(() => import("./pages/Subscription/SubscriptionList"))
+// const SubscriptionPayment = lazy(() => import("./pages/Subscription/SubscriptionPage"))
+const OrgWrapper = lazy(() => import("./components/main/Dashboard/Organization/OrganizationWrapper"))
 
 const App = () => {
   return (
+    // <PayPalScriptProvider
+    //   options={{
+    //     clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
+    //     components: "buttons",
+    //     intent: "subscription",
+    //     vault: true,
+    //     environment: "sandbox"
+    //   }}
+    // >
     <FullScreen>
       <Suspense fallback={<Loader />}>
         <Routes>
-          <Route path="/" element={<Navigate to="login" />}></Route>
-          <Route index path="/login" Component={Login}></Route>
+          <Route path="/" element={<Navigate to="account" />} />
+          <Route path="/account" element={<AccountWrapper />}>
+            <Route index element={<Navigate to="login" />} />
+            <Route path="login" element={<Login />} />
+            <Route path="verify-email" element={<EmailVerify />} />
+            <Route path="email-otp" element={<VerifyOTP />} />
+            {/* <Route path="subscription" element={<Subscription></Subscription>}>
+                <Route index element={<Navigate to="list" />}></Route>
+                <Route path="list" element={<SubscriptionList />}></Route>
+                <Route path="payment" element={<SubscriptionPayment />}></Route>
+              </Route> */}
+          </Route>
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
-            <Route path="admin" element={<Admin/>}></Route>
             <Route index element={<Navigate to="projects" />}></Route>
-            <Route path="projects" element={<ProjectDasboard></ProjectDasboard>}>
+            <Route path="projects" element={<ProjectWrapper></ProjectWrapper>}>
               <Route index element={<ProjectList></ProjectList>}></Route>
               <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
             </Route>
+            <Route path="organization" element={<OrgWrapper />}></Route>
+            <Route path="admin" element={<Admin />}></Route>
           </Route>
           <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
             <Route index element={<Navigate to="docs" />}></Route>
@@ -40,10 +67,10 @@ const App = () => {
             <Route path="settings" element={<ProtectedRoute><ProjectSetting></ProjectSetting></ProtectedRoute>}>
               <Route index element={<Navigate to="members" />}></Route>
               <Route path="members" element={<Members></Members>}>
-                  <Route index element={<Navigate to="list" />}></Route>
-                  <Route path="list" element={<MemberTable></MemberTable>}>
-                  </Route>
-                  <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
+                <Route index element={<Navigate to="list" />}></Route>
+                <Route path="list" element={<MemberTable></MemberTable>}>
+                </Route>
+                <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
               </Route>
             </Route>
           </Route>
@@ -51,6 +78,7 @@ const App = () => {
       </Suspense>
       <Toaster></Toaster>
     </FullScreen>
+    // </PayPalScriptProvider>
   )
 }
 

@@ -95,9 +95,9 @@ const CustomAccordian = ({ child }: FolderInterface) => {
         let updatedFolder = deleteFolderRecursive(id, folder)
         addEditedFolder(null, "folder", JSON.stringify(folder), JSON.stringify(updatedFolder), null)
         if (flag) {
-            addEditedMarkdown(id, "markdown", null, "null", null, Url.replace(/\s/g, ''))
+            addEditedMarkdown(id, "markdown", null, "null", null, Url.replace(/\s*\/\s*/, '/'))
         }
-        addEditedMarkdown(id, "markdown", null, "null", null, Url.replace(/\s/g, '') + ".md")
+        addEditedMarkdown(id, "markdown", null, "null", null, Url.replace(/\s*\/\s*/, '/') + ".md")
         clearList()
         convertIntoLinkedList(updatedFolder)
 

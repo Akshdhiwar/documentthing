@@ -5,7 +5,7 @@ import useProjectStore from "@/store/projectStore";
 import "@blocknote/core/fonts/inter.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { BlockNoteEditor as BNE, PartialBlock } from "@blocknote/core";
 import FileSetter from "./FileSetter";
 import YPartyKitProvider from "y-partykit/provider";
@@ -13,68 +13,62 @@ import useUserStore from "@/store/userStore";
 import * as Y from "yjs";
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
 
-
 const BlockNoteEditor = () => {
-    const axiosInstance = useAxiosWithToast()
+    const axiosInstance = useAxiosWithToast();
     const [pageContent, setPageContent] = useState<PartialBlock[] | undefined>(undefined);
     const selectedFolder = useFolderStore((state) => state.selectedFolder);
     const { isEditing, editedFiles } = useEditChangesStore((state) => state);
     const project = useProjectStore((state) => state.project);
-    const { setContent, setInitialContent ,setMarkdown , setEditor} = useEditorStore((state) => state);
-    const { user } = useUserStore(state => state)
+    const { setContent, setInitialContent, setMarkdown, setEditor } = useEditorStore((state) => state);
+    const { user } = useUserStore((state) => state);
+    const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    // create a function to get random bright hex code
-    const getRandomColor = () => {
+    // Memoize color generation to avoid recalculating
+    const getRandomColor = useCallback(() => {
         const letters = "0123456789ABCDEF";
         let color = "#";
         for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
-    };
+    }, []);
 
     // Editor instance
     const editor = useMemo(() => {
-        let editor: any
-        if (isEditing) {
-            const doc = new Y.Doc();
-            const provider = new YPartyKitProvider(
-                "https://simpledoxs-party.akshdhiwar.partykit.dev",
-                // use a unique name as a "room" for your application:
-                project?.Id! + selectedFolder?.id,
-                doc,
-            );
-            editor = BNE.create({
-                collaboration: {
-                    // The Yjs Provider responsible for transporting updates:
-                    provider,
-                    // Where to store BlockNote data in the Y.Doc:
-                    fragment: doc.getXmlFragment("document-store"),
-                    // Information (name and color) for this user:
-                    user : {
-                        name : user?.GithubName!,
-                        color : getRandomColor()// blue color
-                    }
-                  }
-            })
-        } else {
-            editor = BNE.create({
-                initialContent: pageContent
-            })
-        }
+        if (!selectedFolder || !project || !pageContent) return null;
 
-        return editor
-    }, [selectedFolder , isEditing , pageContent]);
+        const doc = new Y.Doc();
+        const editorOptions = isEditing ? {
+            collaboration: {
+                provider: new YPartyKitProvider(
+                    "https://simpledoxs-party.akshdhiwar.partykit.dev",
+                    project.Id + selectedFolder.id,
+                    doc,
+                ),
+                fragment: doc.getXmlFragment("document-store"),
+                user: {
+                    name: user?.GithubName || "Guest",
+                    color: getRandomColor(),
+                },
+            }
+        } : {
+            initialContent: pageContent,
+        };
 
+        console.log("Editor instance created");
+        return BNE.create(editorOptions);
+    }, [selectedFolder, isEditing, pageContent]);
+
+    // Fetch initial file content
     useEffect(() => {
         if (!selectedFolder?.id) return;
-
-        const editedFile = editedFiles.find((file) => file.id === selectedFolder.id);
-
-        if (editedFile) {
-            setPageContent(editedFile.changedContent);
-            setInitialContent(editedFile.changedContent);
-            return;
+        if (isEditing) {
+            const editedFile = editedFiles.find((file) => file.id === selectedFolder.id);
+            if (editedFile) {
+                setPageContent(editedFile.changedContent);
+                setInitialContent(editedFile.changedContent);
+                return;
+            }
         }
 
         // Fetch file content if not found in the edited files
@@ -99,15 +93,23 @@ const BlockNoteEditor = () => {
             .catch((error) => {
                 console.error("Error fetching file content:", error);
             });
+
     }, [selectedFolder]);
 
-    const onChange = async () => {
-        // Converts the editor's contents from Block objects to Markdown and store to state.
-        const markdown = await editor.blocksToMarkdownLossy(editor.document);
-        setEditor(editor)
-        setContent(editor.document);
-        setMarkdown(markdown);
-      };
+    const onChange = useCallback(() => {
+        if (debounceTimeout.current) {
+            clearTimeout(debounceTimeout.current);
+        }
+
+        debounceTimeout.current = setTimeout(async () => {
+            const markdown = await editor?.blocksToMarkdownLossy(editor.document);
+            setEditor(editor);
+            setContent(editor?.document);
+            setMarkdown(markdown);
+        }, 300); // Adjust the delay as needed
+    }, [editor]);
+
+    console.log("Editor component rerendered");
 
     // Render the editor only when it's ready
     return (
@@ -115,7 +117,7 @@ const BlockNoteEditor = () => {
             {editor && (
                 <BlockNoteView
                     editor={editor}
-                    theme={"light"}
+                    theme="light"
                     editable={isEditing}
                     onChange={onChange}
                 />

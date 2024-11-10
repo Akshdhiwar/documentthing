@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
+import useUserStore from '@/store/userStore';
 
 const ProductCreation = () => {
 
     const axiosInstance = useAxiosWithToast();
+    const { org } = useUserStore(state => state)
 
     async function create() {
         try {
@@ -25,11 +27,11 @@ const ProductCreation = () => {
 
     async function createSub() {
         try {
-            await axiosInstance.post("/subscription-plan/create", {
-                "product_id": "PROD-3UK59828DC895582E",
+            await axiosInstance.post("/subscription/plan/create", {
+                "product_id": "PROD-31H43834X52262230",
                 "name": "Pro Plan",
                 "description": "Access to premium features",
-                "price": "20.00",
+                "price": "1.00",
                 "currency": "USD"
             });
         } catch (error) {
@@ -37,9 +39,17 @@ const ProductCreation = () => {
         }
     }
 
-    async function getSub(){
+    async function getSub() {
         try {
-            await axiosInstance.get("/subscription-plan/list");
+            await axiosInstance.get("/subscription/plan/list");
+        } catch (error) {
+            console.error("Error getting subscription plan:", error);
+        }
+    }
+
+    async function getSubDetails() {
+        try {
+            await axiosInstance.get(`/subscription/details/${org?.id}`);
         } catch (error) {
             console.error("Error getting subscription plan:", error);
         }
@@ -52,6 +62,7 @@ const ProductCreation = () => {
             <Button onClick={get}>GET Product</Button>
             <Button onClick={createSub}>Create Subscription plan</Button>
             <Button onClick={getSub}>Get Subscription plan</Button>
+            <Button onClick={getSubDetails}>Get Subscription Details</Button>
         </div>
     )
 }

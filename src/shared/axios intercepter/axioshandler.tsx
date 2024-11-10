@@ -83,7 +83,7 @@ const useAxiosWithToast = () => {
               });
               localStorage.clear()
               setTimeout(()=>{
-                window.location.href = "/login"; // Example redirect
+                window.location.href = "/account/login"; // Example redirect
               },1000)
               break;
             case 403:

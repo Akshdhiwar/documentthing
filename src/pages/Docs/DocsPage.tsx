@@ -15,14 +15,14 @@ const DocsPage = () => {
     const isNoFilePresent = useFolderStore(state => state.isNoFilePresent)
     const { isEditing } = useEditChangesStore(state => state)
     const clearLinkList = useDoublyLinkedListStore(state => state.clearList)
-    
-    useEffect(()=>{
+    const { selectedFolder } = useFolderStore(state => state)
+    useEffect(() => {
         return () => {
             clearLinkList()
             useFolderStore.getState().setIsNoFilePresent(false)
             useFolderStore.getState().setFolder([])
         }
-    },[])
+    }, [])
 
     return (
         <ResizablePanelGroup
@@ -45,10 +45,12 @@ const DocsPage = () => {
                                         Please avoid making unnecessary changes to the document. Before saving, ensure you review all your changes carefully to keep the document up-to-date and accurate.
                                     </CustomAlert>
                                 }
-                                <div className="flex-1 flex flex-col justify-between">
-                                    <BlockNoteEditor />
-                                    <NextPrevious />
-                                </div>
+                                {
+                                    selectedFolder && <div className="flex-1 flex flex-col justify-between">
+                                        <BlockNoteEditor />
+                                        <NextPrevious />
+                                    </div>
+                                }
                             </div>
                         }
                     </div>

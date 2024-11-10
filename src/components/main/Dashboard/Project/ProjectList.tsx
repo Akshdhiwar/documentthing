@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { ChevronRight, Loader, Plus } from "lucide-react"
+import { ChevronRight, Loader } from "lucide-react"
 import { useEffect, useState } from "react"
-import { Link, NavLink } from "react-router-dom"
+import { Link } from "react-router-dom"
 import useUserStore from "@/store/userStore"
 import useProjectStore from "@/store/projectStore"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
@@ -10,7 +9,7 @@ const ProjectList = () => {
   const axiosInstance = useAxiosWithToast()
   const [loading, setLoading] = useState(true)
   const [projects, setProjects] = useState<Project[]>([])
-  const {user } = useUserStore(state => state)
+  const { user } = useUserStore(state => state)
   const setProject = useProjectStore(state => state.setProject)
 
   function getProjectList() {
@@ -43,12 +42,8 @@ const ProjectList = () => {
           <Input className="pl-8 h-[32px]"></Input>
           <Search height={18} width={18} className="absolute top-[7px] left-2 text-slate-400"></Search>
         </div> */}
-        <div className="flex items-center gap-2">
-          {/* <Button variant={"outline"} className=" h-[32px]">New Organization</Button> */}
-          <Button className=" h-[32px]"><NavLink to={"new"} className={"flex items-center justify-center gap-1 "}><Plus height={18} width={18}></Plus> <p>New Project</p></NavLink></Button>
-        </div>
       </div>
-      <div className="my-6">
+      <div>
         {
           loading ? <div className="flex items-center justify-center"><Loader className="animate-spin"></Loader></div> : <ul className="mx-auto grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
             {
@@ -70,6 +65,7 @@ const ProjectList = () => {
 
       </div>
     </div>
+
   )
 }
 
