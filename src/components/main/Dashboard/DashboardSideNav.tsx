@@ -1,10 +1,12 @@
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import useUserStore from "@/store/userStore"
-import { ArrowUpRight, LogOut, ShieldCheck } from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
+import { DashboardIcon } from "@radix-ui/react-icons"
+import { ArrowUpRight, LogOut, ShieldCheck, Target, UsersRound } from "lucide-react"
+import { NavLink, useNavigate } from "react-router-dom"
 
 const DashboardSideNav = () => {
     const navigate = useNavigate()
-    const { user , org } = useUserStore(state => state)
+    const { user, org } = useUserStore(state => state)
 
     function logout() {
         localStorage.clear()
@@ -12,103 +14,109 @@ const DashboardSideNav = () => {
     }
 
     return (
-        <aside className="h-full">
-            <div className="w-64 border-r border-default h-full overflow-auto">
-                <div className="h-12 max-h-12 flex items-center border-b border-default px-6">
-                    <h4 className="truncate mb-0 text-lg">Dashboard</h4>
-                </div>
-                <nav>
-                    <ul>
-                        <div className="border-b py-5 px-6 border-default">
-                            <div className="flex space-x-3 mb-2 font-normal">
-                                <span className="text-sm text-secondary-foreground w-full">
-                                    Projects
-                                </span>
-                            </div>
-                            <ul className="space-y-1">
-                                <Link to="/dashboard/projects">
-                                    <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <span title="Projects" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground"> All Projects</span>
-                                    </span>
-                                </Link>
-                            </ul>
-                        </div>
-                        <div className="border-b py-5 px-6 border-default">
-                            <div className="flex space-x-3 mb-2 font-normal">
-                                <span className="text-sm text-secondary-foreground w-full">
-                                    Organizations
-                                </span>
-                            </div>
-                            <ul className="space-y-1">
-                                <Link to="/dashboard/organization">
-                                    <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">{org?.name}'s Org</span>
-                                    </span>
-                                </Link>
-                            </ul>
-                        </div>
-                        <div className="border-b py-5 px-6 border-default">
-                            <div className="flex space-x-3 mb-2 font-normal">
-                                <span className="text-sm text-secondary-foreground w-full">
-                                    Account
-                                </span>
-                            </div>
-                            <ul className="space-y-1">
-                                <a href="#">
-                                    <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">Preferences</span>
-                                    </span>
-                                </a>
-                            </ul>
-                        </div>
-                        <div className="border-b py-5 px-6 border-default">
-                            <div className="flex space-x-3 mb-2 font-normal">
-                                <span className="text-sm text-secondary-foreground w-full">
-                                    Documentation
-                                </span>
-                            </div>
-                            <ul className="space-y-1">
-                                <a href="#">
-                                    <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <ArrowUpRight className="text-secondary-foreground text-slate-600" height={18} width={18} />
-                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">AECInspire Org</span>
-                                    </span>
-                                </a>
-                                <a href="#">
-                                    <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <ArrowUpRight className="text-secondary-foreground text-slate-600" height={18} width={18} />
-                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">AECInspire Org</span>
-                                    </span>
-                                </a>
-                            </ul>
-                        </div>
-                        {
-                            user?.GithubID == import.meta.env.VITE_ADMIN_GITHUB_ID &&
-                            <div className="border-b py-5 px-6 border-default">
-                                <ul className="space-y-1">
-                                    <Link to="admin">
-                                        <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                            <ShieldCheck className="text-secondary-foreground text-slate-600" height={18} width={18} />
-                                            <span title="Super Admin" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">Super Admin</span>
-                                        </span>
-                                    </Link>
-                                </ul>
-                            </div>
-                        }
-                        <div className="border-b py-5 px-6 border-default">
-                            <ul className="space-y-1">
-                                <Link to="/account" onClick={() => (logout())}>
-                                    <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
-                                        <LogOut className="text-secondary-foreground text-slate-600" height={18} width={18} />
-                                        <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">Logout</span>
-                                    </span>
-                                </Link>
-                            </ul>
-                        </div>
-                    </ul>
-                </nav>
-            </div>
-        </aside>
+
+        <Sidebar>
+            <SidebarHeader className="border-b">
+                <p className="text-2xl font-extralight leading-tight tracking-tighter md:text-3xl lg:leading-[1.1] text-primary">
+                    <span className='font-semibold'>document</span>Thing
+                </p>
+            </SidebarHeader>
+            <SidebarContent className="gap-0">
+                <SidebarGroup className="border-b">
+                    <SidebarGroupLabel>Projects</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <NavLink to="/dashboard/projects">
+                                        <DashboardIcon />
+                                        <span>All Projects</span>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup className="border-b">
+                    <SidebarGroupLabel>Organizations</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <NavLink to="/dashboard/organization">
+                                        <UsersRound />
+                                        <span>{org?.name}'s Org</span>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup className="border-b">
+                    <SidebarGroupLabel>Account</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <NavLink to="/dashboard/projects">
+                                        <Target />
+                                        <span>Appearance</span>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                <SidebarGroup className="border-b">
+                    <SidebarGroupLabel>Published documentation</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <NavLink to="/dashboard/projects">
+                                        <ArrowUpRight />
+                                        <span>Akash's Documentation</span>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <NavLink to="/dashboard/projects">
+                                        <ArrowUpRight />
+                                        <span>John's Documentation</span>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+                {user?.GithubID == import.meta.env.VITE_ADMIN_GITHUB_ID &&
+                    <SidebarGroup className="border-b">
+                        <SidebarGroupLabel>Super Admin</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <NavLink to="/dashboard/projects">
+                                            <ShieldCheck />
+                                            <span>Super Admin Account</span>
+                                        </NavLink>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
+                }
+            </SidebarContent>
+            <SidebarFooter className="border-b">
+                <SidebarMenuButton asChild>
+                    <NavLink to="/account" onClick={logout}>
+                        <LogOut />
+                        <span>Logout</span>
+                    </NavLink>
+                </SidebarMenuButton>
+            </SidebarFooter>
+        </Sidebar>
     )
 }
 

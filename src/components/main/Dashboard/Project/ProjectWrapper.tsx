@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 import { NavLink, Outlet, useLocation } from "react-router-dom"
-import DashboardSideNav from "../DashboardSideNav"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Separator } from "@/components/ui/separator"
 
 const ProjectWrapper = () => {
 
@@ -11,18 +11,13 @@ const ProjectWrapper = () => {
 
     return (
         <main className="flex-1 flex flex-col">
-            <div className="flex h-12 max-h-12 items-center justify-between py-2 px-5 border-b border-default bg-white sticky top-0 z-10">
-                <div className='md:hidden'>
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <Button size={"icon"} className="p-1" variant={"ghost"}><Menu height={18} width={18}></Menu></Button>
-                        </SheetTrigger>
-                        <SheetContent className="p-0 w-min" side={"left"}>
-                            <DashboardSideNav />
-                        </SheetContent>
-                    </Sheet>
+            <div className="flex h-[50px] max-h-[50px] items-center justify-between py-2 px-5 border-b border-default bg-white sticky top-0 z-10">
+                <div className="flex gap-2 items-center">
+                    <SidebarTrigger />
+                    <Separator orientation="vertical" className="h-[24px]" />
+                    <p className="duration-200 flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opa] ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0 group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0">Projects</p>
                 </div>
-                <p className="text-gray-1100 block px-2 py-1 text-xs leading-5 focus:bg-gray-100 focus:text-gray-900 focus:outline-none ">Projects</p>
+
                 {
                     location.pathname !== "/dashboard/projects/new" && <div className="flex items-center gap-2">
                         {/* <Button variant={"outline"} className=" h-[32px]">New Organization</Button> */}

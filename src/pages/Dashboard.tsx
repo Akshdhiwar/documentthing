@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import DashboardSideNav from "@/components/main/Dashboard/DashboardSideNav"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import { Outlet } from "react-router-dom"
+import { SidebarProvider } from "@/components/ui/sidebar"
 
 const Dashboard = () => {
     const axiosInstance = useAxiosWithToast()
@@ -29,16 +30,18 @@ const Dashboard = () => {
     }, [])
 
     return (
-        <div className="h-full">
-            <div className='h-full flex'>
-                <div className='hidden md:flex'>
-                    <DashboardSideNav />
-                </div>
-                <div className='flex-1 basis-0'>
-                    <Outlet></Outlet>
+        <SidebarProvider>
+            <div className="h-full w-full">
+                <div className='h-full flex'>
+                    <div className='hidden md:flex'>
+                        <DashboardSideNav />
+                    </div>
+                    <div className='flex-1 basis-0'>
+                        <Outlet></Outlet>
+                    </div>
                 </div>
             </div>
-        </div>
+        </SidebarProvider>
     )
 }
 

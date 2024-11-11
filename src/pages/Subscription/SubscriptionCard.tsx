@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Check, ChevronRight, Sparkles } from "lucide-react"
+import { Check,  Sparkles } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 interface SubscriptionCardInterface {
@@ -38,7 +38,7 @@ const SubscriptionCard: React.FC<SubscriptionCardInterface> = ({ details, paymen
                 <p><span className="text-sm">$</span><span className="font-bold text-2xl">{details.price}</span><span className="text-muted-foreground text-sm">/user</span></p>
             </div>
             {
-                !paymentPage && <Button onClick={navigateToSubscriptionPage} className="w-full mt-2" variant="expandIcon" size={"sm"} Icon={ChevronRight} iconPlacement="right">Continue</Button>
+                !paymentPage && <Button onClick={navigateToSubscriptionPage} className="w-full mt-2" size={"sm"}>Continue</Button>
             }
         </div>
 

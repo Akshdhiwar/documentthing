@@ -122,8 +122,8 @@ const Login = () => {
 
         <div className="w-[350px] py-6 box-border space-y-2">
             <div className='text-center'>
-                <p className="text-2xl leading-tight tracking-tighter md:text-3xl lg:leading-[1.1] text-primary">
-                    better<span className='font-semibold'>Docs</span>
+                <p className="text-2xl leading-tight font-extralight tracking-tighter md:text-3xl lg:leading-[1.1] text-primary">
+                    <span className='font-semibold'>document</span>Thing
                 </p>
                 <p className="text-base text-muted-foreground mb-8">
                     One step away to create your own docs
