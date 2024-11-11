@@ -15,7 +15,7 @@ const Toolbar = () => {
     const [isLoading, setLoading] = useState(false)
     const project = useProjectStore(state => state.project)
     const { Url, isNoFilePresent } = useFolderStore(state => state)
-    const { isEditing, setIsEditing, editedFiles, reset, editedFolder , editedMarkdown } = useEditChangesStore(state => state)
+    const { isEditing, setIsEditing, editedFiles, reset, editedFolder, editedMarkdown } = useEditChangesStore(state => state)
 
     // const fetchToServer = async (data: string) => {
     //     setLoading(true)
@@ -65,13 +65,13 @@ const Toolbar = () => {
         // setLoading(true)
         let response = await axiosInstance.post("/commit/save", {
             project_id: project?.Id,
-            content: [...files, ...folder , ...markdown]
+            content: [...files, ...folder, ...markdown]
         })
 
-        if(response.status === 200){
+        if (response.status === 200) {
             setLoading(false)
             reset()
-        }else{
+        } else {
             setLoading(false)
         }
 
@@ -81,7 +81,7 @@ const Toolbar = () => {
 
 
     return (
-        <div className="flex items-center justify-between p-1 mx-4">
+        <div className="flex items-center justify-between p-1 mx-4 h-10">
             <div className="md:hidden order-1">
                 <Sheet>
                     <SheetTrigger asChild>
@@ -98,15 +98,20 @@ const Toolbar = () => {
                 }
             </div>
             <div className="order-3 flex  gap-2">
-            <Export></Export>
-            {
-                isEditing ? <div className="flex gap-2">
-                    <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading} onClick={onSaveToServer}>{
-                        isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
-                    } Save changes</Button>
-                    <Button className="order-3" size={"sm"} onClick={() => cancelEditing()}>Cancel Editing</Button>
-                </div> : <Button className="order-3" size={"sm"} onClick={() => setIsEditing(true)}>Edit</Button>
-            }
+                {
+                    project?.Role !== "Viewer" && <>
+                        <Export></Export>
+                        {
+                            isEditing ? <div className="flex gap-2">
+                                <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading} onClick={onSaveToServer}>{
+                                    isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
+                                } Save changes</Button>
+                                <Button className="order-3" size={"sm"} onClick={() => cancelEditing()}>Cancel Editing</Button>
+                            </div> : <Button className="order-3" size={"sm"} onClick={() => setIsEditing(true)}>Edit</Button>
+                        }
+                    </>
+                }
+
             </div>
         </div>
     )

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import CustomAlert from '@/components/custom/CustomAlert'
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface InstallationType {
     name: string
@@ -127,7 +128,7 @@ const ProjectCreationDailog = () => {
 
     return (
 
-        <div className='w-full max-w-4xl m-auto px-8'>
+        <ScrollArea className='w-full max-w-4xl m-auto px-8 h-full'>
             <div className='mt-10 mb-4'>
                 <p className='text-2xl font-semibold leading-none tracking-tight'>Create new project</p>
             </div>
@@ -149,12 +150,12 @@ const ProjectCreationDailog = () => {
             <form onSubmit={createNewProject}>
                 <div className="grid gap-8 py-4 mt-4">
                     <div className='grid grid-cols-5 gap-4 '>
-                        <div className='col-span-3'>
+                        <div className='col-span-5 lg:col-span-3'>
                             <p className='font-semibold leading-none tracking-tight'>Select Account</p>
                             <span className='text-muted-foreground text-sm tracking-wide'>Choose the Github Installation, user or organization &nbsp;</span>
                             <a className='text-sm underline text-secondary-foreground tracking-wide' href={`https://github.com/apps/${import.meta.env.VITE_ENVIRONMENT === "Local" ? "betterdocs-com" : "betterdocs-prod"}/installations/new`}>Install the Github App</a>
                         </div>
-                        <div className='flex gap-1 col-span-2'>
+                        <div className='flex gap-1 col-span-5 lg:col-span-2'>
                             <Select onValueChange={(event) => setValue(event)}>
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Choose Account" />
@@ -176,12 +177,12 @@ const ProjectCreationDailog = () => {
                     {
                         value !== "" && !loading &&
                         <div className='grid grid-cols-5 gap-4'>
-                            <div className='col-span-3'>
+                            <div className='col-span-5 lg:col-span-3'>
                                 <p className='font-semibold leading-none tracking-tight'>Select Repository</p>
                                 <span className='text-muted-foreground text-sm tracking-wide'>Choose the GitHub repository to sync with. This repository should be authorized in the &nbsp;</span>
                                 <a className='text-sm underline text-secondary-foreground tracking-wide' href={`https://github.com/settings/installations/${value}`}>GitHub installation.</a>
                             </div>
-                            <div className='flex gap-1 col-span-2'>
+                            <div className='flex gap-1 col-span-5 lg:col-span-2'>
                                 <Select onValueChange={(event) => setSelectedRepo(event)}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Choose Repo" />
@@ -207,7 +208,7 @@ const ProjectCreationDailog = () => {
                         </div>
                     }
                 </div>
-                <div className='flex items-center justify-between'>
+                <div className='flex items-center justify-between mb-10'>
                     <Button variant="outline" size="sm" onClick={() => navigate(-1)} type="button">
                         Back
                     </Button>
@@ -218,7 +219,7 @@ const ProjectCreationDailog = () => {
                     </Button>
                 </div>
             </form>
-        </div>
+        </ScrollArea>
     )
 }
 

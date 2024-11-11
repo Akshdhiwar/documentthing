@@ -26,7 +26,7 @@ const ProjectWrapper = () => {
                 {
                     location.pathname !== "/dashboard/projects/new" && <div className="flex items-center gap-2">
                         {/* <Button variant={"outline"} className=" h-[32px]">New Organization</Button> */}
-                        <Button className=" h-[32px]"><NavLink to={"new"} className={"flex items-center justify-center gap-1 "}><Plus height={18} width={18}></Plus> <p>New Project</p></NavLink></Button>
+                        <Button className=" h-[32px]"><NavLink to={"new"} className={"flex items-center justify-center gap-1 "}><Plus height={18} width={18}></Plus> <p className="hidden lg:block">New Project</p></NavLink></Button>
                     </div>
                 }
             </div>

@@ -25,6 +25,7 @@ const Members = lazy(() => import("./components/main/DocsPage/Settings/Member/Me
 // const SubscriptionList = lazy(() => import("./pages/Subscription/SubscriptionList"))
 // const SubscriptionPayment = lazy(() => import("./pages/Subscription/SubscriptionPage"))
 const OrgWrapper = lazy(() => import("./components/main/Dashboard/Organization/OrganizationWrapper"))
+const OrgMembers = lazy(() => import("./components/main/Dashboard/Organization/OrgMembers"))
 
 const App = () => {
   return (
@@ -58,7 +59,10 @@ const App = () => {
               <Route index element={<ProjectList></ProjectList>}></Route>
               <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
             </Route>
-            <Route path="organization" element={<OrgWrapper />}></Route>
+            <Route path="organization" element={<OrgWrapper />}>
+              <Route index element={<Navigate to={"members"} />}></Route>
+              <Route path="members" element={<OrgMembers />}></Route>
+            </Route>
             {/* <Route path="admin" element={<Admin />}></Route> */}
           </Route>
           <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>

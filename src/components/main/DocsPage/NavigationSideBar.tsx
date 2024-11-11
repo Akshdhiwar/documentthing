@@ -1,4 +1,4 @@
-import { Check, Loader, PlusCircle, Settings, X } from "lucide-react"
+import { Check, ChevronLeft, Loader, PlusCircle, Settings, X } from "lucide-react"
 import Item from "../../custom/Item"
 import { Separator } from "../../ui/separator"
 import FolderStructure from "./FolderStructure"
@@ -119,12 +119,13 @@ const NavigationSideBar = () => {
 
     return (
         <div className="h-full flex flex-col w-full relative">
-            {
-                isEditing && <div className="m-2">
-                    {/* <Link label="Home" href="/dashboard" icon={ChevronLeft}></Link> */}
+            <div className="m-2">
+                <Link label="Home" href="/dashboard" icon={ChevronLeft}></Link>
+                {
+                    isEditing &&
                     <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
-                </div>
-            }
+                }
+            </div>
             <Separator />
             {
                 newFolder && (

@@ -1,6 +1,5 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import useProjectStore from "@/store/projectStore"
-import { FileText, FolderGit2, FolderOpen, Home } from "lucide-react"
+import { FileText, FolderOpen } from "lucide-react"
 import React from "react"
 
 type BreadcrumType = {
@@ -8,8 +7,7 @@ type BreadcrumType = {
 }
 
 const BreadCrums: React.FC<BreadcrumType> = ({ UrlString }) => {
-    if(!UrlString) return
-    const project = useProjectStore(state => state.project)
+    if (!UrlString) return
     const resultArray = UrlString.split(" / ").map(str => str.trim());
 
     return (
@@ -17,7 +15,7 @@ const BreadCrums: React.FC<BreadcrumType> = ({ UrlString }) => {
             {/* <FileText className="text-muted-foreground"></FileText> */}
             <Breadcrumb>
                 <BreadcrumbList>
-                    <BreadcrumbItem>
+                    {/* <BreadcrumbItem>
                         <BreadcrumbLink href="/dashboard" className="flex items-center">
                             <Home height={16}></Home>Home
                         </BreadcrumbLink>
@@ -26,7 +24,7 @@ const BreadCrums: React.FC<BreadcrumType> = ({ UrlString }) => {
                     <BreadcrumbItem>
                         <FolderGit2 height={16}></FolderGit2>{project?.Name}
                     </BreadcrumbItem>
-                    <BreadcrumbSeparator></BreadcrumbSeparator>
+                    <BreadcrumbSeparator></BreadcrumbSeparator> */}
                     {
                         resultArray.map((ele, index) => (
                             <div className="flex items-center " key={index}>
@@ -40,7 +38,6 @@ const BreadCrums: React.FC<BreadcrumType> = ({ UrlString }) => {
                                 }
                             </div>
                         ))
-
                     }
                 </BreadcrumbList>
             </Breadcrumb>

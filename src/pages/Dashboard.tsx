@@ -34,7 +34,7 @@ const Dashboard = () => {
                 <div className='hidden md:flex'>
                     <DashboardSideNav />
                 </div>
-                <div className='flex-1 basis-0 overflow-auto'>
+                <div className='flex-1 basis-0'>
                     <Outlet></Outlet>
                 </div>
             </div>

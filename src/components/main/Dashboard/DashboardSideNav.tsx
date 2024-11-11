@@ -26,7 +26,7 @@ const DashboardSideNav = () => {
                                 </span>
                             </div>
                             <ul className="space-y-1">
-                                <Link to="projects">
+                                <Link to="/dashboard/projects">
                                     <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
                                         <span title="Projects" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground"> All Projects</span>
                                     </span>
@@ -40,7 +40,7 @@ const DashboardSideNav = () => {
                                 </span>
                             </div>
                             <ul className="space-y-1">
-                                <Link to="organization">
+                                <Link to="/dashboard/organization">
                                     <span className="group flex max-w-full cursor-pointer items-center py-1 gap-1">
                                         <span title="Akash" className="w-full truncate text-sm transition-all font-medium text-slate-600 group-hover:text-foreground">{org?.name}'s Org</span>
                                     </span>

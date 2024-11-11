@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import useUserStore from "@/store/userStore"
 import useProjectStore from "@/store/projectStore"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 const ProjectList = () => {
   const axiosInstance = useAxiosWithToast()
@@ -36,7 +37,7 @@ const ProjectList = () => {
   }
 
   return (
-    <div className="p-5">
+    <ScrollArea className="p-5">
       <div className="flex gap-2 items-center justify-between">
         {/* <div className="relative">
           <Input className="pl-8 h-[32px]"></Input>
@@ -62,9 +63,8 @@ const ProjectList = () => {
             }
           </ul>
         }
-
       </div>
-    </div>
+    </ScrollArea>
 
   )
 }
