@@ -1,7 +1,6 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import useUserStore from "@/store/userStore"
-import { DashboardIcon } from "@radix-ui/react-icons"
-import { ArrowUpRight, LogOut, ShieldCheck, Target, UsersRound } from "lucide-react"
+import { LogOut } from "lucide-react"
 import { NavLink, useNavigate } from "react-router-dom"
 
 const DashboardSideNav = () => {
@@ -29,7 +28,6 @@ const DashboardSideNav = () => {
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <NavLink to="/dashboard/projects">
-                                        <DashboardIcon />
                                         <span>All Projects</span>
                                     </NavLink>
                                 </SidebarMenuButton>
@@ -44,7 +42,6 @@ const DashboardSideNav = () => {
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <NavLink to="/dashboard/organization">
-                                        <UsersRound />
                                         <span>{org?.name}'s Org</span>
                                     </NavLink>
                                 </SidebarMenuButton>
@@ -59,7 +56,6 @@ const DashboardSideNav = () => {
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <NavLink to="/dashboard/projects">
-                                        <Target />
                                         <span>Appearance</span>
                                     </NavLink>
                                 </SidebarMenuButton>
@@ -74,7 +70,6 @@ const DashboardSideNav = () => {
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <NavLink to="/dashboard/projects">
-                                        <ArrowUpRight />
                                         <span>Akash's Documentation</span>
                                     </NavLink>
                                 </SidebarMenuButton>
@@ -82,7 +77,6 @@ const DashboardSideNav = () => {
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <NavLink to="/dashboard/projects">
-                                        <ArrowUpRight />
                                         <span>John's Documentation</span>
                                     </NavLink>
                                 </SidebarMenuButton>
@@ -98,7 +92,6 @@ const DashboardSideNav = () => {
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild>
                                         <NavLink to="/dashboard/projects">
-                                            <ShieldCheck />
                                             <span>Super Admin Account</span>
                                         </NavLink>
                                     </SidebarMenuButton>
@@ -111,7 +104,7 @@ const DashboardSideNav = () => {
             <SidebarFooter className="border-b">
                 <SidebarMenuButton asChild>
                     <NavLink to="/account" onClick={logout}>
-                        <LogOut />
+                        <LogOut className="rotate-180" />
                         <span>Logout</span>
                     </NavLink>
                 </SidebarMenuButton>

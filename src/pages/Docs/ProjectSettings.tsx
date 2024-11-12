@@ -7,7 +7,7 @@ import { Link, Outlet } from "react-router-dom"
 const ProjectSettings = () => {
     return (
         <>
-            <div className="hidden space-y-6 h-full p-10 pb-16 md:flex flex-col">
+            <div className="space-y-6 h-full p-10 pb-16 flex flex-col">
                 <div className="flex items-center gap-8">
                     <Link to={".."}><ChevronLeft></ChevronLeft>
                     </Link>

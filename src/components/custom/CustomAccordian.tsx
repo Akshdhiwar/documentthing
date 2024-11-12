@@ -1,15 +1,13 @@
-import { Check, ChevronRight, Ellipsis, File, FileText, Plus, SquarePen, Trash, X } from "lucide-react";
+import { Check, ChevronRight, Ellipsis, File, FileText, Plus, Trash, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import Item from "./Item";
 import useFolderStore from "@/store/folderStore";
 import useProjectStore from "@/store/projectStore";
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks";
 import useEditChangesStore from "@/store/changes";
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from "../ui/menubar";
 
 interface FolderInterface {
     child: Folder
@@ -103,12 +101,12 @@ const CustomAccordian = ({ child }: FolderInterface) => {
 
     }
 
-    function renameFolder() {
-        setRenameOpen(true)
-        if (renameInputValue?.current) {
-            renameInputValue.current!.focus()
-        }
-    }
+    // function renameFolder() {
+    //     setRenameOpen(true)
+    //     if (renameInputValue?.current) {
+    //         renameInputValue.current!.focus()
+    //     }
+    // }
 
     function rename(event: React.FormEvent, fileId: string) {
         event.preventDefault();
@@ -139,11 +137,11 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                         <Button className="p-1 h-8 w-8" type="submit"><Check className="h-[16px]"></Check></Button>
                         <Button className="p-1 h-8 w-8" onClick={() => { setRenameOpen(false) }}><X className="h-[16px]"></X></Button>
                     </form> :
-                    <div onClick={() => setSelectedFolder(child)} className={`flex w-full group items-center hover:cursor-pointer hover:bg-primary/10 p-1 px-2 rounded gap-2 transition-all text-muted-foreground hover:text-primary ${selectedFolder?.id === child.id ? "bg-primary/10" : ""} `}>
+                    <div onClick={() => setSelectedFolder(child)} className={`h-[33px] flex w-full group items-center hover:cursor-pointer hover:bg-sidebar-accent p-1 px-2 rounded gap-2 transition-all text-muted-foreground hover:text-primary ${selectedFolder?.id === child.id ? "bg-sidebar-accent" : ""} `}>
                         <div className=' transition-opacity flex'>
                             {
                                 child.children.length > 0 && (
-                                    <Button variant={"ghost"} className='p-0 h-[22px] w-[22px] hidden items-center justify-center group-hover:flex hover:bg-primary/10 rounded z-10 opacity-0 group-hover:opacity-100' onClick={openCloseAccordian}><ChevronRight height={18} width={18} className={`${open ? "rotate-90" : ""}`}></ChevronRight></Button>
+                                    <Button variant={"ghost"} className='p-0 h-[22px] w-[22px] hidden items-center justify-center group-hover:flex hover:bg-sidebar-accent rounded z-10 opacity-0 group-hover:opacity-100' onClick={openCloseAccordian}><ChevronRight height={18} width={18} className={`${open ? "rotate-90" : ""}`}></ChevronRight></Button>
                                 )
                             }
                             <div className={`h-[22px] w-[22px] flex items-center justify-center ${child.children?.length !== 0 ? "group-hover:hidden" : ""}`}>{
@@ -164,28 +162,25 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                                 <div className='opacity-0 transition-opacity group-hover:opacity-100'>
                                     <div className='block absolute overflow-hidden whitespace-nowrap h-[0px] w-[0px] group-hover:flex group-hover:static group-hover:overflow-auto group-hover:whitespace-normal group-hover:h-full group-hover:w-full'>
                                         <div className='flex items-center justify-center h-full z-10'>
-                                            <TooltipProvider delayDuration={200}>
-                                                <Tooltip>
-                                                    <Popover>
-                                                        <PopoverTrigger>
-                                                            <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></Button></TooltipTrigger>
-                                                        </PopoverTrigger>
-                                                        <PopoverContent className="flex flex-col w-48 p-1 gap-1">
-                                                            <Item label="Rename" onClick={() => renameFolder} icon={SquarePen} className={"text-sm"}></Item>
-                                                            <Item label="Delete" onClick={() => deleteFolderFile(child.id)} icon={Trash} className={"text-sm text-red-500"}></Item>
-                                                        </PopoverContent>
-                                                    </Popover>
-                                                    <TooltipContent side='bottom'>
-                                                        <p>more</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                                <Tooltip>
-                                                    <TooltipTrigger className="h-[22px] overflow-hidden"><Button variant={"ghost"} onClick={() => openNew()} className='p-1 h-[22px] w-[22px]  hover:bg-primary/10'><Plus className="h-[14px] w-[14px]"></Plus></Button></TooltipTrigger>
-                                                    <TooltipContent side='bottom'>
-                                                        <p>Create new file</p>
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
+                                            <Menubar className="h-min p-0">
+                                                <MenubarMenu>
+                                                    <MenubarTrigger className='p-1 h-[22px] w-[22px]  hover:bg-sidebar-accent'><Ellipsis className="h-[14px] w-[14px]"></Ellipsis></MenubarTrigger>
+                                                    <MenubarContent className="flex flex-col w-48 p-1 gap-1" side="right">
+                                                        <MenubarItem onClick={() => openNew()}>
+                                                            <div className="flex gap-2 items-center">
+                                                                <Plus className="h-[18px]"></Plus> Create Sub-file
+                                                            </div>
+                                                        </MenubarItem>
+                                                        <MenubarItem onClick={() => deleteFolderFile(child.id)}>
+                                                            <div className="flex gap-2 items-center">
+                                                                <Trash className="h-[18px]"></Trash> Delete
+                                                            </div>
+                                                        </MenubarItem>
+                                                        {/* <Item label="Rename" onClick={() => renameFolder} icon={SquarePen} className={"text-sm"}></Item> */}
+                                                        {/* <Item label="Delete" onClick={() => deleteFolderFile(child.id)} icon={Trash} className={"text-sm text-red-500"}></Item> */}
+                                                    </MenubarContent>
+                                                </MenubarMenu>
+                                            </Menubar>
                                         </div>
                                     </div>
                                 </div>
