@@ -1,14 +1,13 @@
-import { Loader, Menu, SaveAll } from "lucide-react"
+import { Loader, SaveAll } from "lucide-react"
 import { Button } from "../../ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet"
-import NavigationSideBar from "./NavigationSideBar"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
 import { useState } from "react"
 import BreadCrums from "./BreadCrums"
-import Export from "./Export"
 import useEditChangesStore from "@/store/changes"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const Toolbar = () => {
     const axiosInstance = useAxiosWithToast()
@@ -16,6 +15,7 @@ const Toolbar = () => {
     const project = useProjectStore(state => state.project)
     const { Url, isNoFilePresent } = useFolderStore(state => state)
     const { isEditing, setIsEditing, editedFiles, reset, editedFolder, editedMarkdown } = useEditChangesStore(state => state)
+    const [activeTab, setActiveTab] = useState<string>("preview")
 
     // const fetchToServer = async (data: string) => {
     //     setLoading(true)
@@ -32,6 +32,7 @@ const Toolbar = () => {
 
     function cancelEditing() {
         reset()
+        setActiveTab("preview")
         setLoading(false)
     }
 
@@ -71,6 +72,7 @@ const Toolbar = () => {
         if (response.status === 200) {
             setLoading(false)
             reset()
+            setActiveTab("preview")
         } else {
             setLoading(false)
         }
@@ -79,39 +81,41 @@ const Toolbar = () => {
         // await fetchToServer(JSON.stringify(editorContent))
     }
 
+    function onTabChange(value: string) {
+        value === "preview" && cancelEditing()
+        setIsEditing(value === "edit")
+        setActiveTab(value);
+    }
 
     return (
-        <div className="flex items-center justify-between p-1 mx-4 h-10">
-            <div className="md:hidden order-1">
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button size={"icon"} className="p-1" variant={"ghost"}><Menu height={18} width={18}></Menu></Button>
-                    </SheetTrigger>
-                    <SheetContent className="p-0" side={"left"}>
-                        <NavigationSideBar />
-                    </SheetContent>
-                </Sheet>
-            </div>
-            <div className="order-2">
-                {
-                    !isNoFilePresent && Url && <BreadCrums UrlString={Url} />
-                }
-            </div>
-            <div className="order-3 flex  gap-2">
+        <div className="flex flex-col">
+            <div className="flex gap-2 items-center justify-between p-1 px-4 border-b border-gray-100 bg-sidebar">
+                <SidebarTrigger></SidebarTrigger>
+                <Tabs value={activeTab} onValueChange={onTabChange}>
+                    <TabsList>
+                        <TabsTrigger value="preview">Preview</TabsTrigger>
+                        {
+                            project?.Role !== "Viewer" && <TabsTrigger value="edit">Edit Mode</TabsTrigger>
+                        }
+                    </TabsList>
+                </Tabs>
                 {
                     project?.Role !== "Viewer" && <>
-                        <Export></Export>
                         {
                             isEditing ? <div className="flex gap-2">
                                 <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading} onClick={onSaveToServer}>{
                                     isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
                                 } Save changes</Button>
-                                <Button className="order-3" size={"sm"} onClick={() => cancelEditing()}>Cancel Editing</Button>
-                            </div> : <Button className="order-3" size={"sm"} onClick={() => setIsEditing(true)}>Edit</Button>
+                            </div> : <Button size={"sm"}>Publish</Button>
                         }
                     </>
                 }
-
+            </div>
+            {/* <Separator/> */}
+            <div className={`${!isNoFilePresent && Url && "p-1 px-4 border-b border-slate-100"}`}>
+                {
+                    !isNoFilePresent && Url && <BreadCrums UrlString={Url} />
+                }
             </div>
         </div>
     )

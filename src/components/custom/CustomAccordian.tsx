@@ -141,14 +141,12 @@ const CustomAccordian = ({ child }: FolderInterface) => {
                         <div className=' transition-opacity flex'>
                             {
                                 child.children.length > 0 && (
-                                    <Button variant={"ghost"} className='p-0 h-[22px] w-[22px] hidden items-center justify-center group-hover:flex hover:bg-sidebar-accent rounded z-10 opacity-0 group-hover:opacity-100' onClick={openCloseAccordian}><ChevronRight height={18} width={18} className={`${open ? "rotate-90" : ""}`}></ChevronRight></Button>
+                                    <Button variant={"ghost"} className='p-0 h-[22px] w-[22px] flex items-center justify-center  rounded z-10' onClick={openCloseAccordian}><ChevronRight height={18} width={18} className={`${open ? "rotate-90" : ""}`}></ChevronRight></Button>
                                 )
                             }
-                            <div className={`h-[22px] w-[22px] flex items-center justify-center ${child.children?.length !== 0 ? "group-hover:hidden" : ""}`}>{
-                                child.children?.length === 0 ? (
+                            <div className={`h-[22px] w-[22px] flex items-center justify-center ${child.children?.length === 0 ? "" : "hidden"}`}>{
+                                child.children?.length === 0 && (
                                     <File height={18} width={18} />
-                                ) : (
-                                    open ? <FileText height={18} width={18} /> : <FileText height={18} width={18} />
                                 )
                             }</div>
                         </div>

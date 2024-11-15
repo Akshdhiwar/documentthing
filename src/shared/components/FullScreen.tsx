@@ -6,7 +6,7 @@ interface FullScreenProps {
 
 const FullScreen: React.FC<FullScreenProps> = ({ children }) => {
   return (
-    <div className="w-screen h-screen max-h-screen">
+    <div className="h-dvh w-dvw  max-h-dvh overflow-auto">
       {children}
     </div>
   );

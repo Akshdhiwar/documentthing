@@ -34,7 +34,7 @@ const AddEmail = () => {
     };
 
     return (
-        <div className='h-screen w-screen flex flex-col items-center justify-evenly'>
+        <div className='h-dvh w-dvw  flex flex-col items-center justify-evenly'>
             <div className="w-[350px] py-6 box-border space-y-2">
                 <div className='text-center'>
                     <p className="text-2xl mb-2 leading-tight tracking-tighter md:text-3xl lg:leading-[1.1] text-primary">

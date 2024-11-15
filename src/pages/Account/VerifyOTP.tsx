@@ -70,7 +70,7 @@ const VerifyOTP = () => {
   }
 
   return (
-    <div className='h-screen w-screen flex flex-col items-center justify-evenly'>
+    <div className='h-dvh w-dvw  flex flex-col items-center justify-evenly'>
       <div className="w-[350px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

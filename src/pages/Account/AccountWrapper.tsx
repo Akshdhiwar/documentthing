@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 
 const AccountWrapper = () => {
     return (
-        <div className='h-screen w-screen flex items-center justify-center'>
+        <div className='h-dvh w-dvw flex items-center justify-center'>
             <Outlet></Outlet>
         </div>
     )

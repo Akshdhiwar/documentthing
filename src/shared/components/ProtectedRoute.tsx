@@ -17,7 +17,7 @@ export default ProtectedRoute;
 
 const Unauthorized: React.FC = () => {
     return (
-        <div className='h-screen flex items-center justify-center'>
+        <div className='h-dvh w-dvw flex items-center justify-center'>
             Unauthorized
         </div>
     );

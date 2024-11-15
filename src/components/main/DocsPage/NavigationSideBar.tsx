@@ -14,11 +14,15 @@ import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import { useToast } from "@/components/ui/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import useUserStore from "@/store/userStore"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuButton } from "@/components/ui/sidebar"
+import { ProjectSwitcher } from "./Project-Switcher"
+import { NavUser } from "@/components/custom/NavUser"
 
 const NavigationSideBar = () => {
     const { toast } = useToast()
     const axiosInstance = useAxiosWithToast()
     const [newFolder, setNewFolder] = useState(false)
+    const [projs, setProjs] = useState([])
     let InputRef = useRef<HTMLInputElement>(null)
     const { createPage, setFolder, folder, setSelectedFolder, loading, setLoading, isNoFilePresent } = useFolderStore(state => state)
     const project = useProjectStore(state => state.project)
@@ -77,6 +81,17 @@ const NavigationSideBar = () => {
             }
         };
 
+        axiosInstance.get("/project/get-project", {
+            params: {
+                name: user?.GithubName,
+                id: user?.ID
+            }
+        }).then(result => {
+            setProjs(result.data === null ? [] : result.data)
+        }).catch(err => {
+            console.error(err)
+        })
+
         // Start the polling loop
         pollForUpdates();
 
@@ -118,48 +133,58 @@ const NavigationSideBar = () => {
     }, [newFolder]);
 
     return (
-        <div className="h-full flex flex-col w-full relative">
-            <div className="m-2">
-                <Link label="Home" href="/dashboard" icon={ChevronLeft}></Link>
+
+        <Sidebar>
+            <SidebarHeader>
+                <ProjectSwitcher projectList={projs}></ProjectSwitcher>
+            </SidebarHeader>
+            <SidebarContent>
+                <SidebarMenuButton>
+                    <Link label="Home" href="/dashboard" icon={ChevronLeft}></Link>
+                </SidebarMenuButton>
                 {
                     isEditing &&
-                    <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
+                    <SidebarMenuButton>
+                        <Item label="Create new file" onClick={() => { createFolder() }} icon={PlusCircle}></Item>
+                    </SidebarMenuButton>
                 }
-            </div>
-            <Separator />
-            {
-                newFolder && (
-                    <form onSubmit={addPage} className="flex gap-1 items-center m-2">
-                        <Input className="flex-1 h-8" ref={InputRef}></Input>
-                        <Button className="p-1 h-8 w-8" type="submit"><Check className="h-[16px]"></Check></Button>
-                        <Button className="p-1 h-8 w-8" onClick={() => { setNewFolder(false) }}><X className="h-[16px]"></X></Button>
-                    </form>
-                )
-            }
-            {
-                isNoFilePresent ? <div className="flex-1 m-2 flex items-center justify-center text-center">
-                    <p className="text-muted-foreground">Look's like no file is been created</p>
-                </div> : <div className="flex-1 overflow-auto m-2">
-                    <FolderStructure folder={folder} />
-                </div>
-            }
-            {(project?.Role === "Admin" || project?.Role === "Editor") && (
-                <>
-                    <Separator />
-                    <div className="m-2 flex flex-col gap-1">
-                        {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
-                        <Link label="Setting" href={`/project/${project?.Id}/settings`} icon={Settings}></Link>
+                <Separator />
+                {
+                    newFolder && (
+                        <form onSubmit={addPage} className="flex gap-1 items-center m-2">
+                            <Input className="flex-1 h-8" ref={InputRef}></Input>
+                            <Button className="p-1 h-8 w-8" type="submit"><Check className="h-[16px]"></Check></Button>
+                            <Button className="p-1 h-8 w-8" onClick={() => { setNewFolder(false) }}><X className="h-[16px]"></X></Button>
+                        </form>
+                    )
+                }
+                {
+                    isNoFilePresent ? <div className="flex-1 m-2 flex items-center justify-center text-center">
+                        <p className="text-muted-foreground">Look's like no file is been created</p>
+                    </div> : <div className="flex-1 overflow-auto m-2">
+                        <FolderStructure folder={folder} />
                     </div>
-                </>
-            )}
+                }
+                {(project?.Role === "Admin" || project?.Role === "Editor") && (
+                    <>
+                        <Separator />
+                        <div className="m-2 flex flex-col gap-1">
+                            {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
+                            <Link label="Setting" href={`/project/${project?.Id}/settings`} icon={Settings}></Link>
+                        </div>
+                    </>
+                )}
 
-            {
-                loading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
-                    <Loader className="animate-spin"></Loader>
-                </div>
-            }
-
-        </div>
+                {
+                    loading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
+                        <Loader className="animate-spin"></Loader>
+                    </div>
+                }
+            </SidebarContent>
+            <SidebarFooter>
+                <NavUser></NavUser>
+            </SidebarFooter>
+        </Sidebar>
     )
 }
 
