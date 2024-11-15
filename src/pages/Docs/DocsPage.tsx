@@ -8,6 +8,7 @@ import useEditChangesStore from "@/store/changes"
 import { useEffect } from "react"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import { SidebarProvider } from "@/components/ui/sidebar"
+import { ScrollArea } from "@radix-ui/react-scroll-area"
 
 const DocsPage = () => {
 
@@ -26,11 +27,11 @@ const DocsPage = () => {
     return (
         <SidebarProvider>
             <NavigationSideBar />
-            <div className="flex flex-col flex-1 relative">
+            <ScrollArea className="flex flex-col flex-1 relative">
                 <div className="sticky top-0 z-10 bg-white">
                     <Toolbar></Toolbar>
                 </div>
-                <div className="flex justify-center mt-6 flex-1  overflow-auto">
+                <div className="flex justify-center pt-6 p-3 flex-1">
                     {
                         !isNoFilePresent && <div className="w-full max-w-3xl h-full flex-1 basis-auto flex flex-col justify-between">
                             {
@@ -39,7 +40,7 @@ const DocsPage = () => {
                                 </CustomAlert>
                             }
                             {
-                                selectedFolder && <div className="flex-1 flex flex-col justify-between">
+                                selectedFolder && <div className="flex-1 flex flex-col pt-4 justify-between">
                                     <BlockNoteEditor />
                                     <NextPrevious />
                                 </div>
@@ -47,7 +48,7 @@ const DocsPage = () => {
                         </div>
                     }
                 </div>
-            </div>
+            </ScrollArea>
         </SidebarProvider>
     )
 }

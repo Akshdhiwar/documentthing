@@ -49,7 +49,7 @@ const NavigationSideBar = () => {
         } else {
             getFolderJson()
         }
-    }, [editedFolder])
+    }, [editedFolder, project])
 
     useEffect(() => {
         let isPolling = true; // A flag to manage polling loop and cleanup on unmount
@@ -133,7 +133,6 @@ const NavigationSideBar = () => {
     }, [newFolder]);
 
     return (
-
         <Sidebar>
             <SidebarHeader>
                 <ProjectSwitcher projectList={projs}></ProjectSwitcher>

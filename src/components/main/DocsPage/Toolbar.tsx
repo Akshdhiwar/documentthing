@@ -2,7 +2,7 @@ import { Loader, SaveAll } from "lucide-react"
 import { Button } from "../../ui/button"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import BreadCrums from "./BreadCrums"
 import useEditChangesStore from "@/store/changes"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
@@ -87,6 +87,12 @@ const Toolbar = () => {
         setActiveTab(value);
     }
 
+    useEffect(() => {
+        if (isEditing) {
+            setActiveTab("edit");
+        }
+    }, [])
+
     return (
         <div className="flex flex-col">
             <div className="flex gap-2 items-center justify-between p-1 px-4 border-b border-gray-100 bg-sidebar">
@@ -100,19 +106,18 @@ const Toolbar = () => {
                     </TabsList>
                 </Tabs>
                 {
-                    project?.Role !== "Viewer" && <>
+                    project?.Role !== "Viewer" ? <>
                         {
                             isEditing ? <div className="flex gap-2">
                                 <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading} onClick={onSaveToServer}>{
                                     isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
-                                } Save changes</Button>
+                                } Save </Button>
                             </div> : <Button size={"sm"}>Publish</Button>
                         }
-                    </>
+                    </> : <div></div>
                 }
             </div>
-            {/* <Separator/> */}
-            <div className={`${!isNoFilePresent && Url && "p-1 px-4 border-b border-slate-100"}`}>
+            <div className={`${!isNoFilePresent && Url && "p-1 px-4 border-b border-slate-100 truncate"}`}>
                 {
                     !isNoFilePresent && Url && <BreadCrums UrlString={Url} />
                 }

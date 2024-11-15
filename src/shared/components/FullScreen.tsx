@@ -1,3 +1,4 @@
+import { ScrollArea } from '@/components/ui/scroll-area';
 import React, { ReactNode } from 'react';
 
 interface FullScreenProps {
@@ -6,9 +7,9 @@ interface FullScreenProps {
 
 const FullScreen: React.FC<FullScreenProps> = ({ children }) => {
   return (
-    <div className="h-dvh w-dvw  max-h-dvh overflow-auto">
+    <ScrollArea className="h-dvh w-dvw  max-h-dvh overflow-x-hidden">
       {children}
-    </div>
+    </ScrollArea>
   );
 }
 
