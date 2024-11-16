@@ -1,5 +1,4 @@
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from "@/components/ui/sidebar"
-import CustomToggle from "../../custom/CustomAccordian"
 import Tree from "@/components/custom/Tree"
 
 type Props = {

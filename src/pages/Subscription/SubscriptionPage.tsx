@@ -36,6 +36,7 @@ const SubscriptionPage = () => {
         <PayPalButtons
           createSubscription={(data: any, actions: any) => {
             // Check if actions.subscription.create exists before calling it
+            console.log(data)
             if (!actions || !actions.subscription || !actions.subscription.create) {
               console.error("Subscription creation method is unavailable.");
               return Promise.reject("Subscription creation is unavailable.");
