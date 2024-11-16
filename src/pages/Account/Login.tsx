@@ -15,7 +15,6 @@ const Login = () => {
 
     function loginWithGithub() {
         const clientID = import.meta.env.VITE_GITHUB_APP_CLIENT
-        console.log(clientID);
         window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID)
     }
 

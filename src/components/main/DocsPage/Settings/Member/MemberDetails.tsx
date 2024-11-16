@@ -59,7 +59,6 @@ const MemberDetails = () => {
                 projects
             }));
             setActiveUserCount(groupedArray.length)
-            console.log(groupedArray)
 
             // handle the groupedArray as needed
 

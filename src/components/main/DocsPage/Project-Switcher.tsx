@@ -47,15 +47,21 @@ export function ProjectSwitcher({
                             Projects
                         </DropdownMenuLabel>
                         {projectList.map((project) => (
-                            <Link to={`/project/${project.Id}/docs`} onClick={() => goToSpecificProject(project)}>
+                            <Link key={project.Id} to={`/project/${project.Id}/docs`} onClick={() => goToSpecificProject(project)}>
                                 <DropdownMenuItem
                                     key={project.Name}
-                                    className="gap-2 p-2"
+                                    className="gap-2 p-2 flex justify-between"
                                 >
-                                    <div className="flex size-6 items-center justify-center rounded-sm border">
-                                        <Command className="size-4 shrink-0" />
+                                    <div className="flex items-center gap-2">
+                                        <div className="flex size-6 items-center justify-center rounded-sm border">
+                                            <Command className="size-4 shrink-0" />
+                                        </div>
+                                        {project.Name}
                                     </div>
-                                    {project.Name}
+
+                                    <span className="text-xs text-muted-foreground">
+                                        {project.Role}
+                                    </span>
                                 </DropdownMenuItem></Link>
                         ))}
                     </DropdownMenuContent>

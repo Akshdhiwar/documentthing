@@ -5,7 +5,7 @@ import useFolderStore from "@/store/folderStore"
 import BlockNoteEditor from "@/components/main/DocsPage/BlockNoteEditor"
 import CustomAlert from "@/components/custom/CustomAlert"
 import useEditChangesStore from "@/store/changes"
-import { useEffect } from "react"
+import React, { useEffect } from "react"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
@@ -25,7 +25,9 @@ const DocsPage = () => {
     }, [])
 
     return (
-        <SidebarProvider>
+        <SidebarProvider style={{
+            "--sidebar-width": "25rem"
+        } as React.CSSProperties}>
             <NavigationSideBar />
             <ScrollArea className="flex flex-col flex-1 relative">
                 <div className="sticky top-0 z-10 bg-white">

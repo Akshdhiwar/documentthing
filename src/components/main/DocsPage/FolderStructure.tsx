@@ -1,4 +1,6 @@
+import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from "@/components/ui/sidebar"
 import CustomToggle from "../../custom/CustomAccordian"
+import Tree from "@/components/custom/Tree"
 
 type Props = {
   folder: any[]
@@ -6,13 +8,16 @@ type Props = {
 
 const FolderStructure = ({ folder }: Props) => {
   return (
-    <div className="py-1">
-      {
-        folder.map((child: any , index) => (
-          <CustomToggle key={index} child={child} />
-        ))
-      }
-    </div >
+    <SidebarGroup>
+      <SidebarGroupLabel>Document</SidebarGroupLabel>
+      <SidebarGroupContent>
+        {
+          folder.map((child: any, index) => (
+            <Tree key={index} item={child} />
+          ))
+        }
+      </SidebarGroupContent>
+    </SidebarGroup >
   )
 }
 

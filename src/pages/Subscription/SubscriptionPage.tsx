@@ -35,7 +35,6 @@ const SubscriptionPage = () => {
         </div>
         <PayPalButtons
           createSubscription={(data: any, actions: any) => {
-            console.log(data)
             // Check if actions.subscription.create exists before calling it
             if (!actions || !actions.subscription || !actions.subscription.create) {
               console.error("Subscription creation method is unavailable.");
@@ -61,7 +60,6 @@ const SubscriptionPage = () => {
                 })
 
                 // Your code here after successfully creating the subscription
-                console.log("Subscription created with ID:", subscriptionId);
                 return subscriptionId;
               })
               .catch((error: any) => {

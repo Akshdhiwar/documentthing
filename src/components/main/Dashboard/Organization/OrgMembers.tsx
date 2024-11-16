@@ -34,7 +34,6 @@ const OrgMembers = () => {
                 projects
             }));
             setMembers(groupedArray)
-            console.log(groupedArray)
 
             // handle the groupedArray as needed
 

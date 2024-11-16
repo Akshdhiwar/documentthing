@@ -8,7 +8,6 @@ import { Button } from "../../ui/button"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
-import Link from "@/components/custom/Link"
 import useEditChangesStore from "@/store/changes"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import { useToast } from "@/components/ui/use-toast"
@@ -17,6 +16,7 @@ import useUserStore from "@/store/userStore"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuButton } from "@/components/ui/sidebar"
 import { ProjectSwitcher } from "./Project-Switcher"
 import { NavUser } from "@/components/custom/NavUser"
+import { NavLink } from "react-router-dom"
 
 const NavigationSideBar = () => {
     const { toast } = useToast()
@@ -136,11 +136,14 @@ const NavigationSideBar = () => {
         <Sidebar>
             <SidebarHeader>
                 <ProjectSwitcher projectList={projs}></ProjectSwitcher>
+                <SidebarMenuButton asChild>
+                    <NavLink to="/dashboard">
+                        <ChevronLeft />
+                        <span>Home</span>
+                    </NavLink>
+                </SidebarMenuButton>
             </SidebarHeader>
             <SidebarContent>
-                <SidebarMenuButton>
-                    <Link label="Home" href="/dashboard" icon={ChevronLeft}></Link>
-                </SidebarMenuButton>
                 {
                     isEditing &&
                     <SidebarMenuButton>
@@ -164,15 +167,7 @@ const NavigationSideBar = () => {
                         <FolderStructure folder={folder} />
                     </div>
                 }
-                {(project?.Role === "Admin" || project?.Role === "Editor") && (
-                    <>
-                        <Separator />
-                        <div className="m-2 flex flex-col gap-1">
-                            {/* <Item label="Dark / light" onClick={() => { alert("hello") }} icon={Moon}></Item> */}
-                            <Link label="Setting" href={`/project/${project?.Id}/settings`} icon={Settings}></Link>
-                        </div>
-                    </>
-                )}
+
 
                 {
                     loading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
@@ -180,7 +175,18 @@ const NavigationSideBar = () => {
                     </div>
                 }
             </SidebarContent>
+            <Separator />
             <SidebarFooter>
+                {(project?.Role === "Admin" || project?.Role === "Editor") && (
+                    <>
+                        <SidebarMenuButton asChild>
+                            <NavLink to={`/project/${project?.Id}/settings`}>
+                                <Settings />
+                                <span>Setting</span>
+                            </NavLink>
+                        </SidebarMenuButton>
+                    </>
+                )}
                 <NavUser></NavUser>
             </SidebarFooter>
         </Sidebar>

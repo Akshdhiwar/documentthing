@@ -1,4 +1,4 @@
-import { Check, ChevronRight, Ellipsis, File, FileText, Plus, Trash, X } from "lucide-react";
+import { Check, ChevronRight, Ellipsis, File, Plus, Trash, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";

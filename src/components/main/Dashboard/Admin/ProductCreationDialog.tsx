@@ -25,7 +25,6 @@ const ProductCreationDialog: React.FC<DialogInt> = ({ setOpen }) => {
                 description: descInputRef.current.value,
             });
             setOpen(false); // Close the dialog after successful creation
-            console.log("Product created successfully");
         } catch (error) {
             console.error("Error creating product:", error);
         }

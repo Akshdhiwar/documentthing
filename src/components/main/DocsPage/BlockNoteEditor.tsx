@@ -55,7 +55,6 @@ const BlockNoteEditor = () => {
             initialContent: pageContent,
         };
 
-        console.log("Editor instance created");
         return BNE.create(editorOptions);
     }, [selectedFolder, isEditing, pageContent]);
 
@@ -108,8 +107,6 @@ const BlockNoteEditor = () => {
             setMarkdown(markdown);
         }, 300); // Adjust the delay as needed
     }, [editor]);
-
-    console.log("Editor component rerendered");
 
     // Render the editor only when it's ready
     return (

@@ -50,7 +50,6 @@ const MemberInviteDialog = ({ name, projectId, refresh , disabled, email}: Membe
             role: value,
             org_id : org?.id
         }).then(data => {
-            console.log(data)
             setLoading(false)
             toast({
                 title: "Invite Sent",

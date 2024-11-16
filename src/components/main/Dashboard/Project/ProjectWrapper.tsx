@@ -7,7 +7,6 @@ import { Separator } from "@/components/ui/separator"
 const ProjectWrapper = () => {
 
     const location = useLocation()
-    console.log(location)
 
     return (
         <main className="flex-1 flex flex-col">
