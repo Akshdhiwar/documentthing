@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import useEditChangesStore from '@/store/changes'
 import useDoublyLinkedListStore from '@/store/nextPreviousLinks'
+import useAddFolderContext from '@/shared/custom hooks/useDialogContext'
 interface FolderInterface {
     item: Folder
 }
@@ -14,6 +15,7 @@ function Tree({ item }: FolderInterface) {
     const { addEditedFile, addEditedFolder, addEditedMarkdown, isEditing } = useEditChangesStore(state => state)
     const { clearList, convertIntoLinkedList } = useDoublyLinkedListStore(state => state)
     let flag = false;
+    const addPage = useAddFolderContext()
 
     async function deleteFolderFile(id: string) {
 
@@ -58,6 +60,11 @@ function Tree({ item }: FolderInterface) {
         })
     }
 
+    function AddNewPage() {
+        addPage.setId(item.id)
+        addPage.open()
+    }
+
     if (!item.children.length) {
         return (
             <SidebarMenuItem>
@@ -76,14 +83,14 @@ function Tree({ item }: FolderInterface) {
                     </Tooltip>
                 </SidebarMenuButton>
                 {
-                    isEditing && <DropdownMenu>
+                    isEditing && <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <SidebarMenuAction>
                                 <MoreHorizontal />
                             </SidebarMenuAction>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side="right" align="start">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); AddNewPage() }}>
                                 <span>Add Page</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => deleteFolderFile(item.id)}>
@@ -125,7 +132,7 @@ function Tree({ item }: FolderInterface) {
                                     </SidebarMenuAction>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent side="right" align="start">
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => AddNewPage()}>
                                         <span>Add Page</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => deleteFolderFile(item.id)}>

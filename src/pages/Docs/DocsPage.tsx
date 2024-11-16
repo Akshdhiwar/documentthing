@@ -9,6 +9,7 @@ import React, { useEffect } from "react"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
+import { AddFolderProvider } from "@/store/addFolder.context"
 
 const DocsPage = () => {
 
@@ -28,7 +29,9 @@ const DocsPage = () => {
         <SidebarProvider style={{
             "--sidebar-width": "25rem"
         } as React.CSSProperties}>
-            <NavigationSideBar />
+            <AddFolderProvider>
+                <NavigationSideBar />
+            </AddFolderProvider>
             <ScrollArea className="flex flex-col flex-1 relative">
                 <div className="sticky top-0 z-10 bg-white">
                     <Toolbar></Toolbar>

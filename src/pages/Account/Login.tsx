@@ -4,7 +4,7 @@ import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage';
 import { Button } from '../../components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import useUserStore from '@/store/userStore';
-import { Icons } from '../../shared/Icons'
+import { Icons } from '../../shared/components/Icons'
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
 
 const Login = () => {

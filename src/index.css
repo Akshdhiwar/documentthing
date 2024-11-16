@@ -126,3 +126,7 @@
   box-sizing: border-box;
 }
 
+body {
+  pointer-events: auto !important;
+  }
+

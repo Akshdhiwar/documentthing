@@ -22,7 +22,7 @@ const NextPrevious = () => {
     }
 
     return (
-        <div className="flex items-start justify-between pb-10 flex-col md:flex-row">
+        <div className="flex items-start justify-between pb-10 flex-col gap-2 md:flex-row">
             {activeLink?.prev ? (
                 <Button variant={"outline"} className="p-4 h-min flex justify-start group gap-2 min-w-2/12 w-full md:w-min" onClick={() => { goToNextPrevDoc(activeLink.prev.data) }}>
                     <ChevronLeft className="text-muted-foreground" />
