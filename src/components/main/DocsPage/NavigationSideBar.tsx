@@ -13,13 +13,14 @@ import { ProjectSwitcher } from "./Project-Switcher"
 import { NavUser } from "@/components/custom/NavUser"
 import { NavLink } from "react-router-dom"
 import useAddFolderContext from "@/shared/custom hooks/useDialogContext"
+import Export from "./Export"
 
 const NavigationSideBar = () => {
     const axiosInstance = useAxiosWithToast()
     const [projs, setProjs] = useState([])
     const { setFolder, folder, setSelectedFolder, loading, setLoading, isNoFilePresent } = useFolderStore(state => state)
     const project = useProjectStore(state => state.project)
-    const {convertIntoLinkedList , clearList} = useDoublyLinkedListStore(state => state)
+    const { convertIntoLinkedList, clearList } = useDoublyLinkedListStore(state => state)
     const { isEditing, editedFolder } = useEditChangesStore(state => state)
     const { user } = useUserStore(state => state)
     const AddPageDialog = useAddFolderContext()
@@ -119,6 +120,7 @@ const NavigationSideBar = () => {
                         </SidebarMenuButton>
                     </>
                 )}
+                <Export></Export>
                 <SidebarMenuButton asChild>
                     <a href="https://documentthing.featurebase.app/" target="_blank">
                         <BadgeAlert></BadgeAlert>

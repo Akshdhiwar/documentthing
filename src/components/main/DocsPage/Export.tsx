@@ -1,14 +1,10 @@
-import Item from "@/components/custom/Item"
-import { Button } from "@/components/ui/button"
 import useEditorStore from "@/store/editorStore"
 import useFolderStore from "@/store/folderStore"
-import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover"
-import { ChevronDown, CodeXml } from "lucide-react"
-import { useState } from "react"
-import { PopoverClose } from "@radix-ui/react-popover";
+import { BookMarked, Download, FileCode2 } from "lucide-react"
+import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 const Export = () => {
-    const [type, setType] = useState<"Markdown" | "HTML">("Markdown")
     const editor = useEditorStore(state => state.editor)
     const folder = useFolderStore(state => state.selectedFolder)
 
@@ -21,8 +17,8 @@ const Export = () => {
         link.click();
     };
 
-    function exportFile() {
-        if (type === "Markdown") {
+    function exportFile(value: "Markdown" | "HTML") {
+        if (value === "Markdown") {
             exportMarkdown()
         } else {
             exportHTML()
@@ -38,22 +34,43 @@ const Export = () => {
     }
 
     return (
-        <div className="flex items-center gap-[1px]">
-            <Button onClick={exportFile} size={"sm"} className="rounded-none rounded-tl-md rounded-bl-md" >Export {type}</Button>
-            <Popover>
-                <PopoverTrigger>
-                    <Button className="h-8 w-6 rounded-none rounded-tr-md rounded-br-md" size={"icon"}><ChevronDown height={16} width={16} /></Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex flex-col w-48 p-1 gap-1 z-20 border mt-2 rounded-sm bg-white">
-                    <PopoverClose>
-                        <Item label="HTML" onClick={() => { setType("HTML") }} icon={CodeXml} className="text-sm"></Item>
-                    </PopoverClose>
-                    <PopoverClose>
-                        <Item label="Markdown" onClick={() => { setType("Markdown") }} icon={CodeXml} className="text-sm"></Item>
-                    </PopoverClose>
-                </PopoverContent>
-            </Popover>
-        </div>
+        <SidebarMenuItem>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <SidebarMenuButton
+                        size="lg"
+                        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-min"
+                    >
+                        <Download></Download>
+                        Export
+                    </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                    className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                    side={"bottom"}
+                    align="end"
+                    sideOffset={4}
+                >
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">
+                        Export selected page
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={() => { exportFile("HTML") }}>
+                            <FileCode2 />
+                            Export as Html
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={() => { exportFile("Markdown") }}>
+                            <BookMarked />
+                            Export as markdown
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </SidebarMenuItem>
     )
 }
 

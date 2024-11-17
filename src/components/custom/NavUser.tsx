@@ -6,13 +6,12 @@ import {
     LogOut,
     Sparkles,
 } from "lucide-react"
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../ui/sidebar"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import useUserStore from "@/store/userStore"
 
 export function NavUser() {
-    const { isMobile } = useSidebar()
     const { user } = useUserStore(state => state)
     return (
         <SidebarMenu>
@@ -36,7 +35,7 @@ export function NavUser() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                        side={isMobile ? "bottom" : "right"}
+                        side={"bottom"}
                         align="end"
                         sideOffset={4}
                     >

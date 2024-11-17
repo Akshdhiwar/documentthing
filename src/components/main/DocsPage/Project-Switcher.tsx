@@ -1,5 +1,5 @@
 import { ChevronsUpDown, Command } from "lucide-react"
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import useProjectStore from "@/store/projectStore"
 import { Link } from "react-router-dom"
@@ -9,7 +9,6 @@ export function ProjectSwitcher({
 }: {
     projectList: Project[]
 }) {
-    const { isMobile } = useSidebar()
     const { project, setProject } = useProjectStore(state => state)
 
     function goToSpecificProject(project: Project) {
@@ -40,7 +39,7 @@ export function ProjectSwitcher({
                     <DropdownMenuContent
                         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
                         align="start"
-                        side={isMobile ? "bottom" : "right"}
+                        side="bottom"
                         sideOffset={4}
                     >
                         <DropdownMenuLabel className="text-xs text-muted-foreground">
