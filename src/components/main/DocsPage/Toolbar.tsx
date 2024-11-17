@@ -44,7 +44,13 @@ const Toolbar = () => {
     }, [project?.Id, isEditing]);
 
     function setupWebSocket(projectID: string) {
-        const ws = new WebSocket(`ws://localhost:3000/api/v1/project/${projectID}/updates`);
+
+        const baseURL =
+            import.meta.env.VITE_ENVIRONMENT === "Local"
+                ? "ws://localhost:3000/api/v1"
+                : "wss://betterdocs-backend-production.up.railway.app/api/v1" // Replace with your API base URL
+
+        const ws = new WebSocket(`${baseURL}/project/${projectID}/updates`);
 
         // Handle incoming messages
         ws.onmessage = (event) => {
