@@ -1,4 +1,4 @@
-import { ChevronLeft, Loader, PlusCircle, Settings } from "lucide-react"
+import { BadgeAlert, ChevronLeft, Loader, PlusCircle, Settings } from "lucide-react"
 import { Separator } from "../../ui/separator"
 import FolderStructure from "./FolderStructure"
 import { useEffect, useState } from "react"
@@ -7,8 +7,6 @@ import useProjectStore from "@/store/projectStore"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import useEditChangesStore from "@/store/changes"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
-import { useToast } from "@/components/ui/use-toast"
-import { ToastAction } from "@/components/ui/toast"
 import useUserStore from "@/store/userStore"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuButton } from "@/components/ui/sidebar"
 import { ProjectSwitcher } from "./Project-Switcher"
@@ -17,13 +15,11 @@ import { NavLink } from "react-router-dom"
 import useAddFolderContext from "@/shared/custom hooks/useDialogContext"
 
 const NavigationSideBar = () => {
-    const { toast } = useToast()
     const axiosInstance = useAxiosWithToast()
     const [projs, setProjs] = useState([])
     const { setFolder, folder, setSelectedFolder, loading, setLoading, isNoFilePresent } = useFolderStore(state => state)
     const project = useProjectStore(state => state.project)
-    const convertIntoLinkedList = useDoublyLinkedListStore(state => state.convertIntoLinkedList)
-    const clearLinkList = useDoublyLinkedListStore(state => state.clearList)
+    const {convertIntoLinkedList , clearList} = useDoublyLinkedListStore(state => state)
     const { isEditing, editedFolder } = useEditChangesStore(state => state)
     const { user } = useUserStore(state => state)
     const AddPageDialog = useAddFolderContext()
@@ -39,7 +35,7 @@ const NavigationSideBar = () => {
         if (isFolderExists && isEditing) {
             let folder = JSON.parse(isFolderExists.changedContent!)
             setFolder(folder)
-            clearLinkList()
+            clearList()
             convertIntoLinkedList(folder)
             setSelectedFolder(folder[0])
             setLoading(false)
@@ -49,34 +45,6 @@ const NavigationSideBar = () => {
     }, [editedFolder, project])
 
     useEffect(() => {
-        let isPolling = true; // A flag to manage polling loop and cleanup on unmount
-
-        const pollForUpdates = async () => {
-            try {
-                const response = await axiosInstance.get(`/project/${project?.Id}/updates`);
-
-                if (response.status === 200) {
-                    // If an update is received, show a success toast
-                    if (response.data.updatedBy !== user?.ID) {
-                        toast({
-                            variant: "default",
-                            title: 'Someone in your team updated the document',
-                            description: 'Click on refresh to get the latest document',
-                            action: <ToastAction altText="refresh" onClick={getFolderJson}>Refresh</ToastAction>
-
-                        });
-                    }
-
-                }
-            } catch (error) {
-                console.error('Error polling for updates:', error);  // Handle any network or request errors
-            }
-
-            // Continue polling as long as the component is mounted
-            if (isPolling) {
-                setTimeout(pollForUpdates, 100);  // Poll again after 5 seconds (adjust interval as needed)
-            }
-        };
 
         axiosInstance.get("/project/get-project", {
             params: {
@@ -88,14 +56,6 @@ const NavigationSideBar = () => {
         }).catch(err => {
             console.error(err)
         })
-
-        // Start the polling loop
-        pollForUpdates();
-
-        // Cleanup function to stop polling when the component is unmounted
-        return () => {
-            isPolling = false;  // Stop polling on unmount
-        };
     }, []);
 
     function getFolderJson() {
@@ -104,7 +64,7 @@ const NavigationSideBar = () => {
             const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
             setFolder(json)
             if (json.length > 0) {
-                clearLinkList()
+                clearList()
                 convertIntoLinkedList(json)
                 setSelectedFolder(json[0])
             }
@@ -159,6 +119,12 @@ const NavigationSideBar = () => {
                         </SidebarMenuButton>
                     </>
                 )}
+                <SidebarMenuButton asChild>
+                    <a href="https://documentthing.featurebase.app/" target="_blank">
+                        <BadgeAlert></BadgeAlert>
+                        Feature Request / Bug report
+                    </a>
+                </SidebarMenuButton>
                 <NavUser></NavUser>
             </SidebarFooter>
         </Sidebar>
