@@ -4,7 +4,10 @@ import { defineConfig } from "vite";
 import favicons from "@peterek/vite-plugin-favicons";
 
 export default defineConfig({
-  plugins: [react(), favicons("/Documentthing.png")],
+  plugins: [
+    react(),
+    favicons(path.resolve(__dirname, "src/assets/Documentthing.png")),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
