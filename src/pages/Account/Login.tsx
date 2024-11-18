@@ -6,6 +6,8 @@ import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import useUserStore from '@/store/userStore';
 import { Icons } from '../../shared/components/Icons'
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
+import Developer from "../../assets/Developer.svg"
+import Manager from "../../assets/Manager.svg"
 
 const Login = () => {
     const axiosInstance = useAxiosWithToast()
@@ -128,8 +130,12 @@ const Login = () => {
                     One step away to create your own docs
                 </p>
             </div>
-            <Button className='w-full gap-2' onClick={loginWithGithub}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
-            <Button className='w-full gap-2' onClick={loginWithGoogle}><Icons.google className='h-[16px]'></Icons.google> Google</Button>
+            <div className='relative space-y-2'>
+                <Button className='w-full gap-2' onClick={loginWithGithub}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
+                <Button className='w-full gap-2' onClick={loginWithGoogle}><Icons.google className='h-[16px]'></Icons.google> Google</Button>
+                <img src={Developer} alt="For dev" className='absolute top-[-170%] left-[-95%]' />
+                <img src={Manager} alt="For dev" className='absolute top-[86%] left-[85%]' />
+            </div>
         </div>
     )
 }
