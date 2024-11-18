@@ -3,10 +3,13 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import favicons from "@peterek/vite-plugin-favicons";
 
+const imagePath = path.resolve(__dirname, "src/assets/Documentthing.png");
+console.log("Resolved image path:", imagePath); // Log the resolved path
+
 export default defineConfig({
   plugins: [
     react(),
-    favicons(path.resolve(__dirname, "Documentthing.png")),
+    favicons(imagePath),
   ],
   resolve: {
     alias: {
