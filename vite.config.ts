@@ -6,7 +6,7 @@ import favicons from "@peterek/vite-plugin-favicons";
 export default defineConfig({
   plugins: [
     react(),
-    favicons(path.resolve(__dirname, "/Documentthing.png")),
+    favicons(path.resolve(__dirname, "Documentthing.png")),
   ],
   resolve: {
     alias: {
