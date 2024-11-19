@@ -20,7 +20,7 @@ const formSchema = z.object({
 const FolderStructure = ({ folder }: Props) => {
 
   const dialog = useAddFolderContext()
-  const { createPage, addPage } = useFolderStore(state => state)
+  const { createPage, addPage, isNoFilePresent } = useFolderStore(state => state)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,7 +49,9 @@ const FolderStructure = ({ folder }: Props) => {
 
   return (
     <div>
-      <SidebarGroup>
+      {isNoFilePresent ? <div className="flex-1 m-2 flex items-center justify-center text-center">
+        <p className="text-muted-foreground">Look's like no file is been created</p>
+      </div> : <SidebarGroup>
         <SidebarGroupLabel>Document</SidebarGroupLabel>
         <SidebarGroupContent>
           {
@@ -58,7 +60,7 @@ const FolderStructure = ({ folder }: Props) => {
             ))
           }
         </SidebarGroupContent>
-      </SidebarGroup >
+      </SidebarGroup >}
       <ResponsiveModal open={dialog?.isOpen} onOpenChange={dialog.setIsOpen}>
         <ResponsiveModalContent>
           <ResponsiveModalHeader>

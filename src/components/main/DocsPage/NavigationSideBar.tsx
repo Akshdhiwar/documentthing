@@ -18,7 +18,7 @@ import Export from "./Export"
 const NavigationSideBar = () => {
     const axiosInstance = useAxiosWithToast()
     const [projs, setProjs] = useState([])
-    const { setFolder, folder, setSelectedFolder, loading, setLoading, isNoFilePresent } = useFolderStore(state => state)
+    const { setFolder, folder, setSelectedFolder, loading, setLoading } = useFolderStore(state => state)
     const project = useProjectStore(state => state.project)
     const { convertIntoLinkedList, clearList } = useDoublyLinkedListStore(state => state)
     const { isEditing, editedFolder } = useEditChangesStore(state => state)
@@ -97,11 +97,7 @@ const NavigationSideBar = () => {
             </SidebarHeader>
             <SidebarContent>
                 <Separator />
-                {
-                    isNoFilePresent ? <div className="flex-1 m-2 flex items-center justify-center text-center">
-                        <p className="text-muted-foreground">Look's like no file is been created</p>
-                    </div> : <FolderStructure folder={folder} />
-                }
+                <FolderStructure folder={folder} />
                 {
                     loading && <div className="absolute h-full w-full top-0 left-0 flex items-center justify-center bg-slate-400/20">
                         <Loader className="animate-spin"></Loader>
