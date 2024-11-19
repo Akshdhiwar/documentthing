@@ -64,10 +64,9 @@ const FolderStructure = ({ folder }: Props) => {
       <ResponsiveModal open={dialog?.isOpen} onOpenChange={dialog.setIsOpen}>
         <ResponsiveModalContent>
           <ResponsiveModalHeader>
-            <ResponsiveModalTitle>Are you absolutely sure?</ResponsiveModalTitle>
+            <ResponsiveModalTitle>Add a New Page</ResponsiveModalTitle>
             <ResponsiveModalDescription>
-              This action cannot be undone. This will permanently delete your account and remove your
-              data from our servers.
+              Provide a name for your new page to organize your content effectively. This will help you quickly locate and manage your documentation pages.
             </ResponsiveModalDescription>
           </ResponsiveModalHeader>
           <Form {...form}>
