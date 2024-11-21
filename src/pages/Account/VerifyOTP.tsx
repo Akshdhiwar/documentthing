@@ -21,7 +21,7 @@ const VerifyOTP = () => {
   const navigate = useNavigate()
   const { email } = location.state || {};
   const { toast } = useToast()
-  const setUser = useUserStore(state => state.setUserData)
+  const { setUserData, user } = useUserStore(state => state)
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -46,7 +46,7 @@ const VerifyOTP = () => {
       const userDetials: UserInterface = await axiosInstance.get("/account/user-details").then(res => {
         return res.data.userDetails;
       })
-      setUser(userDetials)
+      setUserData(userDetials)
 
       // Check account status
       // const isActive: boolean = (await axiosInstance.get("/account/status")).data;
@@ -65,6 +65,7 @@ const VerifyOTP = () => {
 
   function onResend() {
     axiosInstance.post("/account/add-email", {
+      name: user?.GithubName,
       email: email
     })
   }

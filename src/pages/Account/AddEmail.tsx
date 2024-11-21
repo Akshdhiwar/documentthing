@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
+import useUserStore from "@/store/userStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ const formSchema = z.object({
 const AddEmail = () => {
     const axiosInstance = useAxiosWithToast()
     const navigate = useNavigate()
+    const { user } = useUserStore(state => state)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
@@ -21,10 +23,11 @@ const AddEmail = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             axiosInstance.post("/account/add-email", {
-                email: values.email
-            }).then(()=>{
-                navigate("/account/email-otp" , {
-                    state : { "email" : values.email}
+                email: values.email,
+                name: user?.GithubName
+            }).then(() => {
+                navigate("/account/email-otp", {
+                    state: { "email": values.email }
                 })
             })
             // Simulate an API call
