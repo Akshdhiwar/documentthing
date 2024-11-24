@@ -7,4 +7,6 @@ interface UserInterface {
   ID: string;
   Name: string;
   Twitter: string;
+  GoogleID : string;
+  Type : string
 }

@@ -60,7 +60,7 @@ const NavigationSideBar = () => {
     }, []);
 
     function getFolderJson() {
-        axiosInstance.get(`/folder/${project?.Id}`).then(data => {
+        axiosInstance.get(`/folder/${project?.Id}/${user?.Type}`).then(data => {
             const res = data.data
             const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
             setFolder(json)

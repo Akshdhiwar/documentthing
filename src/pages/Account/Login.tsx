@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useSessionStorage } from '@/shared/custom hooks/useSessionStorage';
 import { Button } from '../../components/ui/button';
@@ -6,27 +6,77 @@ import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import useUserStore from '@/store/userStore';
 import { Icons } from '../../shared/components/Icons'
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
+import { useGoogleLogin } from "@react-oauth/google"
 
 const Login = () => {
     const axiosInstance = useAxiosWithToast()
     let navigate = useNavigate();
     const { getItem, setItem } = useSessionStorage("invite")
-    const { setUserData, setOrg } = useUserStore(state => state)
+    const { setUserData, setOrg, user } = useUserStore(state => state)
+    const [loding, setLoading] = useState<boolean>(false)
+    let type: "github" | "google"
 
     function loginWithGithub() {
+        setLoading(true)
+        type = "github"
         const clientID = import.meta.env.VITE_GITHUB_APP_CLIENT
         window.location.assign("https://github.com/login/oauth/authorize?client_id=" + clientID)
     }
 
     function loginWithGoogle() {
-        axiosInstance.get("/account/auth/google").then(data => {
-            window.location.href = data.data
-        })
+        setLoading(true)
+        googleLogin()
     }
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: async (code) => {
+            const userDetials = await axiosInstance.post("/account/get-access-token", { code: code.code, type: "google" }).then(res => {
+                return res.data.userDetails;
+            }).catch(() => {
+                setLoading(false)
+                return
+            })
+            setUserData(userDetials)
+            localStorage.setItem("betterDocs", "true")
+            await axiosInstance.get("/account/org").then((data: any) => {
+                setOrg(data.data.org)
+            })
+            if (userDetials && getItem()) {
+                await axiosInstance.post("/invite/accept", {
+                    name: userDetials?.Type === "google" ? userDetials.Name : userDetials?.GithubName,
+                    token: JSON.parse(getItem()),
+                    id: userDetials.ID,
+                    type: userDetials?.Type
+                }).then(data => {
+                    if (data.status === 200) {
+                        sessionStorage.removeItem("invite")
+                    }
+                })
+            }
+
+            if (userDetials.Email === "") {
+                navigate("/account/verify-email")
+                return;
+            }
+
+            // const status: any = await axiosInstance.get("/account/status").then(res => {
+            //     return res.data;
+            // })
+
+            // if (status.id == null) {
+            //     navigate("/account/subscription")
+            //     return;
+            // }
+            setLoading(false)
+            navigate("/dashboard/projects");
+            return
+        },
+        flow: 'auth-code',
+    })
 
     useEffect(() => {
         lookInviteToken()
-        githubLogin()
+        CheckLogin()
     }, [])
 
     function lookInviteToken() {
@@ -38,13 +88,16 @@ const Login = () => {
         }
     }
 
-    async function githubLogin() {
+    async function CheckLogin() {
+        setLoading(true)
         const queryString = window.location.search;
         const urlParam = new URLSearchParams(queryString);
         const code = urlParam.get("code");
         if (code) {
-            const userDetials = await axiosInstance.post("/account/get-access-token", { code: code }).then(res => {
+            const userDetials = await axiosInstance.post("/account/get-access-token", { code: code, type: type }).then(res => {
                 return res.data.userDetails;
+            }).catch(() => {
+                setLoading(false)
             })
             setUserData(userDetials)
             localStorage.setItem("betterDocs", "true")
@@ -53,9 +106,10 @@ const Login = () => {
             })
             if (userDetials && getItem()) {
                 await axiosInstance.post("/invite/accept", {
-                    name: userDetials?.GithubName,
+                    name: userDetials?.Type === "google" ? userDetials.Name : userDetials?.GithubName,
                     token: JSON.parse(getItem()),
-                    id: userDetials.ID
+                    id: userDetials.ID,
+                    type: userDetials?.Type
                 }).then(data => {
                     if (data.status === 200) {
                         sessionStorage.removeItem("invite")
@@ -76,13 +130,15 @@ const Login = () => {
             //     navigate("/account/subscription")
             //     return;
             // }
-
+            setLoading(false)
             navigate("/dashboard/projects");
             return
         }
         if (localStorage.getItem("betterDocs")) {
-            const userDetials: UserInterface = await axiosInstance.get("/account/user-details").then(res => {
+            const userDetials: UserInterface = await axiosInstance.get(`/account/user-details?type=${user?.Type}`).then(res => {
                 return res.data.userDetails;
+            }).catch(() => {
+                setLoading(false)
             })
             setUserData(userDetials)
             await axiosInstance.get("/account/org").then((data: any) => {
@@ -95,9 +151,10 @@ const Login = () => {
 
             if (userDetials && getItem()) {
                 await axiosInstance.post("/invite/accept", {
-                    name: userDetials?.GithubName,
+                    name: userDetials?.Type === "google" ? userDetials.Name : userDetials?.GithubName,
                     token: JSON.parse(getItem()),
-                    id: userDetials.ID
+                    id: userDetials.ID,
+                    type: userDetials?.Type
                 }).then(data => {
                     if (data.status === 200) {
                         sessionStorage.removeItem("invite")
@@ -113,8 +170,10 @@ const Login = () => {
             //     navigate("/account/subscription")
             //     return;
             // }
+            setLoading(false)
             navigate("/dashboard/projects");
         }
+        setLoading(false)
     }
 
     return (
@@ -129,8 +188,8 @@ const Login = () => {
                 </p>
             </div>
             <div className='relative space-y-2'>
-                <Button className='w-full gap-2' onClick={loginWithGithub}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
-                <Button className='w-full gap-2' onClick={loginWithGoogle}><Icons.google className='h-[16px]'></Icons.google> Google</Button>
+                <Button className='w-full gap-2' onClick={loginWithGithub} disabled={loding}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
+                <Button className='w-full gap-2' onClick={() => loginWithGoogle()} disabled={loding}><Icons.google className='h-[16px]'></Icons.google> Google</Button>
                 <img src="/Developer.svg" alt="For dev" className='absolute top-[-170%] left-[-95%]' />
                 <img src="/Manager.svg" alt="For dev" className='absolute top-[86%] left-[85%]' />
             </div>

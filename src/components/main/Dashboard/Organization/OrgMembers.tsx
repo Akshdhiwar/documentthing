@@ -14,26 +14,36 @@ const OrgMembers = () => {
         try {
             const response = await axiosInstance.get(`/orgs/${org?.id}/members`);
             if (response.data === null) return
-            // Group data by user_name
             const grouped = response.data.reduce((acc: any, member: any) => {
-                const { github_name, project_name, role } = member;
+                const { github_name, name, project_name, role } = member;
 
-                // Initialize the user_name key if it doesn't exist
-                if (!acc[github_name]) {
-                    acc[github_name] = [];
+                // Determine the key based on availability
+                const key = github_name || name || "Unknown";
+
+                // If the key doesn't exist, initialize it with default structure
+                if (!acc[key]) {
+                    acc[key] = {
+                        name: name || github_name || "Unknown", // Prefer name, fallback to github_name
+                        role: role || null, // Set role if available
+                        projects: [] // Initialize projects array
+                    };
                 }
 
-                // Push the project info to the array for this user_name
-                acc[github_name].push({ project_name, role });
+                // Add project to the projects array for the key
+                acc[key].projects.push({
+                    project_name: project_name || "No Project",
+                    role: role || null
+                });
+
                 return acc;
             }, {});
 
-            // Convert grouped object to array
-            const groupedArray = Object.entries(grouped).map(([github_name, projects]) => ({
-                github_name,
-                projects
-            }));
-            setMembers(groupedArray)
+            // Convert grouped object into array if needed
+            const groupedArray = Object.values(grouped);
+
+            setMembers(groupedArray);
+
+
 
             // handle the groupedArray as needed
 
@@ -64,7 +74,7 @@ const OrgMembers = () => {
                     {members?.map((member: any, index: number) => (
                         <TableRow key={index}>
                             <TableCell>{index + 1}</TableCell>
-                            <TableCell>{member.github_name}</TableCell>
+                            <TableCell>{member.name}</TableCell>
                             <TableCell>{member.projects.map((project: any) => project.project_name).join(', ')}</TableCell>
                             <TableCell>{member.projects.map((project: any) => project.role).join(', ')}</TableCell>
                         </TableRow>

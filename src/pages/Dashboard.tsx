@@ -14,9 +14,10 @@ const Dashboard = () => {
     function sendInviteIfExists() {
         if (user && getItem()) {
             axiosInstance.post("/invite/accept", {
-                name: user?.GithubName,
+                name: user?.Type === "google" ? user?.Name : user?.GithubName,
                 token: JSON.parse(getItem()),
-                id: user.ID
+                id: user.ID,
+                type: user?.Type
             }).then(data => {
                 if (data.status === 200) {
                     sessionStorage.removeItem("invite")

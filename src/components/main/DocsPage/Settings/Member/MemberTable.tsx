@@ -1,10 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
-import { ChevronRight, Loader } from "lucide-react"
+import { ChevronRight, Loader, Plus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import MemberInviteDialog from "./MemberInviteDialog"
 
 const MemberTable = () => {
     const axiosInstance = useAxiosWithToast()
@@ -32,11 +35,25 @@ const MemberTable = () => {
 
     return (
         <div className='flex flex-col h-full'>
-            <header>
-                <h3 className="text-xl font-bold">Members</h3>
-                <p className="text-muted-foreground">
-                    Manage your members for this particular project according to your preference.
-                </p>
+            <header className="flex items-center justify-between">
+                <div>
+                    <h3 className="text-xl font-bold">Members</h3>
+                    <p className="text-muted-foreground">
+                        Manage your members for this particular project according to your preference.
+                    </p>
+                </div>
+                <div>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            {/* <Button size={"sm"} disabled={activeUserCount === maxUserCount}>Invite</Button> */}
+                            <Button><Plus></Plus>Invite</Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            {/* <MemberInviteDialog email={user.email} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={activeUserCount === maxUserCount} /> */}
+                            <MemberInviteDialog email={""} name={""} projectId={project?.Id} refresh={() => { }} disabled={false} />
+                        </DialogContent>
+                    </Dialog>
+                </div>
             </header>
             {
                 isNoOrg && <div className=" h-full flex items-center justify-center tracking-tight">

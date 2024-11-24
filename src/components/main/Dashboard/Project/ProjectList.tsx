@@ -17,7 +17,6 @@ const ProjectList = () => {
     setLoading(true)
     axiosInstance.get("/project/get-project", {
       params: {
-        name: user?.GithubName,
         id: user?.ID
       }
     }).then(result => {

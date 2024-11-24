@@ -76,6 +76,7 @@ const BlockNoteEditor = () => {
                 params: {
                     proj: project?.Id,
                     file: selectedFolder?.id,
+                    t : user?.Type
                 },
             })
             .then((response) => {
