@@ -12,6 +12,17 @@ import { ToastAction } from "@/components/ui/toast"
 import useUserStore from "@/store/userStore"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import { useToast } from "@/components/ui/use-toast"
+import { ResponsiveModal, ResponsiveModalTrigger, ResponsiveModalContent, ResponsiveModalHeader, ResponsiveModalTitle } from "@/components/ui/responsive-dialog"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import * as z from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Textarea } from "@/components/ui/textarea"
+
+const formSchema = z.object({
+    message: z.string()
+});
+
 
 const Toolbar = () => {
     const axiosInstance = useAxiosWithToast()
@@ -24,6 +35,20 @@ const Toolbar = () => {
     const { convertIntoLinkedList, clearList } = useDoublyLinkedListStore(state => state)
     const webSocket = useRef<WebSocket | null>(null); // Use useRef to hold the WebSocket instance
     const { toast } = useToast()
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+
+    })
+
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            onSaveToServer(values.message)
+        } catch (error) {
+            console.error("Form submission error", error);
+        }
+    }
 
     useEffect(() => {
         if (!project?.Id) return;
@@ -95,7 +120,7 @@ const Toolbar = () => {
         setLoading(false)
     }
 
-    const onSaveToServer = async () => {
+    const onSaveToServer = async (message: string) => {
         setLoading(true)
         let files = editedFiles.map(file => {
             if (file.changedContent !== file.originalContent) {
@@ -125,7 +150,8 @@ const Toolbar = () => {
         // setLoading(true)
         let response = await axiosInstance.post("/commit/save", {
             project_id: project?.Id,
-            content: [...files, ...folder, ...markdown]
+            content: [...files, ...folder, ...markdown],
+            message: message
         })
 
         if (response.status === 200) {
@@ -142,6 +168,8 @@ const Toolbar = () => {
         } else {
             setLoading(false)
         }
+
+        setIsModalOpen(false)
 
         // const editorContent = editor.getEditorValue();
         // await fetchToServer(JSON.stringify(editorContent))
@@ -169,9 +197,46 @@ const Toolbar = () => {
                     project?.Role !== "Viewer" ? <>
                         {
                             isEditing ? <div className="flex gap-2">
-                                <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading} onClick={onSaveToServer}>{
-                                    isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
-                                } Save </Button>
+                                <ResponsiveModal open={isModalOpen} onOpenChange={setIsModalOpen}>
+                                    <ResponsiveModalTrigger asChild>
+                                        <Button size={"sm"} className="flex gap-2" disabled={editedFiles.length === 0 || isLoading}>{
+                                            isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
+                                        } Save </Button>
+                                    </ResponsiveModalTrigger>
+                                    <ResponsiveModalContent side={"bottom"}>
+                                        <ResponsiveModalHeader>
+                                            <ResponsiveModalTitle>Commit Message</ResponsiveModalTitle>
+                                            <Form {...form}>
+                                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-5">
+
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="message"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>Mesasge</FormLabel>
+                                                                <FormControl>
+                                                                    <Textarea
+                                                                        placeholder="Updated the login module documentation"
+                                                                        className="resize-none"
+                                                                        {...field}
+                                                                    />
+                                                                </FormControl>
+                                                                <FormDescription>The commit mesasge that will be displayed on github</FormDescription>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <div className="flex justify-end">
+                                                        <Button type="submit" disabled={isLoading}>{
+                                                            isLoading ? <Loader className="animate-spin" height={18} width={18}></Loader> : <SaveAll height={18} width={18}></SaveAll>
+                                                        }Commit and Save</Button>
+                                                    </div>
+                                                </form>
+                                            </Form>
+                                        </ResponsiveModalHeader>
+                                    </ResponsiveModalContent>
+                                </ResponsiveModal>
                             </div> : <Button size={"sm"}>Publish</Button>
                         }
                     </> : <div></div>

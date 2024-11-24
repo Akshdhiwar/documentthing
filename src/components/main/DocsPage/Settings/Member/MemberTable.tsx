@@ -1,10 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import useProjectStore from "@/store/projectStore"
-import { ChevronRight, Loader, Plus } from "lucide-react"
+import { ChevronRight, Loader } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import MemberInviteDialog from "./MemberInviteDialog"
@@ -43,16 +41,7 @@ const MemberTable = () => {
                     </p>
                 </div>
                 <div>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            {/* <Button size={"sm"} disabled={activeUserCount === maxUserCount}>Invite</Button> */}
-                            <Button><Plus></Plus>Invite</Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                            {/* <MemberInviteDialog email={user.email} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={activeUserCount === maxUserCount} /> */}
-                            <MemberInviteDialog email={""} name={""} projectId={project?.Id} refresh={() => { }} disabled={false} />
-                        </DialogContent>
-                    </Dialog>
+                    <MemberInviteDialog email={""} name={""} projectId={project?.Id} refresh={() => { }} disabled={false} />
                 </div>
             </header>
             {
@@ -73,6 +62,7 @@ const MemberTable = () => {
                             <TableRow>
                                 <TableHead className="w-[100px]"></TableHead>
                                 <TableHead>Name</TableHead>
+                                <TableHead>Account Type</TableHead>
                                 <TableHead>Role</TableHead>
                                 <TableHead>Invited</TableHead>
                                 <TableHead className="w-[100px]"></TableHead>
@@ -86,9 +76,10 @@ const MemberTable = () => {
                                         <AvatarFallback>{member.name[0]}</AvatarFallback>
                                     </Avatar></TableCell>
                                     <TableCell>{member.name}</TableCell>
+                                    <TableCell className="capitalize">{member.type}</TableCell>
                                     <TableCell>{member.role}</TableCell>
                                     <TableCell>{member.isActive}</TableCell>
-                                    <TableCell><Link className="group-hover:block hidden " to={`../${member.name}`}><ChevronRight className="text-muted-foreground"></ChevronRight></Link></TableCell>
+                                    <TableCell><Link className={` ${member.type !== "google" && "group-hover:block"} hidden `} to={`../${member.name}`}><ChevronRight className="text-muted-foreground"></ChevronRight></Link></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

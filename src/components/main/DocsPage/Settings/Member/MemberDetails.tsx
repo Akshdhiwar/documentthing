@@ -1,6 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import useProjectStore from "@/store/projectStore"
 import { ChevronLeft, Loader } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -17,7 +15,6 @@ const MemberDetails = () => {
     const [refresh, setRefresh] = useState(false)
     const project = useProjectStore(state => state.project)
     const [user, setUser] = useState<UserDetails | null>(null)
-    const [openDialog, setOpenDialog] = useState(false)
     // const [activeUserCount, setActiveUserCount] = useState(0)
     // const [maxUserCount, setMaxUserCount] = useState(0)
     // const { org } = useUserStore(state => state)
@@ -119,17 +116,7 @@ const MemberDetails = () => {
                             <p className="text-muted-foreground">{user?.isActive === null ?
                                 <div className="flex gap-4 items-center">
                                     <span>This user is not invited in this project</span>
-                                    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                                        <DialogTrigger asChild>
-                                            {/* <Button size={"sm"} disabled={activeUserCount === maxUserCount}>Invite</Button> */}
-                                            <Button size={"sm"}>Invite</Button>
-                                        </DialogTrigger>
-                                        <DialogContent className="sm:max-w-[425px]">
-                                            {/* <MemberInviteDialog email={user.email} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={activeUserCount === maxUserCount} /> */}
-                                            <MemberInviteDialog email={user.email} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={false} />
-                                        </DialogContent>
-                                    </Dialog>
-                                    {/* <Button size={"sm"} onClick={() => { inviteUser(user.email) }}>Invite</Button> */}
+                                    <MemberInviteDialog email={user.email} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={false} />
                                 </div>
                                 : user?.isActive}</p>
                         </div>
