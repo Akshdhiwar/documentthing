@@ -6,10 +6,12 @@ import { ChevronRight, Loader } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import MemberInviteDialog from "./MemberInviteDialog"
+import useUserStore from "@/store/userStore"
 
 const MemberTable = () => {
     const axiosInstance = useAxiosWithToast()
     const project = useProjectStore(state => state.project)
+    const { user } = useUserStore(state => state)
     const [members, setMembers] = useState<Member[]>([])
     const [isNoOrg, setIsNoOrg] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
@@ -41,7 +43,7 @@ const MemberTable = () => {
                     </p>
                 </div>
                 <div>
-                    <MemberInviteDialog email={""} name={""} projectId={project?.Id} refresh={() => { }} disabled={false} />
+                    <MemberInviteDialog email={""} name={""} userName={user?.GithubName!} projectName={project?.Name!} projectId={project?.Id} refresh={() => { }} disabled={false} />
                 </div>
             </header>
             {

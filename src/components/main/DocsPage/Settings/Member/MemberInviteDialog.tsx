@@ -16,6 +16,8 @@ import { ResponsiveModal, ResponsiveModalContent, ResponsiveModalDescription, Re
 interface MemberInviteType {
     name: string
     email: string
+    userName: string
+    projectName: string
     projectId: string | undefined
     refresh: Dispatch<any>
     disabled: boolean
@@ -32,7 +34,7 @@ const formSchema = z.object({
 });
 
 
-const MemberInviteDialog = ({ name, projectId, refresh, disabled, email }: MemberInviteType) => {
+const MemberInviteDialog = ({ name, projectId, refresh, disabled, email, userName, projectName }: MemberInviteType) => {
     const axiosInstance = useAxiosWithToast()
     const { toast } = useToast()
     const [loading, setLoading] = useState(false)
@@ -56,7 +58,9 @@ const MemberInviteDialog = ({ name, projectId, refresh, disabled, email }: Membe
                 email: values.email,
                 project_id: projectId,
                 role: values.role,
-                org_id: org?.id
+                org_id: org?.id,
+                invite_by: userName,
+                project_name: projectName
             }).then(() => {
                 setLoading(false)
                 toast({

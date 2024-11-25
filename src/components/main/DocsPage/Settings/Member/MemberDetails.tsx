@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import MemberInviteDialog from "./MemberInviteDialog"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import useUserStore from "@/store/userStore"
 // import useUserStore from "@/store/userStore"
 // import monthltSubs from "@/pages/Subscription/Subscription"
 
@@ -14,6 +15,7 @@ const MemberDetails = () => {
     const [isLoading, setLoading] = useState(false)
     const [refresh, setRefresh] = useState(false)
     const project = useProjectStore(state => state.project)
+    const userDetails = useUserStore(state => state.user)
     const [user, setUser] = useState<UserDetails | null>(null)
     // const [activeUserCount, setActiveUserCount] = useState(0)
     // const [maxUserCount, setMaxUserCount] = useState(0)
@@ -116,7 +118,7 @@ const MemberDetails = () => {
                             <p className="text-muted-foreground">{user?.isActive === null ?
                                 <div className="flex gap-4 items-center">
                                     <span>This user is not invited in this project</span>
-                                    <MemberInviteDialog email={user.email} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={false} />
+                                    <MemberInviteDialog email={user.email} userName={userDetails?.GithubName!} projectName={project?.Name!} name={user.githubName} projectId={project?.Id} refresh={setRefresh} disabled={false} />
                                 </div>
                                 : user?.isActive}</p>
                         </div>
