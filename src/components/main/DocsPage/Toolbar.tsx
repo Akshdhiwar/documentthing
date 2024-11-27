@@ -151,7 +151,7 @@ const Toolbar = () => {
         let response = await axiosInstance.post("/commit/save", {
             project_id: project?.Id,
             content: [...files, ...folder, ...markdown],
-            message: message
+            message: message + " - " + user?.GithubName
         })
 
         if (response.status === 200) {
