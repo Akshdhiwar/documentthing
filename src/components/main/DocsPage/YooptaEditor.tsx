@@ -1,6 +1,8 @@
 import YooptaEditor, { createYooptaEditor, YooptaMark, generateId } from '@yoopta/editor';
 import Paragraph from '@yoopta/paragraph';
+import Divider from '@yoopta/divider'
 import Blockquote from '@yoopta/blockquote';
+import Table from '@yoopta/table';
 import Embed from '@yoopta/embed';
 import Link from '@yoopta/link';
 import Callout from '@yoopta/callout';
@@ -12,13 +14,18 @@ import Code from '@yoopta/code';
 import ActionMenuList, { DefaultActionMenuRender } from '@yoopta/action-menu-list';
 import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import useFolderStore from '@/store/folderStore';
 import useEditorStore from '@/store/editorStore';
 import useProjectStore from '@/store/projectStore';
 import useEditChangesStore from '@/store/changes';
 import FileSetter from './FileSetter';
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
+import useUserStore from '@/store/userStore';
+import { markdown } from '@yoopta/exports';
+import Image from '@yoopta/image'
+import File from '@yoopta/file'
+import Video from '@yoopta/video'
 
 const plugins: any = [
   Paragraph,
@@ -34,6 +41,11 @@ const plugins: any = [
   Code,
   Link,
   Embed,
+  Divider,
+  Table,
+  Image,
+  File,
+  Video
 ];
 
 const TOOLS = {
@@ -59,58 +71,74 @@ const Editor = () => {
   const [editorID, setEditorID] = useState(generateId())
   const [pageContent, setPageContent] = useState<any>(undefined);
   const selectedFolder = useFolderStore(state => state.selectedFolder)
-  const setEditor = useEditorStore(state => state.setEditor)
+  const { setContent, setInitialContent, setMarkdown, setEditor } = useEditorStore((state) => state);
   const project = useProjectStore(state => state.project)
+  const { user } = useUserStore((state) => state);
   const { isEditing, editedFiles } = useEditChangesStore(state => state)
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    function handleChange() {
-    }
-    setEditor(editor)
-    editor.on('change', handleChange);
-    return () => {
-      editor.off('change', handleChange);
-    };
-  }, [editor]);
-
-  useEffect(() => {
-    if (selectedFolder?.id === undefined) return
-
-    const isSelectedFilePresentInEditedFilesArray = editedFiles.find(file => {
-      return file.id === selectedFolder?.id;
-    })
-
-    if (isSelectedFilePresentInEditedFilesArray) {
-      setPageContent(isSelectedFilePresentInEditedFilesArray.changedContent)
-      return
-    }
-    axiosInstance.get(`/file/get`, {
-      params: {
-        proj: project?.Id,
-        file: selectedFolder?.id
+    if (!selectedFolder?.id) return;
+    if (isEditing) {
+      const editedFile = editedFiles.find((file) => file.id === selectedFolder.id);
+      if (editedFile) {
+        setPageContent(editedFile.changedContent);
+        setInitialContent(editedFile.changedContent);
+        return;
       }
-    }).then(data => {
-      let base64 = data.data
-      if (base64 === "") {
-        setPageContent({})
-        return
-      }
-      let content = atob(base64)
-      let obj = JSON.parse(content)
-      setPageContent(obj)
-    })
-  }, [selectedFolder , isEditing])
+    }
+
+    // Fetch file content if not found in the edited files
+    axiosInstance
+      .get(`/file/get`, {
+        params: {
+          proj: project?.Id,
+          file: selectedFolder?.id,
+          t: user?.Type
+        },
+      })
+      .then((response) => {
+        let base64 = response.data;
+        if (!base64) {
+          setPageContent([]);
+          return;
+        }
+        let content = atob(base64);
+        let obj = JSON.parse(content);
+        setPageContent(obj);
+        setInitialContent(obj)
+      })
+      .catch((error) => {
+        console.error("Error fetching file content:", error);
+      });
+  }, [selectedFolder])
 
   useEffect(() => {
     setEditorID(generateId())
+    setEditor(editor)
   }, [pageContent, isEditing])
+
+  const onChange = useCallback(() => {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(async () => {
+      const data = editor.getEditorValue();
+      const markdownString = markdown.serialize(editor, data);
+      setEditor(editor);
+      setContent(data);
+      setMarkdown(markdownString);
+    }, 300); // Adjust the delay as needed
+  }, [editor])
 
   return (
     <div
-      className="w-full pt-[80px] px-2 pl-[56px] pb-[40px] flex justify-center"
+      className={`w-full ${isEditing && "pl-[56px]"}  pb-[40px] flex justify-center`}
       ref={selectionRef}
     >
       <YooptaEditor
+        placeholder='Let create your very own document'
         key={editorID}
         editor={editor}
         plugins={plugins}
@@ -122,8 +150,9 @@ const Editor = () => {
         autoFocus
         className="yoopta-editor"
         readOnly={!isEditing}
+        onChange={onChange}
       />
-      <FileSetter/>
+      <FileSetter />
     </div>
   );
 }

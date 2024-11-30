@@ -2,7 +2,6 @@ import Toolbar from "../../components/main/DocsPage/Toolbar"
 import NavigationSideBar from "@/components/main/DocsPage/NavigationSideBar"
 import NextPrevious from "@/components/main/DocsPage/NextPrevious"
 import useFolderStore from "@/store/folderStore"
-import BlockNoteEditor from "@/components/main/DocsPage/BlockNoteEditor"
 import CustomAlert from "@/components/custom/CustomAlert"
 import useEditChangesStore from "@/store/changes"
 import React, { useEffect } from "react"
@@ -10,6 +9,7 @@ import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { AddFolderProvider } from "@/store/addFolder.context"
+import Editor from "@/components/main/DocsPage/YooptaEditor"
 
 const DocsPage = () => {
 
@@ -46,7 +46,8 @@ const DocsPage = () => {
                             }
                             {
                                 selectedFolder && <div className="flex-1 flex flex-col pt-4 justify-between">
-                                    <BlockNoteEditor />
+                                    {/* <BlockNoteEditor /> */}
+                                    <Editor />
                                     <NextPrevious />
                                 </div>
                             }

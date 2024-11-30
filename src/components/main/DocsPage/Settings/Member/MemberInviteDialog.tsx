@@ -70,6 +70,8 @@ const MemberInviteDialog = ({ name, projectId, refresh, disabled, email, userNam
                 })
                 refresh((prev: boolean) => !prev)
                 setOpenDialog(false)
+            }).catch(() => {
+                setLoading(false)
             })
         } catch (error) {
             setOpenDialog(false)

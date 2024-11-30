@@ -100,7 +100,7 @@ const MemberDetails = () => {
                 {
                     isLoading ? <div className="flex h-full items-center justify-center">
                         <Loader className="animate-spin"></Loader>
-                    </div> : <div className="grid grid-cols-2 gap-6">
+                    </div> : <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-6">
                         <div className="my-4">
                             <p className="tracking-tight">Name</p>
                             <p className="text-muted-foreground">{user?.name === null ? "No name provided on github" : user?.name}</p>

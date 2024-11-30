@@ -3,6 +3,7 @@ import useFolderStore from "@/store/folderStore"
 import { BookMarked, Download, FileCode2 } from "lucide-react"
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { html, markdown } from "@yoopta/exports"
 
 const Export = () => {
     const editor = useEditorStore(state => state.editor)
@@ -25,11 +26,13 @@ const Export = () => {
         }
     }
     async function exportHTML() {
-        const htmlString = await editor.blocksToHTMLLossy(editor.document)
+        const data = editor.getEditorValue();
+        const htmlString = html.serialize(editor, data);
         downloadFile(htmlString, folder?.name + ".html", "text/html");
     }
     async function exportMarkdown() {
-        const markdownString = await editor.blocksToMarkdownLossy(editor.document)
+        const data = editor.getEditorValue();
+        const markdownString = markdown.serialize(editor, data);
         downloadFile(markdownString, folder?.name + ".md", "text/markdown");
     }
 
