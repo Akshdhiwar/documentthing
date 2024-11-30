@@ -1,6 +1,8 @@
+import MockAppleBrowser from "./MockAppleBrowser"
+
 const Landing = () => {
   return (
-    <div>Landing</div>
+    <MockAppleBrowser />
   )
 }
 
