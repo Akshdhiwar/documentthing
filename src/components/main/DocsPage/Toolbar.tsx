@@ -18,6 +18,7 @@ import * as z from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Textarea } from "@/components/ui/textarea"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 const formSchema = z.object({
     message: z.string()
@@ -237,7 +238,14 @@ const Toolbar = () => {
                                         </ResponsiveModalHeader>
                                     </ResponsiveModalContent>
                                 </ResponsiveModal>
-                            </div> : <Button size={"sm"}>Publish</Button>
+                            </div> : <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button size={"sm"}>Publish</Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>🚧 Publish to Internet is currently under development and will be available soon. Stay tuned!</p>
+                                </TooltipContent>
+                            </Tooltip>
                         }
                     </> : <div></div>
                 }
