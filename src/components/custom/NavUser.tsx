@@ -10,9 +10,16 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import useUserStore from "@/store/userStore"
+import { useNavigate } from "react-router-dom"
 
 export function NavUser() {
     const { user } = useUserStore(state => state)
+    const navigate = useNavigate()
+
+    function logout() {
+        localStorage.clear()
+        navigate("/account/login")
+    }
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -74,7 +81,7 @@ export function NavUser() {
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={logout}>
                             <LogOut />
                             Log out
                         </DropdownMenuItem>

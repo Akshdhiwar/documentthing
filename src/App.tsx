@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import AccountWrapper from "./pages/Account/AccountWrapper";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Landing from "./pages/Landing Page/Landing";
 // import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const Login = lazy(() => import("./pages/Account/Login"))
@@ -46,7 +47,7 @@ const App = () => {
         <TooltipProvider>
           <Suspense fallback={<Loader />}>
             <Routes>
-              <Route path="/" element={<Navigate to="account" />} />
+              <Route path="/" element={<Landing />} />
               <Route path="/account" element={<AccountWrapper />}>
                 <Route index element={<Navigate to="login" />} />
                 <Route path="login" element={<Login />} />
