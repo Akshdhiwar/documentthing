@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, Plus, RotateCcw, Share2, ShieldCheck, Circle
 
 export default function MockAppleBrowser() {
     return (
-        <div className="w-full max-w-screen-xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
+        <div className="w-full max-w-[1500px] mx-auto bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
             {/* Title Bar */}
             <div className="bg-gradient-to-b from-gray-100 to-gray-50 px-4 py-2.5 flex items-center gap-6 border-b border-gray-200">
                 {/* Traffic Lights */}
@@ -47,7 +47,7 @@ export default function MockAppleBrowser() {
                 </div>
             </div>
             <div>
-                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHV6ZWdzbDZvMTBwamx6NjZuMGcyamhhZmx6cmZ0dnhuaTd1N2x6diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0MYt5jPR6QX5pnqM/giphy.webp" alt="" className='w-full' />
+                <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnIzZW40a2d3eTV6ZjNpYWxjY2hhZzFnYnA2ZDcwNmx6eG10aHE5dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W12WAzuqod9VS/giphy.webp" alt="" className='w-full' />
             </div>
         </div>
     )
