@@ -12,7 +12,6 @@ import Dashboard from "./pages/Dashboard";
 import AccountWrapper from "./pages/Account/AccountWrapper";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import Landing from "./pages/Landing Page/Landing";
 // import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const Login = lazy(() => import("./pages/Account/Login"))
@@ -29,6 +28,7 @@ const Members = lazy(() => import("./components/main/DocsPage/Settings/Member/Me
 // const SubscriptionPayment = lazy(() => import("./pages/Subscription/SubscriptionPage"))
 const OrgWrapper = lazy(() => import("./components/main/Dashboard/Organization/OrganizationWrapper"))
 const OrgMembers = lazy(() => import("./components/main/Dashboard/Organization/OrgMembers"))
+const Landing = lazy(() => import("./pages/Landing Page/Landing"))
 
 const App = () => {
   const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID
