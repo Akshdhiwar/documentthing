@@ -47,7 +47,7 @@ export default function MockAppleBrowser() {
                 </div>
             </div>
             <div>
-                <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnIzZW40a2d3eTV6ZjNpYWxjY2hhZzFnYnA2ZDcwNmx6eG10aHE5dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W12WAzuqod9VS/giphy.webp" alt="" className='w-full' />
+                <img src="./main.png" alt="" className='w-full' />
             </div>
         </div>
     )

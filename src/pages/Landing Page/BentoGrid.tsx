@@ -1,9 +1,8 @@
-import { FollowerPointerCard } from "@/components/ui/following-pointer"
 import { Download, Github, Globe, MessageCircle, Text } from "lucide-react"
 
 const BentoGrid = () => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 max-w-7xl mx-auto mt-10 border">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-w-7xl mx-auto mt-10 border" id="features">
             <div className="p-2 md:col-span-2 border-b"></div>
             <div className="p-8 flex flex-col border-b border-r">
                 <div className="flex-1 flex flex-col">
@@ -13,8 +12,8 @@ const BentoGrid = () => {
                         <p className="text-xl text-muted-foreground ">Create, edit files on documentthing gets saved in your github repo</p>
                     </div>
                 </div>
-                <div>
-                    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnIzZW40a2d3eTV6ZjNpYWxjY2hhZzFnYnA2ZDcwNmx6eG10aHE5dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W12WAzuqod9VS/giphy.webp" alt="" className='w-full' />
+                <div className="shadow-xl rounded-lg overflow-hidden">
+                    <img loading="lazy" src="./github.gif" alt="" className='w-full' />
                 </div>
             </div>
             <div className="p-8 flex flex-col  border-b">
@@ -25,9 +24,9 @@ const BentoGrid = () => {
                         <p className="text-xl text-muted-foreground">Connect documentthing to Github organization and invite your mates</p>
                     </div>
                 </div>
-                <FollowerPointerCard>
-                    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnIzZW40a2d3eTV6ZjNpYWxjY2hhZzFnYnA2ZDcwNmx6eG10aHE5dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W12WAzuqod9VS/giphy.webp" alt="" className='w-full' />
-                </FollowerPointerCard>
+                <div className="shadow-xl rounded-lg overflow-hidden">
+                    <img loading="lazy" src="./invite.gif" alt="" className='w-full' />
+                </div>
             </div>
             <div className="p-8 flex flex-col md:col-span-2 border-b">
                 <div className="flex-1 flex flex-col">
@@ -37,8 +36,8 @@ const BentoGrid = () => {
                         <p className="text-xl text-muted-foreground ">Craft your documentation with ease using our powerful and user-friendly editor</p>
                     </div>
                 </div>
-                <div>
-                    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnIzZW40a2d3eTV6ZjNpYWxjY2hhZzFnYnA2ZDcwNmx6eG10aHE5dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/W12WAzuqod9VS/giphy.webp" alt="" className='w-full' />
+                <div className="shadow-xl rounded-lg overflow-hidden border">
+                    <img loading="lazy" src="./editor.gif" alt="" className='w-full' />
                 </div>
             </div>
             <div className="p-8 flex flex-col border-r border-b">
@@ -49,8 +48,8 @@ const BentoGrid = () => {
                         <p className="text-xl text-muted-foreground">Turn your work into a professional online document effortlessly</p>
                     </div>
                 </div>
-                <div>
-                    <img src="./world.svg" alt="" />
+                <div className="shadow-xl rounded-lg overflow-hidden">
+                    <img loading="lazy" src="./world.svg" alt="" />
                 </div>
             </div>
             <div className="p-8 flex flex-col border-b">
@@ -61,8 +60,8 @@ const BentoGrid = () => {
                         <p className="text-xl text-muted-foreground">Take your documentation wherever you need it with easy export options.</p>
                     </div>
                 </div>
-                <div>
-                    <img src="./world.svg" alt="" />
+                <div className="shadow-xl rounded-lg overflow-hidden">
+                    <img loading="lazy" src="./export.gif" alt="" className="object-contain w-full" />
                 </div>
             </div>
             <div className="p-2 md:col-span-2 border-b"></div>

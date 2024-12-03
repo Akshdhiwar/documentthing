@@ -6,6 +6,7 @@ import BentoGrid from "./BentoGrid"
 import PricingSection from "./PricingSection"
 import { GetStarted } from "./GetStarted"
 import Footer from "./Footer"
+import FAQ from "./FAQ"
 
 const Landing = () => {
   return (
@@ -18,6 +19,7 @@ const Landing = () => {
         <FeaturesSectionDemo />
         <PricingSection />
         <GetStarted></GetStarted>
+        <FAQ></FAQ>
         <Footer />
       </div>
     </div>
