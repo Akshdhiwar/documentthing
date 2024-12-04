@@ -189,6 +189,9 @@ const Login = () => {
             </div>
             <div className='relative space-y-2'>
                 <Button className='w-full gap-2' onClick={loginWithGithub} disabled={loding}><GitHubLogoIcon></GitHubLogoIcon> Github</Button>
+                <Button className='w-full gap-2' onClick={() => {
+                    axiosInstance.get("/ping")
+                }} disabled={loding}><GitHubLogoIcon></GitHubLogoIcon> Ping</Button>
                 <Button className='w-full gap-2' onClick={() => loginWithGoogle()} disabled={loding}><Icons.google className='h-[16px]'></Icons.google> Google</Button>
                 <img src="/Developer.svg" alt="For dev" className='absolute top-[-170%] left-[-95%]' />
                 <img src="/Manager.svg" alt="For dev" className='absolute top-[86%] left-[85%]' />
