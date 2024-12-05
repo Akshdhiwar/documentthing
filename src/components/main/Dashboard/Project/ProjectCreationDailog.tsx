@@ -21,7 +21,7 @@ const ProjectCreationDailog = () => {
     const axiosInstance = useAxiosWithToast()
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
-    const {user , org} = useUserStore(state => state)
+    const { user, org } = useUserStore(state => state)
     const [value, setValue] = useState<string>("")
     const [selectedRepo, setSelectedRepo] = useState<string>("")
     const [accounts, setAccounts] = useState<InstallationType[] | null>(null)
@@ -55,7 +55,7 @@ const ProjectCreationDailog = () => {
         })
 
         // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
-        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: orgName, owner: name , org_id : org?.id })
+        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: orgName, owner: name, org_id: org?.id })
         if (response.status !== 201) {
             toast({
                 title: "Error",
@@ -153,7 +153,7 @@ const ProjectCreationDailog = () => {
                         <div className='col-span-5 lg:col-span-3'>
                             <p className='font-semibold leading-none tracking-tight'>Select Account</p>
                             <span className='text-muted-foreground text-sm tracking-wide'>Choose the Github Installation, user or organization &nbsp;</span>
-                            <a className='text-sm underline text-secondary-foreground tracking-wide' href={`https://github.com/apps/${import.meta.env.VITE_ENVIRONMENT === "Local" ? "betterdocs-com" : "betterdocs-prod"}/installations/new`}>Install the Github App</a>
+                            <a className='text-sm underline text-secondary-foreground tracking-wide' href={`https://github.com/apps/${import.meta.env.VITE_ENVIRONMENT === "Local" ? "betterdocs-com" : "Documentthing"}/installations/new`}>Install the Github App</a>
                         </div>
                         <div className='flex gap-1 col-span-5 lg:col-span-2'>
                             <Select onValueChange={(event) => setValue(event)}>

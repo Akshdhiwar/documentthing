@@ -21,7 +21,7 @@ type editorStoreType = {
     setMarkdownFiles: (data: editedFilesInterface[]) => void,
     addEditedFile: (id: string | null, type: "file" | "folder", ogContent: any, modifiedContent: any, name: string | null) => void;
     addEditedFolder: (id: string | null, type: "file" | "folder", ogContent: any, modifiedContent: any, name: string | null) => void;
-    addEditedMarkdown: (id: string | null, type: "markdown", ogContent: any, modifiedContent: any, name: string | null , path : string) => void;
+    addEditedMarkdown: (id: string | null, type: "markdown", ogContent: any, modifiedContent: any, name: string | null, path: string) => void;
     reset: () => void
 }
 
@@ -37,9 +37,9 @@ const useEditChangesStore = create<editorStoreType>()(
             editedFiles: [],
             editedFolder: [],
             editedMarkdown: [],
-            addEditedMarkdown: (id , type , ogContent , modifiedContent , name , path) => {
-                set((state)=>({
-                    editedMarkdown : [
+            addEditedMarkdown: (id, type, ogContent, modifiedContent, name, path) => {
+                set((state) => ({
+                    editedMarkdown: [
                         ...state.editedMarkdown,
                         {
                             type: type,
@@ -74,7 +74,7 @@ const useEditChangesStore = create<editorStoreType>()(
                         ...state.editedFiles,
                         {
                             type: type,
-                            path: id ? `simpledocs/files/${id}.json` : null,
+                            path: id ? `Documentthing/files/${id}.json` : null,
                             name: name,
                             id: id,
                             originalContent: ogContent,
@@ -97,7 +97,7 @@ const useEditChangesStore = create<editorStoreType>()(
                     editedFolder: [
                         {
                             type: type,
-                            path: `simpledocs/folder/folder.json`,
+                            path: `Documentthing/folder/folder.json`,
                             name: name,
                             id: id,
                             originalContent: ogContent,
