@@ -26,26 +26,28 @@ import { markdown } from '@yoopta/exports';
 import Image from '@yoopta/image'
 import File from '@yoopta/file'
 import Video from '@yoopta/video'
+import { CarouselPlugin } from '@/components/custom/Carousel';
 
 const plugins: any = [
-  Paragraph,
-  Accordion,
   HeadingOne,
   HeadingTwo,
   HeadingThree,
-  Blockquote,
-  Callout,
+  Paragraph,
   NumberedList,
   BulletedList,
-  TodoList,
-  Code,
   Link,
-  Embed,
+  Code,
   Divider,
+  Embed,
   Table,
   Image,
   File,
-  Video
+  Video,
+  Blockquote,
+  Callout,
+  TodoList,
+  Accordion,
+  CarouselPlugin,
 ];
 
 const TOOLS = {
