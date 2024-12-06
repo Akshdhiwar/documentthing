@@ -10,6 +10,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { AddFolderProvider } from "@/store/addFolder.context"
 import Editor from "@/components/main/DocsPage/YooptaEditor"
+import { TrackPageView } from "@/shared/utils/GoogleAnalytics"
 
 const DocsPage = () => {
 
@@ -18,6 +19,7 @@ const DocsPage = () => {
     const clearLinkList = useDoublyLinkedListStore(state => state.clearList)
     const { selectedFolder } = useFolderStore(state => state)
     useEffect(() => {
+        TrackPageView()
         return () => {
             clearLinkList()
             useFolderStore.getState().setIsNoFilePresent(false)

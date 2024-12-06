@@ -7,6 +7,7 @@ import useUserStore from '@/store/userStore';
 import { Icons } from '../../shared/components/Icons'
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler';
 import { useGoogleLogin } from "@react-oauth/google"
+import { TrackPageView } from '@/shared/utils/GoogleAnalytics';
 
 const Login = () => {
     const axiosInstance = useAxiosWithToast()
@@ -24,6 +25,7 @@ const Login = () => {
     }
 
     function loginWithGoogle() {
+        TrackPageView()
         setLoading(true)
         googleLogin()
     }

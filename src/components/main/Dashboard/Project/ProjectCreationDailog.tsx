@@ -10,6 +10,7 @@ import axios from 'axios'
 import CustomAlert from '@/components/custom/CustomAlert'
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { TrackPageView } from '@/shared/utils/GoogleAnalytics'
 
 interface InstallationType {
     name: string
@@ -120,6 +121,7 @@ const ProjectCreationDailog = () => {
 
     useEffect(() => {
         getInstallations()
+        TrackPageView()
     }, [])
 
     useEffect(() => {

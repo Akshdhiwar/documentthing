@@ -1,6 +1,7 @@
 import CustomAlert from "@/components/custom/CustomAlert"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import { TrackPageView } from "@/shared/utils/GoogleAnalytics"
 import useUserStore from "@/store/userStore"
 import { useEffect, useState } from "react"
 
@@ -53,6 +54,7 @@ const OrgMembers = () => {
     }
 
     useEffect(() => {
+        TrackPageView()
         fetchMembers()
     }, [])
 

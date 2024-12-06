@@ -8,6 +8,8 @@ import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import useUserStore from "@/store/userStore";
+import { useEffect } from "react";
+import { TrackPageView } from "@/shared/utils/GoogleAnalytics";
 
 const FormSchema = z.object({
   pin: z.string().min(6, {
@@ -69,6 +71,10 @@ const VerifyOTP = () => {
       email: email
     })
   }
+
+  useEffect(() => {
+    TrackPageView()
+  })
 
   return (
     <div className='h-dvh w-dvw  flex flex-col items-center justify-evenly'>

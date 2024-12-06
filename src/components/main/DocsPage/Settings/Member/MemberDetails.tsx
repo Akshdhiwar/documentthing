@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom"
 import MemberInviteDialog from "./MemberInviteDialog"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import useUserStore from "@/store/userStore"
+import { TrackPageView } from "@/shared/utils/GoogleAnalytics"
 // import useUserStore from "@/store/userStore"
 // import monthltSubs from "@/pages/Subscription/Subscription"
 
@@ -81,6 +82,7 @@ const MemberDetails = () => {
 
 
     useEffect(() => {
+        TrackPageView()
         getUserDetail()
     }, [refresh])
 

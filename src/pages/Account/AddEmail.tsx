@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
+import { TrackPageView } from "@/shared/utils/GoogleAnalytics";
 import useUserStore from "@/store/userStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -19,6 +21,10 @@ const AddEmail = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
+
+    useEffect(() => {
+        TrackPageView()
+    })
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {

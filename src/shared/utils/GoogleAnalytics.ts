@@ -5,6 +5,7 @@ function InitializeGoogleAnalytics() {
 }
 
 function TrackPageView() {
+  console.log(window.location.pathname + window.location.search)
   // Send pageview with a custom path
   ReactGA.send({
     hitType: "pageview",

@@ -5,6 +5,7 @@ import useUserStore from "@/store/userStore"
 import useProjectStore from "@/store/projectStore"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { TrackPageView } from "@/shared/utils/GoogleAnalytics"
 
 const ProjectList = () => {
   const axiosInstance = useAxiosWithToast()
@@ -29,6 +30,7 @@ const ProjectList = () => {
 
   useEffect(() => {
     getProjectList()
+    TrackPageView()
   }, [])
 
   function goToSpecificProject(project: Project) {
