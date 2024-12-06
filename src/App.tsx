@@ -3,7 +3,7 @@ import FullScreen from "./shared/components/FullScreen"
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import Loader from "./shared/components/Loader";
 import MemberTable from "./components/main/DocsPage/Settings/Member/MemberTable";
 import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDetails";
@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import AccountWrapper from "./pages/Account/AccountWrapper";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { InitializeGoogleAnalytics, TrackPageView } from "./shared/utils/GoogleAnalytics";
 // import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const Login = lazy(() => import("./pages/Account/Login"))
@@ -31,6 +32,10 @@ const OrgMembers = lazy(() => import("./components/main/Dashboard/Organization/O
 const Landing = lazy(() => import("./pages/Landing Page/Landing"))
 
 const App = () => {
+  useEffect(() => {
+    InitializeGoogleAnalytics()
+    TrackPageView()
+  }, [])
   const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID
   return (
     // <PayPalScriptProvider
