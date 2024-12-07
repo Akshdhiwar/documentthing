@@ -29,8 +29,8 @@ const ProjectList = () => {
   }
 
   useEffect(() => {
+    TrackPageView(user?.Name, user?.ID)
     getProjectList()
-    TrackPageView()
   }, [])
 
   function goToSpecificProject(project: Project) {

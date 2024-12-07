@@ -73,7 +73,7 @@ const VerifyOTP = () => {
   }
 
   useEffect(() => {
-    TrackPageView()
+    TrackPageView(user?.Name, user?.ID)
   })
 
   return (
