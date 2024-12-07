@@ -120,7 +120,7 @@ const ProjectCreationDailog = () => {
 
 
     useEffect(() => {
-        TrackPageView(user?.Name, user?.ID)
+        TrackPageView()
         getInstallations()
     }, [])
 

@@ -29,7 +29,7 @@ const ProjectList = () => {
   }
 
   useEffect(() => {
-    TrackPageView(user?.Name, user?.ID)
+    TrackPageView()
     getProjectList()
   }, [])
 

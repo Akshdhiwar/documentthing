@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 const OrgMembers = () => {
 
     const axiosInstance = useAxiosWithToast()
-    const { org, user } = useUserStore(state => state)
+    const { org } = useUserStore(state => state)
     const [members, setMembers] = useState<any[]>([])
 
     async function fetchMembers() {
@@ -54,7 +54,7 @@ const OrgMembers = () => {
     }
 
     useEffect(() => {
-        TrackPageView(user?.Name, user?.ID)
+        TrackPageView()
         fetchMembers()
     }, [])
 

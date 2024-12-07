@@ -82,7 +82,7 @@ const MemberDetails = () => {
 
 
     useEffect(() => {
-        TrackPageView(userDetails?.Name, userDetails?.ID)
+        TrackPageView()
         getUserDetail()
     }, [refresh])
 

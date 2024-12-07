@@ -23,7 +23,7 @@ const AddEmail = () => {
     });
 
     useEffect(() => {
-        TrackPageView(user?.Name, user?.ID)
+        TrackPageView()
     })
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {

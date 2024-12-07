@@ -4,12 +4,12 @@ function InitializeGoogleAnalytics() {
   ReactGA.initialize(import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID);
 }
 
-function TrackPageView(userName?: string, userID?: string) {
+function TrackPageView() {
   // Send pageview with a custom path
   ReactGA.send({
     hitType: "pageview",
     page: window.location.pathname + window.location.search,
-    title: userName + " " + userID,
+    title: window.location.pathname + window.location.search,
   });
 }
 
