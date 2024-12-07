@@ -1,9 +1,7 @@
 import ReactGA from "react-ga4";
 
 function InitializeGoogleAnalytics() {
-  ReactGA.initialize(import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID, {
-    testMode: import.meta.env.VITE_ENVIRONMENT === "Local" ? true : false,
-  });
+  ReactGA.initialize(import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID);
 }
 
 function TrackPageView(userName?: string, userID?: string) {
