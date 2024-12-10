@@ -38,15 +38,6 @@ const App = () => {
   }, [])
   const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID
   return (
-    // <PayPalScriptProvider
-    //   options={{
-    //     clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID,
-    //     components: "buttons",
-    //     intent: "subscription",
-    //     vault: true,
-    //     environment: "sandbox"
-    //   }}
-    // >
     <GoogleOAuthProvider clientId={googleClientID}>
       <FullScreen>
         <TooltipProvider>
@@ -95,7 +86,6 @@ const App = () => {
         <Toaster></Toaster>
       </FullScreen>
     </GoogleOAuthProvider>
-    // </PayPalScriptProvider>
   )
 }
 
