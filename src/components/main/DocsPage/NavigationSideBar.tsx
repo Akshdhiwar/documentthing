@@ -1,4 +1,4 @@
-import { BadgeAlert, ChevronLeft, Loader, PlusCircle, Settings } from "lucide-react"
+import { BadgeAlert, ChevronLeft, Hash, Loader, PlusCircle, Settings } from "lucide-react"
 import { Separator } from "../../ui/separator"
 import FolderStructure from "./FolderStructure"
 import { useEffect, useState } from "react"
@@ -14,6 +14,7 @@ import { NavUser } from "@/components/custom/NavUser"
 import { NavLink } from "react-router-dom"
 import useAddFolderContext from "@/shared/custom hooks/useDialogContext"
 import Export from "./Export"
+import useBranchStore from "@/store/branch"
 
 const NavigationSideBar = () => {
     const axiosInstance = useAxiosWithToast()
@@ -24,6 +25,7 @@ const NavigationSideBar = () => {
     const { isEditing, editedFolder } = useEditChangesStore(state => state)
     const { user } = useUserStore(state => state)
     const AddPageDialog = useAddFolderContext()
+    const { name } = useBranchStore(state => state)
 
     useEffect(() => {
         setLoading(true)
@@ -81,6 +83,17 @@ const NavigationSideBar = () => {
         <Sidebar>
             <SidebarHeader>
                 <ProjectSwitcher projectList={projs}></ProjectSwitcher>
+                {
+                    isEditing &&
+                    <div>
+                        <Separator />
+                        <SidebarMenuButton>
+                            <Hash></Hash>
+                            {name}
+                        </SidebarMenuButton>
+                        <Separator />
+                    </div>
+                }
                 <SidebarMenuButton asChild>
                     <NavLink to="/dashboard">
                         <ChevronLeft />
