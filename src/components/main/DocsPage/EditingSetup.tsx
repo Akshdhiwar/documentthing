@@ -5,15 +5,11 @@ import useProjectStore from "@/store/projectStore"
 import useUserStore from "@/store/userStore"
 import useBranchStore from "@/store/branch"
 
-type EditingSetupInterface = {
-    setActiveTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
 function getRandomNumber() {
     return Math.floor(Math.random() * 999) + 1;
 }
 
-const EditingSetup: React.FC<EditingSetupInterface> = ({ }) => {
+const EditingSetup = ({ }) => {
     const axiosInstance = useAxiosWithToast()
     const { isEditing } = useEditChangesStore(state => state)
     const { project } = useProjectStore(state => state)
@@ -23,7 +19,6 @@ const EditingSetup: React.FC<EditingSetupInterface> = ({ }) => {
     useEffect(() => {
 
         if (isEditing) {
-            console.log("create")
             createBranch()
         }
 
@@ -32,7 +27,6 @@ const EditingSetup: React.FC<EditingSetupInterface> = ({ }) => {
     function getDate() {
         const currentDate = new Date();
         const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
-        console.log(formattedDate); // Output: YYYY-MM-DD
         return formattedDate;
     }
 
@@ -45,14 +39,6 @@ const EditingSetup: React.FC<EditingSetupInterface> = ({ }) => {
         })
     }
 
-    // function deleteBranch() {
-    //     axiosInstance.delete(`/branch/${project?.Id}/${name}`).then(() => {
-    //         setName("")
-    //     }).catch(() => {
-    //         // get back to editing mode
-    //         setActiveTab("edit")
-    //     })
-    // }
 
     return (
         <></>

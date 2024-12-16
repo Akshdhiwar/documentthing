@@ -47,6 +47,20 @@ const NavigationSideBar = () => {
         }
     }, [editedFolder, project])
 
+    function getFolderJson() {
+        axiosInstance.get(`/folder/${project?.Id}/${user?.Type}`).then(data => {
+            const res = data.data
+            const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
+            setFolder(json)
+            if (json.length > 0) {
+                clearList()
+                convertIntoLinkedList(json)
+                setSelectedFolder(json[0])
+            }
+            setLoading(false)
+        })
+    }
+
     useEffect(() => {
 
         axiosInstance.get("/project/get-project", {
@@ -61,19 +75,6 @@ const NavigationSideBar = () => {
         })
     }, []);
 
-    function getFolderJson() {
-        axiosInstance.get(`/folder/${project?.Id}/${user?.Type}`).then(data => {
-            const res = data.data
-            const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
-            setFolder(json)
-            if (json.length > 0) {
-                clearList()
-                convertIntoLinkedList(json)
-                setSelectedFolder(json[0])
-            }
-            setLoading(false)
-        })
-    }
 
     function createFolder() {
         AddPageDialog?.open()

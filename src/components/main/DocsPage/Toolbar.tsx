@@ -7,7 +7,6 @@ import BreadCrums from "./BreadCrums"
 import useEditChangesStore from "@/store/changes"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ToastAction } from "@/components/ui/toast"
 import useUserStore from "@/store/userStore"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
@@ -23,6 +22,7 @@ import EditingSetup from "./EditingSetup"
 import useBranchStore from "@/store/branch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import ToggleEditPreview from "./ToggleEditPreview"
 
 const formSchema = z.object({
     message: z.string(),
@@ -36,15 +36,15 @@ const Toolbar = () => {
     const [isLoading, setLoading] = useState(false)
     const project = useProjectStore(state => state.project)
     const { setFolder, setSelectedFolder, isNoFilePresent, Url } = useFolderStore(state => state)
-    const { isEditing, setIsEditing, editedFiles, reset, editedFolder, editedMarkdown } = useEditChangesStore(state => state)
+    const { isEditing, editedFiles, reset, editedFolder, editedMarkdown } = useEditChangesStore(state => state)
     const { user } = useUserStore(state => state)
-    const [activeTab, setActiveTab] = useState<string>("preview")
     const { convertIntoLinkedList, clearList } = useDoublyLinkedListStore(state => state)
     const webSocket = useRef<WebSocket | null>(null); // Use useRef to hold the WebSocket instance
     const { toast } = useToast()
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const { name, setName } = useBranchStore(state => state)
+    const { name } = useBranchStore(state => state)
     const [selectedBranch, setSelectedBranch] = useState<string>("main");
+    const [activeTab, setActiveTab] = useState<string>("preview")
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -69,10 +69,6 @@ const Toolbar = () => {
         // Establish WebSocket connection when projectId is available
         webSocket.current = setupWebSocket(project.Id);
 
-        if (isEditing) {
-            setActiveTab("edit");
-        }
-
         // Clean up WebSocket on component unmount
         return () => {
             if (webSocket.current) {
@@ -80,12 +76,6 @@ const Toolbar = () => {
             }
         };
     }, [project?.Id, isEditing]);
-
-    function deleteBranch() {
-        axiosInstance.delete(`/branch/${project?.Id}/${name}`).then(() => {
-            setName("")
-        })
-    }
 
     function setupWebSocket(projectID: string) {
 
@@ -133,12 +123,6 @@ const Toolbar = () => {
     }
 
 
-    function cancelEditing() {
-        reset()
-        setActiveTab("preview")
-        setLoading(false)
-    }
-
     const onSaveToServer = async (message: string, branchName: string, prBool: boolean) => {
         setLoading(true)
 
@@ -180,7 +164,6 @@ const Toolbar = () => {
             setLoading(false)
             reset()
             setActiveTab("preview")
-            deleteBranch()
             // Make sure the WebSocket is open before trying to send a message
             if (webSocket.current && webSocket.current.readyState === WebSocket.OPEN) {
                 webSocket.current.send(JSON.stringify({
@@ -198,31 +181,13 @@ const Toolbar = () => {
         // await fetchToServer(JSON.stringify(editorContent))
     }
 
-    function onTabChange(value: string) {
-        if (value === "preview") {
-            cancelEditing();
-            deleteBranch();
-        }
-        setIsEditing(value === "edit")
-        setActiveTab(value);
-    }
 
-    useEffect(() => {
-        onTabChange(activeTab)
-    }, [activeTab])
 
     return (
         <div className="flex flex-col">
             <div className="flex gap-2 items-center justify-between p-1 px-4 border-b border-gray-100 bg-sidebar">
                 <SidebarTrigger></SidebarTrigger>
-                <Tabs value={activeTab} onValueChange={onTabChange}>
-                    <TabsList>
-                        <TabsTrigger value="preview">Preview</TabsTrigger>
-                        {
-                            project?.Role !== "Viewer" && <TabsTrigger value="edit">Edit Mode</TabsTrigger>
-                        }
-                    </TabsList>
-                </Tabs>
+                <ToggleEditPreview activeTab={activeTab} setActiveTab={setActiveTab} setLoading={setLoading} ></ToggleEditPreview>
                 {
                     project?.Role !== "Viewer" ? <>
                         {
@@ -311,7 +276,7 @@ const Toolbar = () => {
                                         </ResponsiveModalHeader>
                                     </ResponsiveModalContent>
                                 </ResponsiveModal>
-                                <EditingSetup setActiveTab={setActiveTab}></EditingSetup>
+                                <EditingSetup></EditingSetup>
                             </div> : <Tooltip>
                                 <TooltipTrigger asChild>
                                     <Button size={"sm"}>Publish</Button>
