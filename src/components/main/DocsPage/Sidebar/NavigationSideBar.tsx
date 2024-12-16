@@ -1,5 +1,5 @@
 import { BadgeAlert, ChevronLeft, Hash, Loader, PlusCircle, Settings } from "lucide-react"
-import { Separator } from "../../ui/separator"
+import { Separator } from "../../../ui/separator"
 import FolderStructure from "./FolderStructure"
 import { useEffect, useState } from "react"
 import useFolderStore from "@/store/folderStore"

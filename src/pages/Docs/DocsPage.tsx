@@ -1,6 +1,6 @@
-import Toolbar from "../../components/main/DocsPage/Toolbar"
-import NavigationSideBar from "@/components/main/DocsPage/NavigationSideBar"
-import NextPrevious from "@/components/main/DocsPage/NextPrevious"
+import Toolbar from "../../components/main/DocsPage/Toolbar/Toolbar"
+import NavigationSideBar from "@/components/main/DocsPage/Sidebar/NavigationSideBar"
+import NextPrevious from "@/components/main/DocsPage/Editor/NextPrevious"
 import useFolderStore from "@/store/folderStore"
 import CustomAlert from "@/components/custom/CustomAlert"
 import useEditChangesStore from "@/store/changes"
@@ -9,7 +9,7 @@ import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { AddFolderProvider } from "@/store/addFolder.context"
-import Editor from "@/components/main/DocsPage/YooptaEditor"
+import Editor from "@/components/main/DocsPage/Editor/YooptaEditor"
 import { TrackPageView } from "@/shared/utils/GoogleAnalytics"
 
 const DocsPage = () => {
