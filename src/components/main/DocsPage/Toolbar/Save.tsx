@@ -34,7 +34,7 @@ const Save: React.FC<SaveInterface> = ({ isLoading, setLoading, setActiveTab, we
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedBranch, setSelectedBranch] = useState<string>("main");
     const { editedFiles, reset, editedFolder, editedMarkdown } = useEditChangesStore(state => state)
-    const { name } = useBranchStore(state => state)
+    const { name, setName } = useBranchStore(state => state)
     const { user } = useUserStore(state => state)
     const project = useProjectStore(state => state.project)
 
@@ -96,6 +96,11 @@ const Save: React.FC<SaveInterface> = ({ isLoading, setLoading, setActiveTab, we
             setLoading(false)
             reset()
             setActiveTab("preview")
+            if (branchName === "main") {
+                await axiosInstance.delete(`/branch/${project?.Id}/${name}`).then(() => {
+                    setName("")
+                })
+            }
             // Make sure the WebSocket is open before trying to send a message
             if (webSocket.current && webSocket.current.readyState === WebSocket.OPEN) {
                 webSocket.current.send(JSON.stringify({

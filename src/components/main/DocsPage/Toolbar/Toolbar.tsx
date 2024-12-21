@@ -92,7 +92,7 @@ const Toolbar = () => {
         <div className="flex flex-col">
             <div className="flex gap-2 items-center justify-between p-1 px-4 border-b border-gray-100 bg-sidebar">
                 <SidebarTrigger></SidebarTrigger>
-                <ToggleEditPreview activeTab={activeTab} setActiveTab={setActiveTab} setLoading={setLoading} ></ToggleEditPreview>
+                <ToggleEditPreview activeTab={activeTab} setActiveTab={setActiveTab}></ToggleEditPreview>
                 {
                     project?.Role !== "Viewer" ? <>
                         {

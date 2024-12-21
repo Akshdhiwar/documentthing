@@ -30,13 +30,23 @@ const EditingSetup = ({ }) => {
         return formattedDate;
     }
 
-    function createBranch() {
-        let branchName = user?.GithubName + "_" + getDate() + "_" + getRandomNumber() + "_" + "changes"
-        setName(branchName)
-        axiosInstance.post("/branch", {
-            project_id: project?.Id,
-            branch_name: branchName
+    async function createBranch() {
+
+        const existingBranchName = await axiosInstance.get(`/branch/check/${project?.Id}`).then(res => {
+            return res.data.branch_name
         })
+
+        if (existingBranchName === "") {
+            let branchName = user?.GithubName + "_" + getDate() + "_" + getRandomNumber() + "_" + "changes"
+            setName(branchName)
+            axiosInstance.post("/branch", {
+                project_id: project?.Id,
+                branch_name: branchName
+            })
+        } else {
+            setName(existingBranchName)
+        }
+
     }
 
 

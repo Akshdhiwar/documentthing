@@ -10,19 +10,18 @@ import { useState } from "react";
 type ToggleInterface = {
     activeTab: string,
     setActiveTab: (tab: string) => void,
-    setLoading: (val: boolean) => void,
 }
 
-const ToggleEditPreview: React.FC<ToggleInterface> = ({ activeTab, setActiveTab, setLoading }) => {
+const ToggleEditPreview: React.FC<ToggleInterface> = ({ activeTab, setActiveTab }) => {
     const project = useProjectStore(state => state.project)
-    const { setIsEditing, reset } = useEditChangesStore(state => state)
+    const { setIsEditing, reset, editedFiles, editedFolder } = useEditChangesStore(state => state)
     const { name, setName } = useBranchStore(state => state)
     const axiosInstance = useAxiosWithToast()
     const [deleteBarnchDialog, setDeleteBranchDialog] = useState(false)
 
     function onTabChange(value: string) {
         console.log(value)
-        if (value === "preview") {
+        if (value === "preview" && (editedFiles.length > 0 || editedFolder.length > 0)) {
             setDeleteBranchDialog(true)
             return
         }
@@ -33,7 +32,6 @@ const ToggleEditPreview: React.FC<ToggleInterface> = ({ activeTab, setActiveTab,
     function cancelEditing() {
         reset()
         setActiveTab("preview")
-        setLoading(false)
         setDeleteBranchDialog(false)
         deleteBranch()
     }
