@@ -13,6 +13,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import ToggleEditPreview from "./ToggleEditPreview"
 import Save from "./Save"
+import useBranchStore from "@/store/branch"
 
 
 const Toolbar = () => {
@@ -26,6 +27,7 @@ const Toolbar = () => {
     const webSocket = useRef<WebSocket | null>(null); // Use useRef to hold the WebSocket instance
     const { toast } = useToast()
     const [activeTab, setActiveTab] = useState<string>("preview")
+    const { name } = useBranchStore(state => state)
 
     useEffect(() => {
         if (!project?.Id) return;
@@ -73,7 +75,7 @@ const Toolbar = () => {
     }
 
     function getFolderJson() {
-        axiosInstance.get(`/folder/${project?.Id}/${user?.Type}`).then(data => {
+        axiosInstance.get(`/folder/${project?.Id}/${user?.Type}/${isEditing ? name : "main"}`).then(data => {
             const res = data.data
             const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
             setFolder(json)
@@ -85,8 +87,6 @@ const Toolbar = () => {
             setLoading(false)
         })
     }
-
-
 
     return (
         <div className="flex flex-col">
