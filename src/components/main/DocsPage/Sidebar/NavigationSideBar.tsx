@@ -1,5 +1,5 @@
-import { BadgeAlert, ChevronLeft, Loader, PlusCircle, Settings } from "lucide-react"
-import { Separator } from "../../ui/separator"
+import { BadgeAlert, ChevronLeft, Hash, Loader, PlusCircle, Settings } from "lucide-react"
+import { Separator } from "../../../ui/separator"
 import FolderStructure from "./FolderStructure"
 import { useEffect, useState } from "react"
 import useFolderStore from "@/store/folderStore"
@@ -14,6 +14,7 @@ import { NavUser } from "@/components/custom/NavUser"
 import { NavLink } from "react-router-dom"
 import useAddFolderContext from "@/shared/custom hooks/useDialogContext"
 import Export from "./Export"
+import useBranchStore from "@/store/branch"
 
 const NavigationSideBar = () => {
     const axiosInstance = useAxiosWithToast()
@@ -24,6 +25,7 @@ const NavigationSideBar = () => {
     const { isEditing, editedFolder } = useEditChangesStore(state => state)
     const { user } = useUserStore(state => state)
     const AddPageDialog = useAddFolderContext()
+    const { name } = useBranchStore(state => state)
 
     useEffect(() => {
         setLoading(true)
@@ -45,6 +47,24 @@ const NavigationSideBar = () => {
         }
     }, [editedFolder, project])
 
+    function getFolderJson() {
+        axiosInstance.get(`/folder/${project?.Id}/${user?.Type}/${isEditing ? name : "main"}`).then(data => {
+            const res = data.data
+            const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
+            setFolder(json)
+            if (json.length > 0) {
+                clearList()
+                convertIntoLinkedList(json)
+                setSelectedFolder(json[0])
+            }
+            setLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        getFolderJson()
+    }, [isEditing])
+
     useEffect(() => {
 
         axiosInstance.get("/project/get-project", {
@@ -59,19 +79,6 @@ const NavigationSideBar = () => {
         })
     }, []);
 
-    function getFolderJson() {
-        axiosInstance.get(`/folder/${project?.Id}/${user?.Type}`).then(data => {
-            const res = data.data
-            const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
-            setFolder(json)
-            if (json.length > 0) {
-                clearList()
-                convertIntoLinkedList(json)
-                setSelectedFolder(json[0])
-            }
-            setLoading(false)
-        })
-    }
 
     function createFolder() {
         AddPageDialog?.open()
@@ -81,6 +88,17 @@ const NavigationSideBar = () => {
         <Sidebar>
             <SidebarHeader>
                 <ProjectSwitcher projectList={projs}></ProjectSwitcher>
+                {
+                    isEditing &&
+                    <div>
+                        <Separator />
+                        <SidebarMenuButton>
+                            <Hash></Hash>
+                            {name}
+                        </SidebarMenuButton>
+                        <Separator />
+                    </div>
+                }
                 <SidebarMenuButton asChild>
                     <NavLink to="/dashboard">
                         <ChevronLeft />

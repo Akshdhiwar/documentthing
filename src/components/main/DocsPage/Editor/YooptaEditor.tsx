@@ -27,6 +27,7 @@ import Image from '@yoopta/image'
 import File from '@yoopta/file'
 import Video from '@yoopta/video'
 import { CarouselPlugin } from '@/components/custom/Carousel';
+import useBranchStore from '@/store/branch';
 
 const plugins: any = [
   HeadingOne,
@@ -78,6 +79,7 @@ const Editor = () => {
   const { user } = useUserStore((state) => state);
   const { isEditing, editedFiles } = useEditChangesStore(state => state)
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const { name } = useBranchStore(state => state)
 
   useEffect(() => {
     if (!selectedFolder?.id) return;
@@ -96,7 +98,8 @@ const Editor = () => {
         params: {
           proj: project?.Id,
           file: selectedFolder?.id,
-          t: user?.Type
+          t: user?.Type,
+          ref: isEditing ? name : "main"
         },
       })
       .then((response) => {
