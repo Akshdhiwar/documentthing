@@ -48,6 +48,7 @@ const NavigationSideBar = () => {
     }, [editedFolder, project])
 
     function getFolderJson() {
+        if(isEditing && name === "") return
         axiosInstance.get(`/folder/${project?.Id}/${user?.Type}/${isEditing ? name : "main"}`).then(data => {
             const res = data.data
             const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
