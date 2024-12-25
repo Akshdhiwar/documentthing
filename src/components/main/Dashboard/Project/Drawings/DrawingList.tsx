@@ -1,0 +1,39 @@
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Loader } from "lucide-react"
+import { useState } from "react"
+import DrawingNew from "./DrawingNew"
+import { Link } from "react-router-dom"
+
+const DrawingList = () => {
+
+    const [loading, setLoading] = useState(false)
+
+    return (
+        <ScrollArea className="p-5">
+            <div>
+                {
+                    loading ? <div className="flex items-center justify-center"><Loader className="animate-spin"></Loader></div> : <ul className="mx-auto grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+                        {
+                            // projects.map((project, index) => (
+                            //     <Link to={`/project/${project.Id}/docs`} role="button" key={index} className="w-full flex flex-col justify-between group relative h-44 border rounded-md hover:cursor-pointer p-4 transition-all hover:bg-primary/10" onClick={() => goToSpecificProject(project)}>
+                            //         <div>
+                            //             <p className="truncate mr-6 text-sm">{project.Name}</p>
+                            //             <ChevronRight className="absolute top-4 right-4 text-slate-400 group-hover:h-8 group-hover:w-8 transition-all group-hover:text-primary/30"></ChevronRight>
+                            //         </div>
+                            //         <div className="text-sm text-secondary-foreground flex justify-between">
+                            //             <p><span className="text-muted-foreground">Owner: </span>  {project.RepoOwner}</p>
+                            //             <p>{project.Role}</p>
+                            //         </div>
+                            //     </Link>
+                            // ))
+                        }
+                        <DrawingNew></DrawingNew>
+                        <Link to={"/drawings/ad"}>Go to excaliDraw</Link>
+                    </ul>
+                }
+            </div>
+        </ScrollArea>
+    )
+}
+
+export default DrawingList

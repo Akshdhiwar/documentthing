@@ -1,4 +1,4 @@
-import ProjectList from "./components/main/Dashboard/Project/ProjectList";
+import ProjectList from "./components/main/Dashboard/Project/Docs/ProjectList";
 import FullScreen from "./shared/components/FullScreen"
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
@@ -7,12 +7,13 @@ import { lazy, Suspense, useEffect } from "react";
 import Loader from "./shared/components/Loader";
 import MemberTable from "./components/main/DocsPage/Settings/Member/MemberTable";
 import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDetails";
-import ProjectCreationDailog from "./components/main/Dashboard/Project/ProjectCreationDailog";
+import ProjectCreationDailog from "./components/main/Dashboard/Project/Docs/ProjectCreationDailog";
 import Dashboard from "./pages/Dashboard";
 import AccountWrapper from "./pages/Account/AccountWrapper";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { InitializeGoogleAnalytics, TrackPageView } from "./shared/utils/GoogleAnalytics";
+import DrawingList from "./components/main/Dashboard/Project/Drawings/DrawingList";
 // import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const Login = lazy(() => import("./pages/Account/Login"))
@@ -30,6 +31,7 @@ const Members = lazy(() => import("./components/main/DocsPage/Settings/Member/Me
 const OrgWrapper = lazy(() => import("./components/main/Dashboard/Organization/OrganizationWrapper"))
 const OrgMembers = lazy(() => import("./components/main/Dashboard/Organization/OrgMembers"))
 const Landing = lazy(() => import("./pages/Landing Page/Landing"))
+const Drawings = lazy(() => import("./components/main/Drawings/Drawings"))
 
 const App = () => {
   useEffect(() => {
@@ -59,6 +61,7 @@ const App = () => {
                 <Route index element={<Navigate to="projects" />}></Route>
                 <Route path="projects" element={<ProjectWrapper></ProjectWrapper>}>
                   <Route index element={<ProjectList></ProjectList>}></Route>
+                  <Route path="drawings" element={<DrawingList></DrawingList>}></Route>
                   <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
                 </Route>
                 <Route path="organization" element={<OrgWrapper />}>
@@ -80,6 +83,7 @@ const App = () => {
                   </Route>
                 </Route>
               </Route>
+              <Route path="/drawings/:folderID" element={<ProtectedRoute><Drawings></Drawings></ProtectedRoute>}></Route>
             </Routes>
           </Suspense>
         </TooltipProvider>
