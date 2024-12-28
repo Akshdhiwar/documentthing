@@ -15,7 +15,11 @@ const formSchema = z.object({
     name: z.string()
 });
 
-const DrawingNew = () => {
+type DrawingNewInterface = {
+    refresh: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const DrawingNew: React.FC<DrawingNewInterface> = ({refresh}) => {
     const { projectID } = useParams()
     const axiosInstance = useAxiosWithToast()
     const [openDialog, setOpenDialog] = useState(false)
@@ -23,14 +27,13 @@ const DrawingNew = () => {
         resolver: zodResolver(formSchema),
     })
 
-    console.log(projectID)
-
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             await axiosInstance.post("/project/drawing", {
                 name: values.name,
                 project_id: projectID
             }).then(() => {
+                refresh(prev => !prev)
                 setOpenDialog(false)
             }).catch(err => {
                 console.error("Failed to create drawing", err.response);

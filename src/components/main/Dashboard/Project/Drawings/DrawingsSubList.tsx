@@ -10,6 +10,7 @@ const DrawingsSubList = () => {
   const [loading, setLoading] = useState(true)
   const { projectID } = useParams()
   const [projects, setProjects] = useState<string[]>([])
+  const [refresh, setRefresh] = useState<boolean>(false)
 
   async function getDrawingsSubList() {
     await axiosInstance.get("/file/drawings", {
@@ -26,7 +27,7 @@ const DrawingsSubList = () => {
 
   useEffect(() => {
     getDrawingsSubList()
-  }, [])
+  }, [refresh])
 
   return (
     <ScrollArea className="p-5">
@@ -43,7 +44,7 @@ const DrawingsSubList = () => {
                 </Link>
               ))
             }
-            <DrawingNew />
+            <DrawingNew refresh={setRefresh} />
           </ul>
         }
       </div>

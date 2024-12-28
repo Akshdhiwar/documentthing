@@ -1,6 +1,6 @@
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
 import useProjectStore from "@/store/projectStore";
-import { exportToSvg, MainMenu } from "@excalidraw/excalidraw"
+import { MainMenu } from "@excalidraw/excalidraw"
 import { ChevronsLeft, Github } from "lucide-react"
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom"
@@ -16,7 +16,7 @@ const CustomMainMenu: React.FC<CustomMenuInterface> = ({ excalidrawApi }) => {
     const {project} = useProjectStore(state => state);
 
     const goToDashboard = () => {
-        navigate("/dashboard")
+        navigate("/dashboard/projects/drawings")
     }
 
     async function saveDrawing(){
