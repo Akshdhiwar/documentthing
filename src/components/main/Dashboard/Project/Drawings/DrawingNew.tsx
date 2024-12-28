@@ -8,21 +8,33 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
+import { useParams } from "react-router-dom"
 
 const formSchema = z.object({
     name: z.string()
 });
 
 const DrawingNew = () => {
+    const { projectID } = useParams()
+    const axiosInstance = useAxiosWithToast()
     const [openDialog, setOpenDialog] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(projectID)
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            console.log(values)
-            setOpenDialog(false)
+            await axiosInstance.post("/project/drawing", {
+                name: values.name,
+                project_id: projectID
+            }).then(() => {
+                setOpenDialog(false)
+            }).catch(err => {
+                console.error("Failed to create drawing", err.response);
+            })
         } catch (error) {
             console.error("Form submission error", error);
             setOpenDialog(false)
@@ -37,7 +49,7 @@ const DrawingNew = () => {
                         <div className="mb-4 p-3 rounded-full bg-primary/10">
                             <Plus className="h-6 w-6 text-primary" />
                         </div>
-                        <h3 className="text-lg font-semibold mb-2">Add New Project</h3>
+                        <h3 className="text-lg font-semibold mb-2">Add New Drawing</h3>
                         <p className="text-sm text-muted-foreground">
                             Create a new project to start building
                         </p>

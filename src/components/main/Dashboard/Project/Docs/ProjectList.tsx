@@ -63,7 +63,7 @@ const ProjectList = () => {
                 </Link>
               ))
             }
-            <Link to={"new"} role="button">
+            <Link to={"new?type=docs"} role="button">
               <Card className="h-full transition-all hover:border-primary hover:shadow-md">
                 <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center">
                   <div className="mb-4 p-3 rounded-full bg-primary/10">

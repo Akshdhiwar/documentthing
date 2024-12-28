@@ -14,6 +14,8 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { InitializeGoogleAnalytics, TrackPageView } from "./shared/utils/GoogleAnalytics";
 import DrawingList from "./components/main/Dashboard/Project/Drawings/DrawingList";
+import DrawingsWrapper from "./components/main/Dashboard/Project/Drawings/DrawingsWrapper";
+import DrawingsSubList from "./components/main/Dashboard/Project/Drawings/DrawingsSubList";
 // import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const Login = lazy(() => import("./pages/Account/Login"))
@@ -61,7 +63,10 @@ const App = () => {
                 <Route index element={<Navigate to="projects" />}></Route>
                 <Route path="projects" element={<ProjectWrapper></ProjectWrapper>}>
                   <Route index element={<ProjectList></ProjectList>}></Route>
-                  <Route path="drawings" element={<DrawingList></DrawingList>}></Route>
+                  <Route path="drawings" element={<ProtectedRoute><DrawingsWrapper></DrawingsWrapper></ProtectedRoute>} >
+                    <Route index element={<DrawingList></DrawingList>}></Route>
+                    <Route path="sub-list/:projectID" element={<DrawingsSubList></DrawingsSubList>}></Route>
+                  </Route>
                   <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
                 </Route>
                 <Route path="organization" element={<OrgWrapper />}>
