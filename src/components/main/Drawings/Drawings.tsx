@@ -13,40 +13,43 @@ const Drawings = () => {
     const [excalidrawAPI, setExcalidrawAPI] = useState<any | null>(null);
     const [initialData, setInitialData] = useState<any[] | null>(null);
     const { project } = useProjectStore(state => state)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         getDrawing()
     }, [])
 
+    useEffect(() => {
+        console.log("changes");
+    }, [isLoading])
+
     async function getDrawing() {
-        try {
-            const response = await axiosInstance.get(`/file/drawings/${folderID}`, {
-                params: {
-                    proj: project?.Id
-                }
-            })
-            setInitialData(JSON.parse(JSON.parse(atob(response.data))))
-            console.log(JSON.parse(JSON.parse(atob(response.data))))
-        } catch (error) {
-            console.error(error)
-        }
+        setIsLoading(true)
+        const response = await axiosInstance.get(`/file/drawings/${folderID}`, {
+            params: {
+                proj: project?.Id
+            }
+        })
+        setIsLoading(false)
+        setInitialData(JSON.parse(atob(response.data)))
     }
 
     return (
         <div className="h-dvh w-dvw">
             {
-                initialData ? <Excalidraw excalidrawAPI={(api) => setExcalidrawAPI(api)}
-                // initialData={
-                //     {
-                //         elements : 
-                //     }
-                // } 
-                >
-                    <CustomWelcomeScreen />
-                    <CustomMainMenu excalidrawApi={excalidrawAPI}></CustomMainMenu>
-                </Excalidraw> : <div className="flex items-center justify-center">
-                    <Loader className="animate-spin"></Loader>
-                </div>
+                !isLoading ? <Excalidraw excalidrawAPI={(api) => setExcalidrawAPI(api)}
+                        initialData={
+                            {
+                                elements: initialData,
+                            }
+                        }
+                    >
+                        <CustomWelcomeScreen />
+                        <CustomMainMenu excalidrawApi={excalidrawAPI}></CustomMainMenu>
+                    </Excalidraw>
+                    : <div className="flex items-center justify-center">
+                        <Loader className="animate-spin"></Loader>
+                    </div>
             }
         </div>
     )

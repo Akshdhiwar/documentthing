@@ -1,18 +1,42 @@
+import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
+import useProjectStore from "@/store/projectStore";
 import { exportToSvg, MainMenu } from "@excalidraw/excalidraw"
 import { ChevronsLeft, Github } from "lucide-react"
 import React from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 type CustomMenuInterface = {
     excalidrawApi: any;
 }
 
 const CustomMainMenu: React.FC<CustomMenuInterface> = ({ excalidrawApi }) => {
-
+     const { folderID } = useParams()
+    const axiosInstance = useAxiosWithToast();
     const navigate = useNavigate()
+    const {project} = useProjectStore(state => state);
 
     const goToDashboard = () => {
         navigate("/dashboard")
+    }
+
+    async function saveDrawing(){
+        if (!excalidrawApi) {
+            return
+        }
+
+        let response = await axiosInstance.post("/commit/edits", {
+            project_id: project?.Id,
+            content: [{
+                type : "folder",
+                path : `${folderID}/${folderID}.json`,
+                changedContent: JSON.stringify(excalidrawApi.getSceneElements())
+            }],
+            message: "updated" ,
+            branch_name: "main",
+            pr: false
+        })
+
+        console.log(response)
     }
 
     return (
@@ -25,18 +49,8 @@ const CustomMainMenu: React.FC<CustomMenuInterface> = ({ excalidrawApi }) => {
             </MainMenu.Group>
             <MainMenu.Separator></MainMenu.Separator>
             <MainMenu.Group title="Save">
-                <MainMenu.Item onSelect={async () => {
-                    if (!excalidrawApi) {
-                        return
-                    }
-                    
-                    // console.log(excalidrawApi.getSceneElements())
-                    // const svg = await exportToSvg({
-                    //     elements: excalidrawApi.getSceneElements(),
-                    //     files: excalidrawApi?.getFiles()
-                    // })
-                    // console.log(svg);
-
+                <MainMenu.Item onSelect={() => {
+                    saveDrawing()
                 }} icon={<Github></Github>}>
                     Save to Github
                 </MainMenu.Item>
