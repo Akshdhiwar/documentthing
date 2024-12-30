@@ -1,4 +1,4 @@
-import { ChevronRight, Loader } from "lucide-react"
+import { ChevronRight, Loader, Plus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import useUserStore from "@/store/userStore"
@@ -6,6 +6,7 @@ import useProjectStore from "@/store/projectStore"
 import useAxiosWithToast from "@/shared/axios intercepter/axioshandler"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { TrackPageView } from "@/shared/utils/GoogleAnalytics"
+import { Card, CardContent } from "@/components/ui/card"
 
 const ProjectList = () => {
   const axiosInstance = useAxiosWithToast()
@@ -62,6 +63,19 @@ const ProjectList = () => {
                 </Link>
               ))
             }
+            <Link to={"new?type=docs"} role="button">
+              <Card className="h-full transition-all hover:border-primary hover:shadow-md">
+                <CardContent className="flex flex-col items-center justify-center h-full p-6 text-center">
+                  <div className="mb-4 p-3 rounded-full bg-primary/10">
+                    <Plus className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Add New Project</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Create a new project to start building
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           </ul>
         }
       </div>

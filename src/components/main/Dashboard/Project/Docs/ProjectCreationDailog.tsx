@@ -5,7 +5,7 @@ import { Loader, LoaderIcon, RefreshCw } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import useUserStore from '@/store/userStore'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import CustomAlert from '@/components/custom/CustomAlert'
 import useAxiosWithToast from '@/shared/axios intercepter/axioshandler'
@@ -28,7 +28,8 @@ const ProjectCreationDailog = () => {
     const [accounts, setAccounts] = useState<InstallationType[] | null>(null)
     const [repos, setRepos] = useState<any>(null)
     const navigate = useNavigate()
-
+    const [searchParams] = useSearchParams();
+    const type = searchParams.get("type") || "docs";
 
     const createNewProject = async (event: any) => {
         event.preventDefault();
@@ -56,7 +57,7 @@ const ProjectCreationDailog = () => {
         })
 
         // const response = await axiosInstance.post("/project/create", { name: inputValue.current.value })
-        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: orgName, owner: name, org_id: org?.id })
+        const response = await axiosInstance.post("/project/create-project", { name: selectedRepo, id: user?.ID, org: orgName, owner: name, org_id: org?.id, type: type })
         if (response.status !== 201) {
             toast({
                 title: "Error",
@@ -132,7 +133,7 @@ const ProjectCreationDailog = () => {
 
         <ScrollArea className='w-full max-w-4xl m-auto px-8 h-full'>
             <div className='mt-10 mb-4'>
-                <p className='text-2xl font-semibold leading-none tracking-tight'>Create new project</p>
+                <p className='text-2xl font-semibold leading-none tracking-tight'>Create new <span className='capitalize'>{type}</span> project </p>
             </div>
             <CustomAlert type="info" title='Steps to create new project'>
                 - Create a new repository in your github account

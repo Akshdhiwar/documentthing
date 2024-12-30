@@ -28,7 +28,25 @@ const DashboardSideNav = () => {
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <NavLink to="/dashboard/projects">
-                                        <span>All Projects</span>
+                                        <span>Docs</span>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <NavLink to="/dashboard/projects/drawings">
+                                        <span>Drawings</span>
+                                    </NavLink>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <NavLink to="/dashboard/projects">
+                                        <span>API Docs</span>
                                     </NavLink>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
