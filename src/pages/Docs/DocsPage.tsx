@@ -11,6 +11,7 @@ import { ScrollArea } from "@radix-ui/react-scroll-area"
 import { AddFolderProvider } from "@/store/addFolder.context"
 import Editor from "@/components/main/DocsPage/Editor/YooptaEditor"
 import { TrackPageView } from "@/shared/utils/GoogleAnalytics"
+import ContentSideBar from "@/components/main/DocsPage/Editor/ContentSideBar"
 
 const DocsPage = () => {
 
@@ -38,23 +39,34 @@ const DocsPage = () => {
                 <div className="sticky top-0 z-10 bg-white">
                     <Toolbar></Toolbar>
                 </div>
-                <div className="flex justify-center pt-6 p-3 flex-1">
-                    {
-                        !isNoFilePresent && <div className="w-full max-w-3xl h-full flex-1 basis-auto flex flex-col justify-between">
-                            {
-                                isEditing && <CustomAlert type="warning" title='' hideTitle={true}>
-                                    Please avoid making unnecessary changes to the document. Before saving, ensure you review all your changes carefully to keep the document up-to-date and accurate.
-                                </CustomAlert>
-                            }
-                            {
-                                selectedFolder && <div className="flex-1 flex flex-col pt-4 justify-between">
-                                    {/* <BlockNoteEditor /> */}
-                                    <Editor />
-                                    <NextPrevious />
-                                </div>
-                            }
-                        </div>
-                    }
+                <div className="grid grid-cols-4 pt-6 p-3 flex-1 relative">
+                    <div className="w-full flex-1 col-span-3 flex justify-center">
+                        {
+                            !isNoFilePresent && <div className="w-full max-w-3xl h-full flex-1 basis-auto flex flex-col justify-between">
+                                {
+                                    isEditing && <CustomAlert type="warning" title='' hideTitle={true}>
+                                        Please avoid making unnecessary changes to the document. Before saving, ensure you review all your changes carefully to keep the document up-to-date and accurate.
+                                    </CustomAlert>
+                                }
+                                {
+                                    selectedFolder && <div className="flex-1 flex flex-col pt-4 justify-between">
+                                        <Editor />
+                                        <NextPrevious />
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div className="sticky top-[100px] w-full z-20 h-min hidden lg:block">
+                        {
+                            !isEditing &&
+                            // <div>
+                                <ScrollArea style={{ maxHeight: "calc(100vh - 120px)" }} className="overflow-y-auto">
+                                    <ContentSideBar />
+                                </ScrollArea>
+                            // </div>
+                        }
+                    </div>
                 </div>
             </ScrollArea>
         </SidebarProvider>

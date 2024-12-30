@@ -74,20 +74,35 @@ const Editor = () => {
   const [editorID, setEditorID] = useState(generateId())
   const [pageContent, setPageContent] = useState<any>(undefined);
   const selectedFolder = useFolderStore(state => state.selectedFolder)
-  const { setContent, setInitialContent, setMarkdown, setEditor } = useEditorStore((state) => state);
+  const { setContent, setInitialContent, setMarkdown, setEditor, setSidebarContents , resetSidebarContents } = useEditorStore((state) => state);
   const project = useProjectStore(state => state.project)
   const { user } = useUserStore((state) => state);
   const { isEditing, editedFiles } = useEditChangesStore(state => state)
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const { name } = useBranchStore(state => state)
 
+  function generateSidebarContents() {
+    setTimeout(() => {
+      if (!editor) return
+      const values = editor.getEditorValue();
+      const contents = Object.values(values)
+
+      const showContents = contents.filter(block => {
+        if (block.type === "HeadingTwo" || block.type === "HeadingOne") return block
+      })
+      setSidebarContents(showContents)
+    }, 500)
+  }
+
   useEffect(() => {
     if (!selectedFolder?.id) return;
+    resetSidebarContents()
     if (isEditing) {
       const editedFile = editedFiles.find((file) => file.id === selectedFolder.id);
       if (editedFile) {
         setPageContent(editedFile.changedContent);
         setInitialContent(editedFile.changedContent);
+        generateSidebarContents();
         return;
       }
     }
@@ -106,12 +121,14 @@ const Editor = () => {
         let base64 = response.data;
         if (!base64) {
           setPageContent([]);
+          generateSidebarContents();
           return;
         }
         let content = atob(base64);
         let obj = JSON.parse(content);
         setPageContent(obj);
-        setInitialContent(obj)
+        setInitialContent(obj);
+        generateSidebarContents();
       })
       .catch((error) => {
         console.error("Error fetching file content:", error);
