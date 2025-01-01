@@ -11,7 +11,7 @@ import useUserStore from "@/store/userStore"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuButton } from "@/components/ui/sidebar"
 import { ProjectSwitcher } from "./Project-Switcher"
 import { NavUser } from "@/components/custom/NavUser"
-import { NavLink } from "react-router-dom"
+import { NavLink, useParams } from "react-router-dom"
 import useAddFolderContext from "@/shared/custom hooks/useDialogContext"
 import Export from "./Export"
 import useBranchStore from "@/store/branch"
@@ -26,6 +26,8 @@ const NavigationSideBar = () => {
     const { user } = useUserStore(state => state)
     const AddPageDialog = useAddFolderContext()
     const { name } = useBranchStore(state => state)
+    const { folderId } = useParams()
+    const setProject = useProjectStore(state => state.setProject)
 
     useEffect(() => {
         setLoading(true)
@@ -47,9 +49,30 @@ const NavigationSideBar = () => {
         }
     }, [editedFolder, project])
 
-    function getFolderJson() {
-        if(isEditing && name === "") return
-        axiosInstance.get(`/folder/${project?.Id}/${user?.Type}/${isEditing ? name : "main"}`).then(data => {
+    async function getFolderJson() {
+        if (isEditing && name === "") return
+        if (!project?.Id) {
+            try {
+                let projects: Project[] = []
+                await axiosInstance.get("/project/get-project", {
+                    params: {
+                        id: user?.ID
+                    }
+                }).then(result => {
+                    projects = result.data === null ? [] : result.data
+                    projects?.forEach(p => {
+                        if (p.Id === folderId) {
+                            setProject(p)
+                        }
+                    })
+                })
+            } catch (e) {
+                return
+            }
+
+        }
+        if(!project?.Id) return
+        await axiosInstance.get(`/folder/${project?.Id}/${user?.Type}/${isEditing ? name : "main"}`).then(data => {
             const res = data.data
             const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
             setFolder(json)

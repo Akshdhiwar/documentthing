@@ -28,6 +28,7 @@ import File from '@yoopta/file'
 import Video from '@yoopta/video'
 import { CarouselPlugin } from '@/components/custom/Carousel';
 import useBranchStore from '@/store/branch';
+import { useLocation } from 'react-router-dom';
 
 const plugins: any = [
   HeadingOne,
@@ -74,12 +75,13 @@ const Editor = () => {
   const [editorID, setEditorID] = useState(generateId())
   const [pageContent, setPageContent] = useState<any>(undefined);
   const selectedFolder = useFolderStore(state => state.selectedFolder)
-  const { setContent, setInitialContent, setMarkdown, setEditor, setSidebarContents , resetSidebarContents } = useEditorStore((state) => state);
+  const { setContent, setInitialContent, setMarkdown, setEditor, setSidebarContents, resetSidebarContents } = useEditorStore((state) => state);
   const project = useProjectStore(state => state.project)
   const { user } = useUserStore((state) => state);
   const { isEditing, editedFiles } = useEditChangesStore(state => state)
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const { name } = useBranchStore(state => state)
+  const location = useLocation();
 
   function generateSidebarContents() {
     setTimeout(() => {
@@ -93,6 +95,16 @@ const Editor = () => {
       setSidebarContents(showContents)
     }, 500)
   }
+
+  const scrollToHash = () => {
+    const hash = location.hash; // Get the hash from the URL
+    if (hash) {
+      const element = document.getElementById(hash.slice(1)); // Remove the '#' and find the element
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
 
   useEffect(() => {
     if (!selectedFolder?.id) return;
@@ -129,6 +141,7 @@ const Editor = () => {
         setPageContent(obj);
         setInitialContent(obj);
         generateSidebarContents();
+        scrollToHash()
       })
       .catch((error) => {
         console.error("Error fetching file content:", error);
