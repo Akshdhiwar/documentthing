@@ -40,7 +40,7 @@ const DocsPage = () => {
                     <Toolbar></Toolbar>
                 </div>
                 <div className="grid grid-cols-4 pt-6 p-3 flex-1 relative">
-                    <div className="w-full flex-1 col-span-3 flex justify-center">
+                    <div className="w-full flex-1 col-span-4 lg:col-span-3 flex justify-center">
                         {
                             !isNoFilePresent && <div className="w-full max-w-3xl h-full flex-1 basis-auto flex flex-col justify-between">
                                 {
@@ -61,9 +61,9 @@ const DocsPage = () => {
                         {
                             !isEditing &&
                             // <div>
-                                <ScrollArea style={{ maxHeight: "calc(100vh - 120px)" }} className="overflow-y-auto">
-                                    <ContentSideBar />
-                                </ScrollArea>
+                            <ScrollArea style={{ maxHeight: "calc(100vh - 120px)" }} className="overflow-y-auto">
+                                <ContentSideBar />
+                            </ScrollArea>
                             // </div>
                         }
                     </div>

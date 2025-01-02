@@ -97,6 +97,7 @@ const Editor = () => {
   }
 
   const scrollToHash = () => {
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
     const hash = location.hash; // Get the hash from the URL
     if (hash) {
       const element = document.getElementById(hash.slice(1)); // Remove the '#' and find the element
