@@ -38,10 +38,11 @@ const EditingSetup = ({ }) => {
 
         if (existingBranchName === "") {
             let branchName = user?.GithubName + "_" + getDate() + "_" + getRandomNumber() + "_" + "changes"
-            setName(branchName)
             axiosInstance.post("/branch", {
                 project_id: project?.Id,
                 branch_name: branchName
+            }).then(() => {
+                setName(branchName)
             })
         } else {
             setName(existingBranchName)

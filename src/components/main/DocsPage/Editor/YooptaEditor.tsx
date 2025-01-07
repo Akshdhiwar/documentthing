@@ -28,7 +28,7 @@ import File from '@yoopta/file'
 import Video from '@yoopta/video'
 import { CarouselPlugin } from '@/components/custom/Carousel';
 import useBranchStore from '@/store/branch';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 const plugins: any = [
   HeadingOne,
@@ -82,6 +82,7 @@ const Editor = () => {
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
   const { name } = useBranchStore(state => state)
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   function generateSidebarContents() {
     setTimeout(() => {
@@ -110,6 +111,7 @@ const Editor = () => {
   useEffect(() => {
     if (!selectedFolder?.id) return;
     resetSidebarContents()
+    setSearchParams({ folder: selectedFolder.id })
     if (isEditing) {
       const editedFile = editedFiles.find((file) => file.id === selectedFolder.id);
       if (editedFile) {

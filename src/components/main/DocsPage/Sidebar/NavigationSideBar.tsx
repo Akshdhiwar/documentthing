@@ -11,7 +11,7 @@ import useUserStore from "@/store/userStore"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuButton } from "@/components/ui/sidebar"
 import { ProjectSwitcher } from "./Project-Switcher"
 import { NavUser } from "@/components/custom/NavUser"
-import { NavLink, useParams } from "react-router-dom"
+import { NavLink, useParams, useSearchParams } from "react-router-dom"
 import useAddFolderContext from "@/shared/custom hooks/useDialogContext"
 import Export from "./Export"
 import useBranchStore from "@/store/branch"
@@ -28,6 +28,8 @@ const NavigationSideBar = () => {
     const { name } = useBranchStore(state => state)
     const { folderId } = useParams()
     const setProject = useProjectStore(state => state.setProject)
+    const [searchParams] = useSearchParams();
+
 
     useEffect(() => {
         setLoading(true)
@@ -49,6 +51,10 @@ const NavigationSideBar = () => {
         }
     }, [editedFolder, project])
 
+    useEffect(() => {
+        getFolderJson()
+    }, [name])
+
     async function getFolderJson() {
         if (isEditing && name === "") return
         if (!project?.Id) {
@@ -69,9 +75,8 @@ const NavigationSideBar = () => {
             } catch (e) {
                 return
             }
-
         }
-        if(!project?.Id) return
+        if (!project?.Id) return
         await axiosInstance.get(`/folder/${project?.Id}/${user?.Type}/${isEditing ? name : "main"}`).then(data => {
             const res = data.data
             const json: Folder[] = JSON.parse(JSON.parse(atob(res)))
@@ -80,6 +85,11 @@ const NavigationSideBar = () => {
                 clearList()
                 convertIntoLinkedList(json)
                 setSelectedFolder(json[0])
+                if (searchParams.get("folder")) {
+                    json.forEach(f => {
+                        if (f.id == searchParams.get("folder")) setSelectedFolder(f)
+                    })
+                }
             }
             setLoading(false)
         })

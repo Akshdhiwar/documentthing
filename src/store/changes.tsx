@@ -108,7 +108,7 @@ const useEditChangesStore = create<editorStoreType>()(
             },
         }),
         {
-            name: 'project-storage', // name of the item in the storage (must be unique)
+            name: 'change-storage', // name of the item in the storage (must be unique)
             storage: createJSONStorage(() => localStorage), // using sessionStorage; default is localStorage
         }
     )

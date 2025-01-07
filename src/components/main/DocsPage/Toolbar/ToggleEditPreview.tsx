@@ -5,7 +5,7 @@ import useAxiosWithToast from "@/shared/axios intercepter/axioshandler";
 import useBranchStore from "@/store/branch";
 import useEditChangesStore from "@/store/changes";
 import useProjectStore from "@/store/projectStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ToggleInterface = {
     activeTab: string,
@@ -18,9 +18,15 @@ const ToggleEditPreview: React.FC<ToggleInterface> = ({ activeTab, setActiveTab 
     const { name, setName } = useBranchStore(state => state)
     const axiosInstance = useAxiosWithToast()
     const [deleteBarnchDialog, setDeleteBranchDialog] = useState(false)
+    const { isEditing } = useEditChangesStore(state => state)
+
+    useEffect(() => {
+        if (isEditing) {
+            onTabChange("edit")
+        }
+    }, [])
 
     function onTabChange(value: string) {
-        console.log(value)
         if (value === "preview" && (editedFiles.length > 0 || editedFolder.length > 0)) {
             setDeleteBranchDialog(true)
             return
