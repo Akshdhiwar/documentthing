@@ -68,7 +68,12 @@ const TOOLS = {
 };
 
 const MARKS: YooptaMark<any>[] = [Bold, Italic, CodeMark, Underline, Strike, Highlight];
-const Editor = () => {
+
+type EditorInterface = {
+  setIsLoading: (value: boolean) => void
+}
+
+const Editor: React.FC<EditorInterface> = ({ setIsLoading }) => {
   const axiosInstance = useAxiosWithToast()
   const editor = useMemo(() => createYooptaEditor(), []);
   const selectionRef = useRef(null);
@@ -121,7 +126,7 @@ const Editor = () => {
         return;
       }
     }
-
+    setIsLoading(true)
     // Fetch file content if not found in the edited files
     axiosInstance
       .get(`/file/get`, {
@@ -145,6 +150,7 @@ const Editor = () => {
         setInitialContent(obj);
         generateSidebarContents();
         scrollToHash()
+        setIsLoading(false)
       })
       .catch((error) => {
         console.error("Error fetching file content:", error);
@@ -152,6 +158,7 @@ const Editor = () => {
   }, [selectedFolder])
 
   useEffect(() => {
+    console.log(searchParams.get("folder"))
     setEditorID(generateId())
     setEditor(editor)
   }, [pageContent, isEditing])
