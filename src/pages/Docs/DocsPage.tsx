@@ -60,7 +60,7 @@ const DocsPage = () => {
                             </div>
                         }
                     </div>
-                    <div className="sticky top-[100px] w-full z-20 h-min hidden lg:block">
+                    <div className="sticky top-[100px] w-full z-20 h-min hidden xl:block">
                         {
                             !isEditing &&
                             // <div>
