@@ -59,51 +59,55 @@ const App = () => {
               subdomain ?
                 <Routes>
                   <Route path="/docs" element={<Docs subdomain={subdomain}></Docs>}></Route>
+                  <Route path="*" element={<Navigate to="/docs" />} />
                 </Routes> :
-                <Routes>
-                  <Route path="/" element={<Landing />} />
-                  <Route path="/account" element={<AccountWrapper />}>
-                    <Route index element={<Navigate to="login" />} />
-                    <Route path="login" element={<Login />} />
-                    <Route path="verify-email" element={<EmailVerify />} />
-                    <Route path="email-otp" element={<VerifyOTP />} />
-                    {/* <Route path="subscription" element={<Subscription></Subscription>}>
+                <>
+                  <Routes>
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/account" element={<AccountWrapper />}>
+                      <Route index element={<Navigate to="login" />} />
+                      <Route path="login" element={<Login />} />
+                      <Route path="verify-email" element={<EmailVerify />} />
+                      <Route path="email-otp" element={<VerifyOTP />} />
+                      {/* <Route path="subscription" element={<Subscription></Subscription>}>
                 <Route index element={<Navigate to="list" />}></Route>
                 <Route path="list" element={<SubscriptionList />}></Route>
                 <Route path="payment" element={<SubscriptionPayment />}></Route>
               </Route> */}
-                  </Route>
-                  <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
-                    <Route index element={<Navigate to="projects" />}></Route>
-                    <Route path="projects" element={<ProjectWrapper></ProjectWrapper>}>
-                      <Route index element={<ProjectList></ProjectList>}></Route>
-                      <Route path="drawings" element={<ProtectedRoute><DrawingsWrapper></DrawingsWrapper></ProtectedRoute>} >
-                        <Route index element={<DrawingList></DrawingList>}></Route>
-                        <Route path="sub-list/:projectID" element={<DrawingsSubList></DrawingsSubList>}></Route>
-                      </Route>
-                      <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
                     </Route>
-                    <Route path="organization" element={<OrgWrapper />}>
-                      <Route index element={<Navigate to={"members"} />}></Route>
-                      <Route path="members" element={<OrgMembers />}></Route>
-                    </Route>
-                    {/* <Route path="admin" element={<Admin />}></Route> */}
-                  </Route>
-                  <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
-                    <Route index element={<Navigate to="docs" />}></Route>
-                    <Route path="docs" element={<DocsPage></DocsPage>}> </Route>
-                    <Route path="settings" element={<ProtectedRoute><ProjectSetting></ProjectSetting></ProtectedRoute>}>
-                      <Route index element={<Navigate to="members" />}></Route>
-                      <Route path="members" element={<Members></Members>}>
-                        <Route index element={<Navigate to="list" />}></Route>
-                        <Route path="list" element={<MemberTable></MemberTable>}>
+                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
+                      <Route index element={<Navigate to="projects" />}></Route>
+                      <Route path="projects" element={<ProjectWrapper></ProjectWrapper>}>
+                        <Route index element={<ProjectList></ProjectList>}></Route>
+                        <Route path="drawings" element={<ProtectedRoute><DrawingsWrapper></DrawingsWrapper></ProtectedRoute>} >
+                          <Route index element={<DrawingList></DrawingList>}></Route>
+                          <Route path="sub-list/:projectID" element={<DrawingsSubList></DrawingsSubList>}></Route>
                         </Route>
-                        <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
+                        <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
+                      </Route>
+                      <Route path="organization" element={<OrgWrapper />}>
+                        <Route index element={<Navigate to={"members"} />}></Route>
+                        <Route path="members" element={<OrgMembers />}></Route>
+                      </Route>
+                      {/* <Route path="admin" element={<Admin />}></Route> */}
+                    </Route>
+                    <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
+                      <Route index element={<Navigate to="docs" />}></Route>
+                      <Route path="docs" element={<DocsPage></DocsPage>}> </Route>
+                      <Route path="settings" element={<ProtectedRoute><ProjectSetting></ProjectSetting></ProtectedRoute>}>
+                        <Route index element={<Navigate to="members" />}></Route>
+                        <Route path="members" element={<Members></Members>}>
+                          <Route index element={<Navigate to="list" />}></Route>
+                          <Route path="list" element={<MemberTable></MemberTable>}>
+                          </Route>
+                          <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
+                        </Route>
                       </Route>
                     </Route>
-                  </Route>
-                  <Route path="/drawings/:folderID" element={<ProtectedRoute><Drawings></Drawings></ProtectedRoute>}></Route>
-                </Routes>
+                    <Route path="/drawings/:folderID" element={<ProtectedRoute><Drawings></Drawings></ProtectedRoute>}></Route>
+                    <Route path="*" element={<Navigate to="/" />} />
+                  </Routes>
+                </>
             }
           </Suspense>
         </TooltipProvider>
