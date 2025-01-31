@@ -3,7 +3,7 @@ import FullScreen from "./shared/components/FullScreen"
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import ProtectedRoute from "./shared/components/ProtectedRoute";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import Loader from "./shared/components/Loader";
 import MemberTable from "./components/main/DocsPage/Settings/Member/MemberTable";
 import MemberDetails from "./components/main/DocsPage/Settings/Member/MemberDetails";
@@ -16,7 +16,6 @@ import { InitializeGoogleAnalytics, TrackPageView } from "./shared/utils/GoogleA
 import DrawingList from "./components/main/Dashboard/Project/Drawings/DrawingList";
 import DrawingsWrapper from "./components/main/Dashboard/Project/Drawings/DrawingsWrapper";
 import DrawingsSubList from "./components/main/Dashboard/Project/Drawings/DrawingsSubList";
-import Docs from "./public-docs/Docs";
 // import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 const Login = lazy(() => import("./pages/Account/Login"))
@@ -37,17 +36,9 @@ const Landing = lazy(() => import("./pages/Landing Page/Landing"))
 const Drawings = lazy(() => import("./components/main/Drawings/Drawings"))
 
 const App = () => {
-  const [subdomain, setSubdomain] = useState<string | null>(null);
   useEffect(() => {
     InitializeGoogleAnalytics()
     TrackPageView()
-    const host = window.location.hostname;
-    const parts = host.split(".");
-
-    if (parts.length > 2) {
-      console.log(parts[0])
-      setSubdomain(parts[0]);
-    }
   }, [])
   const googleClientID = import.meta.env.VITE_GOOGLE_CLIENT_ID
   return (
@@ -55,60 +46,50 @@ const App = () => {
       <FullScreen>
         <TooltipProvider>
           <Suspense fallback={<Loader />}>
-            {
-              subdomain ?
-                <Routes>
-                  <Route path="/docs" element={<Docs subdomain={subdomain}></Docs>}></Route>
-                  <Route path="*" element={<Navigate to="/docs" />} />
-                </Routes> :
-                <>
-                  <Routes>
-                    <Route path="/" element={<Landing />} />
-                    <Route path="/account" element={<AccountWrapper />}>
-                      <Route index element={<Navigate to="login" />} />
-                      <Route path="login" element={<Login />} />
-                      <Route path="verify-email" element={<EmailVerify />} />
-                      <Route path="email-otp" element={<VerifyOTP />} />
-                      {/* <Route path="subscription" element={<Subscription></Subscription>}>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/account" element={<AccountWrapper />}>
+                <Route index element={<Navigate to="login" />} />
+                <Route path="login" element={<Login />} />
+                <Route path="verify-email" element={<EmailVerify />} />
+                <Route path="email-otp" element={<VerifyOTP />} />
+                {/* <Route path="subscription" element={<Subscription></Subscription>}>
                 <Route index element={<Navigate to="list" />}></Route>
                 <Route path="list" element={<SubscriptionList />}></Route>
                 <Route path="payment" element={<SubscriptionPayment />}></Route>
               </Route> */}
+              </Route>
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
+                <Route index element={<Navigate to="projects" />}></Route>
+                <Route path="projects" element={<ProjectWrapper></ProjectWrapper>}>
+                  <Route index element={<ProjectList></ProjectList>}></Route>
+                  <Route path="drawings" element={<ProtectedRoute><DrawingsWrapper></DrawingsWrapper></ProtectedRoute>} >
+                    <Route index element={<DrawingList></DrawingList>}></Route>
+                    <Route path="sub-list/:projectID" element={<DrawingsSubList></DrawingsSubList>}></Route>
+                  </Route>
+                  <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
+                </Route>
+                <Route path="organization" element={<OrgWrapper />}>
+                  <Route index element={<Navigate to={"members"} />}></Route>
+                  <Route path="members" element={<OrgMembers />}></Route>
+                </Route>
+                {/* <Route path="admin" element={<Admin />}></Route> */}
+              </Route>
+              <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
+                <Route index element={<Navigate to="docs" />}></Route>
+                <Route path="docs" element={<DocsPage></DocsPage>}> </Route>
+                <Route path="settings" element={<ProtectedRoute><ProjectSetting></ProjectSetting></ProtectedRoute>}>
+                  <Route index element={<Navigate to="members" />}></Route>
+                  <Route path="members" element={<Members></Members>}>
+                    <Route index element={<Navigate to="list" />}></Route>
+                    <Route path="list" element={<MemberTable></MemberTable>}>
                     </Route>
-                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard></Dashboard></ProtectedRoute>}>
-                      <Route index element={<Navigate to="projects" />}></Route>
-                      <Route path="projects" element={<ProjectWrapper></ProjectWrapper>}>
-                        <Route index element={<ProjectList></ProjectList>}></Route>
-                        <Route path="drawings" element={<ProtectedRoute><DrawingsWrapper></DrawingsWrapper></ProtectedRoute>} >
-                          <Route index element={<DrawingList></DrawingList>}></Route>
-                          <Route path="sub-list/:projectID" element={<DrawingsSubList></DrawingsSubList>}></Route>
-                        </Route>
-                        <Route path="new" element={<ProjectCreationDailog></ProjectCreationDailog>}></Route>
-                      </Route>
-                      <Route path="organization" element={<OrgWrapper />}>
-                        <Route index element={<Navigate to={"members"} />}></Route>
-                        <Route path="members" element={<OrgMembers />}></Route>
-                      </Route>
-                      {/* <Route path="admin" element={<Admin />}></Route> */}
-                    </Route>
-                    <Route path="/project/:folderId" element={<ProtectedRoute><DocsWrapper></DocsWrapper></ProtectedRoute>}>
-                      <Route index element={<Navigate to="docs" />}></Route>
-                      <Route path="docs" element={<DocsPage></DocsPage>}> </Route>
-                      <Route path="settings" element={<ProtectedRoute><ProjectSetting></ProjectSetting></ProtectedRoute>}>
-                        <Route index element={<Navigate to="members" />}></Route>
-                        <Route path="members" element={<Members></Members>}>
-                          <Route index element={<Navigate to="list" />}></Route>
-                          <Route path="list" element={<MemberTable></MemberTable>}>
-                          </Route>
-                          <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
-                        </Route>
-                      </Route>
-                    </Route>
-                    <Route path="/drawings/:folderID" element={<ProtectedRoute><Drawings></Drawings></ProtectedRoute>}></Route>
-                    <Route path="*" element={<Navigate to="/" />} />
-                  </Routes>
-                </>
-            }
+                    <Route path=":memberName" element={<MemberDetails></MemberDetails>} ></Route>
+                  </Route>
+                </Route>
+              </Route>
+              <Route path="/drawings/:folderID" element={<ProtectedRoute><Drawings></Drawings></ProtectedRoute>}></Route>
+            </Routes>
           </Suspense>
         </TooltipProvider>
         <Toaster></Toaster>
