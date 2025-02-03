@@ -88,6 +88,12 @@ const Toolbar = () => {
         })
     }
 
+    async function publish() {
+        axiosInstance.post("/public/publish", {
+            project_id: project?.Id
+        })
+    }
+
     return (
         <div className="flex flex-col">
             <div className="flex gap-2 items-center justify-between p-1 px-4 border-b border-gray-100 bg-sidebar">
@@ -98,7 +104,7 @@ const Toolbar = () => {
                         {
                             isEditing ? <Save isLoading={isLoading} setActiveTab={setActiveTab} setLoading={setLoading} webSocket={webSocket} /> : <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button size={"sm"}>Publish</Button>
+                                    <Button size={"sm"} onClick={publish}>Publish</Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>🚧 Publish to Internet is currently under development and will be available soon. Stay tuned!</p>

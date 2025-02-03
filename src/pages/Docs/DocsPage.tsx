@@ -36,7 +36,7 @@ const DocsPage = () => {
             "--sidebar-width": "25rem"
         } as React.CSSProperties}>
             <AddFolderProvider>
-                <NavigationSideBar />
+                <NavigationSideBar setMainLoading={setIsLoading} />
             </AddFolderProvider>
             <ScrollArea className={`flex flex-col flex-1 relative`}>
                 <div className="sticky top-0 z-10 bg-white">

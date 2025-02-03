@@ -16,7 +16,11 @@ import useAddFolderContext from "@/shared/custom hooks/useDialogContext"
 import Export from "./Export"
 import useBranchStore from "@/store/branch"
 
-const NavigationSideBar = () => {
+interface NavSideBarInterface {
+    setMainLoading: (val: boolean) => void
+}
+
+const NavigationSideBar: React.FC<NavSideBarInterface> = ({ setMainLoading }) => {
     const axiosInstance = useAxiosWithToast()
     const [projs, setProjs] = useState([])
     const { setFolder, folder, setSelectedFolder, loading, setLoading } = useFolderStore(state => state)
@@ -92,6 +96,7 @@ const NavigationSideBar = () => {
                 }
             }
             setLoading(false)
+            setMainLoading(false)
         })
     }
 

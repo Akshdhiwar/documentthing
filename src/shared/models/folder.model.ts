@@ -1,5 +1,5 @@
 interface Folder {
-    id: string;
-    name: string;
-    children: Folder[];
+  id: string;
+  name: string;
+  children: Folder[];
 }

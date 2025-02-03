@@ -36,7 +36,7 @@ const useFolderStore = create<folderStoreType>((set) => ({
                 isNoFilePresent: false
             }))
         }
-        
+
         set((state) => ({
             ...state,
             folder: content,
@@ -160,7 +160,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                     editedFolder: [...folderStructure]
                 }
             })
-            changesStore.addEditedFile(folder.id, "file", "",  JSON.stringify([{
+            changesStore.addEditedFile(folder.id, "file", "", JSON.stringify([{
                 children: [],
                 content: [],
                 id: "7af2d8c4-d4b1-480c-b833-be99737a340f",
@@ -171,7 +171,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }]), folder.name)
-            changesStore.addEditedMarkdown( folder.id ,  "markdown", null , null ,null , url.replace(/\s*\/\s*/, '/') + "/" + folder.name + ".md")
+            changesStore.addEditedMarkdown(folder.id, "markdown", null, null, null, url.replace(/\s*\/\s*/, '/') + "/" + folder.name + ".md")
         } else {
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(updatedFolder), null)
             changesStore.addEditedFile(folder.id, "file", "", [{
@@ -185,7 +185,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }], folder.name)
-            changesStore.addEditedMarkdown(folder.id ,"markdown" , null , null , null , url.replace(/\s*\/\s*/, '/') + "/" + folder.name + ".md")
+            changesStore.addEditedMarkdown(folder.id, "markdown", null, null, null, url.replace(/\s*\/\s*/, '/') + "/" + folder.name + ".md")
         }
 
     } else {
@@ -208,7 +208,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }], folder.name)
-            changesStore.addEditedMarkdown(folder.id ,"markdown" , null , null, null , folder.name + ".md")
+            changesStore.addEditedMarkdown(folder.id, "markdown", null, null, null, folder.name + ".md")
         } else {
             originalFolder.push(folder)
             changesStore.addEditedFolder(null, "folder", JSON.stringify(useFolderStore.getState().originalFolder), JSON.stringify(originalFolder), null)
@@ -223,7 +223,7 @@ function saveFolderStructure(folder: Folder, parentID?: string) {
                 },
                 type: "paragraph"
             }], folder.name)
-            changesStore.addEditedMarkdown(folder.id ,"markdown" , null , null , null , folder.name + ".md")
+            changesStore.addEditedMarkdown(folder.id, "markdown", null, null, null, folder.name + ".md")
         }
     }
 
