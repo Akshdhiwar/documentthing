@@ -4,4 +4,5 @@ interface Project {
     Name : string
     Role : string
     RepoOwner : string
+    Published : boolean
 }

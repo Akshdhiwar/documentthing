@@ -1,4 +1,3 @@
-import { Button } from "../../../ui/button"
 import useFolderStore from "@/store/folderStore"
 import useProjectStore from "@/store/projectStore"
 import { useEffect, useRef, useState } from "react"
@@ -10,10 +9,10 @@ import { ToastAction } from "@/components/ui/toast"
 import useUserStore from "@/store/userStore"
 import useDoublyLinkedListStore from "@/store/nextPreviousLinks"
 import { useToast } from "@/components/ui/use-toast"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import ToggleEditPreview from "./ToggleEditPreview"
 import Save from "./Save"
 import useBranchStore from "@/store/branch"
+import PublishVisit from "./PublishVisit"
 
 
 const Toolbar = () => {
@@ -88,12 +87,6 @@ const Toolbar = () => {
         })
     }
 
-    async function publish() {
-        axiosInstance.post("/public/publish", {
-            project_id: project?.Id
-        })
-    }
-
     return (
         <div className="flex flex-col">
             <div className="flex gap-2 items-center justify-between p-1 px-4 border-b border-gray-100 bg-sidebar">
@@ -102,14 +95,7 @@ const Toolbar = () => {
                 {
                     project?.Role !== "Viewer" ? <>
                         {
-                            isEditing ? <Save isLoading={isLoading} setActiveTab={setActiveTab} setLoading={setLoading} webSocket={webSocket} /> : <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button size={"sm"} onClick={publish}>Publish</Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>🚧 Publish to Internet is currently under development and will be available soon. Stay tuned!</p>
-                                </TooltipContent>
-                            </Tooltip>
+                            isEditing ? <Save isLoading={isLoading} setActiveTab={setActiveTab} setLoading={setLoading} webSocket={webSocket} /> : <PublishVisit />
                         }
                     </> : <div></div>
                 }
