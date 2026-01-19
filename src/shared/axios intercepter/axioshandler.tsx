@@ -13,7 +13,7 @@ type toastInterface = {
 // Custom hook for Axios with Toast notifications
 const useAxiosWithToast = () => {
   const { toast } = useToast();
-e
+
   // Create an Axios instance
   const axiosInstance = axios.create({
     baseURL:
