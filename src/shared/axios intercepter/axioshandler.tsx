@@ -19,7 +19,7 @@ const useAxiosWithToast = () => {
     baseURL:
       import.meta.env.VITE_ENVIRONMENT === "Local"
         ? "http://localhost:3000/api/v1"
-        : "https://unrespectable-pseudoanatomically-xuan.ngrok-free.dev/api/v1", // Replace with your API base URL
+        : "https://kvdixb-ip-150-242-197-44.tunnelmole.net/api/v1", // Replace with your API base URL
     timeout: 300000, // Set a timeout (in milliseconds)
     withCredentials: true, // Send cookies with requests
   });
