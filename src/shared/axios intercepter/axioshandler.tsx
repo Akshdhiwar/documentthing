@@ -3,6 +3,7 @@ import useProjectStore from "@/store/projectStore";
 import useUserStore from "@/store/userStore";
 import axios from "axios";
 import { useEffect } from "react";
+import { API_BASE } from "../utils/baseApi";
 
 type toastInterface = {
   title: string;
@@ -19,7 +20,7 @@ const useAxiosWithToast = () => {
     baseURL:
       import.meta.env.VITE_ENVIRONMENT === "Local"
         ? "http://localhost:3000/api/v1"
-        : "https://kvdixb-ip-150-242-197-44.tunnelmole.net/api/v1", // Replace with your API base URL
+        : `${API_BASE}/api/v1`, // Replace with your API base URL
     timeout: 300000, // Set a timeout (in milliseconds)
     withCredentials: true, // Send cookies with requests
   });
