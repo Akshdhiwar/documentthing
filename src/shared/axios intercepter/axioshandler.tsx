@@ -19,7 +19,7 @@ const useAxiosWithToast = () => {
     baseURL:
       import.meta.env.VITE_ENVIRONMENT === "Local"
         ? "http://localhost:3000/api/v1"
-        : "documentthing-backend-production.up.railway.app", // Replace with your API base URL
+        : "https://documentthing-backend-production.up.railway.app/api/v1", // Replace with your API base URL
     timeout: 300000, // Set a timeout (in milliseconds)
     withCredentials: true, // Send cookies with requests
   });
